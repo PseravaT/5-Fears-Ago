@@ -43,7 +43,7 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 1.2
+    m_Value: 0
   contrast:
     m_OverrideState: 1
     m_Value: -22
@@ -130,7 +130,7 @@ MonoBehaviour:
     m_Value: 65
   redOutGreenIn:
     m_OverrideState: 1
-    m_Value: -53
+    m_Value: -54
   redOutBlueIn:
     m_OverrideState: 1
     m_Value: 7
@@ -167,7 +167,7 @@ MonoBehaviour:
   active: 1
   type:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   intensity:
     m_OverrideState: 1
     m_Value: 0.737
@@ -311,17 +311,17 @@ MonoBehaviour:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 0.7882396
-          outSlope: 0.7882396
+          inSlope: 1.381579
+          outSlope: 1.381579
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: -0
-          outSlope: -0
+          time: 0.98367345
+          value: 0.95535713
+          inSlope: 1.9916044
+          outSlope: 1.9916044
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
@@ -489,7 +489,7 @@ MonoBehaviour:
   active: 1
   temperature:
     m_OverrideState: 1
-    m_Value: -44
+    m_Value: -49
   tint:
     m_OverrideState: 1
     m_Value: 14
