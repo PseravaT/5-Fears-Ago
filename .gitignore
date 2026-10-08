@@ -49,3 +49,11 @@ ServerData/
 *.apk
 *.aab
 *.keystore
+
+# Blender
+Assets/Models/SalaBaked.blend
+*.blend[0-9]
+*.blend@
+
+# Unity (arquivos pessoais do editor)
+UserSettings/
