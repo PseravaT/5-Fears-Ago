@@ -16,10 +16,24 @@ public class Menu : MonoBehaviour
     [Header("Telefone")]
     public VisorTelefone visor;
 
+    [Header("Caixa postal")]
+    public AudioClip clique;
+    public float pausaAposClique = 0.4f;
+
+    [Header("Digitação da legenda")]
+    public bool efeitoDigitacao = true;
+    public float segundosPorLetra = 0.06f;  // velocidade (menor = mais rápido)
+    public float pausaPontuacao = 0.18f;    // segundos extras depois de , . ! ? : ;
+    public float pausaAposFrase = 0.6f;  // segundos de espera depois de terminar de digitar
+    bool legendasTerminadas = true;
+    public AudioClip somDigitar;            // opcional: um "tique" curto
+    [Range(0f, 1f)] public float volumeDigitar = 0.3f;
+
     [Header("Áudio")]
     public AudioSource fonte;
     public AudioClip toque;
     public AudioClip mensagem;
+    public AudioClip sequenciaCarro;
 
     [Header("Tempos (segundos)")]
     public float fadeBotao = 0.8f;
@@ -29,6 +43,7 @@ public class Menu : MonoBehaviour
     public float duracaoSemAudio = 5f;
     public float pausaAposMensagem = 1.5f;
     public float duracaoFade = 1.5f;
+    public float pausaAntesDoSom = 2f;   // segundos de tela preta antes do som das chaves
 
     [Header("Cena")]
     public string cenaJogo = "atual";
@@ -73,6 +88,12 @@ public class Menu : MonoBehaviour
             fonte.loop = false;
         }
 
+        if (clique)
+        {
+            fonte.PlayOneShot(clique);
+            yield return new WaitForSeconds(pausaAposClique);
+        }
+
         yield return new WaitForSeconds(pausaAntesMensagem);
 
         if (visor) visor.NovaMensagem();
@@ -89,22 +110,71 @@ public class Menu : MonoBehaviour
         float duracao = mensagem != null ? mensagem.length : duracaoSemAudio;
         yield return new WaitForSeconds(duracao + pausaAposMensagem);
 
+        if (clique) fonte.PlayOneShot(clique);
+
         if (visor) visor.Apagar();
         if (painelDialogo) StartCoroutine(Fade(painelDialogo, 1, 0, fadePainel));
 
-        fade.blocksRaycasts = true;
         yield return Fade(fade, 0, 1, duracaoFade);
 
-        yield return SceneManager.LoadSceneAsync(cenaJogo);
+        var op = SceneManager.LoadSceneAsync(cenaJogo);
+        op.allowSceneActivation = false;
+
+        yield return new WaitForSeconds(pausaAntesDoSom);   // NOVO: silêncio na tela preta
+
+        if (sequenciaCarro)
+        {
+            fonte.Stop();
+            fonte.PlayOneShot(sequenciaCarro);
+            yield return new WaitForSeconds(sequenciaCarro.length);
+        }
+
+        while (op.progress < 0.9f) yield return null; 
+        op.allowSceneActivation = true;
     }
 
     IEnumerator Legendas()
     {
+        legendasTerminadas = false;
         float t0 = Time.time;
+
         foreach (var l in legendas)
         {
             while (Time.time - t0 < l.tempo) yield return null;
-            if (legenda) legenda.text = l.texto;
+            if (!legenda) continue;
+
+            yield return StartCoroutine(Digitar(l.texto));   // espera terminar de digitar
+            yield return new WaitForSeconds(pausaAposFrase); // segura a frase na tela
+        }
+
+        legendasTerminadas = true;
+    }
+
+    IEnumerator Digitar(string texto)
+    {
+        legenda.text = texto;
+
+        if (!efeitoDigitacao)
+        {
+            legenda.maxVisibleCharacters = 99999;
+            yield break;
+        }
+
+        legenda.maxVisibleCharacters = 0;
+        legenda.ForceMeshUpdate();
+        int total = legenda.textInfo.characterCount;
+
+        for (int i = 1; i <= total; i++)
+        {
+            legenda.maxVisibleCharacters = i;
+            char c = legenda.textInfo.characterInfo[i - 1].character;
+
+            if (somDigitar && fonte && !char.IsWhiteSpace(c) && i % 2 == 0)
+                fonte.PlayOneShot(somDigitar, volumeDigitar);
+
+            float espera = segundosPorLetra;
+            if (".,!?;:".IndexOf(c) >= 0) espera += pausaPontuacao;
+            yield return new WaitForSeconds(espera);
         }
     }
 
