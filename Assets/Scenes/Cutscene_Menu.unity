@@ -1614,7 +1614,7 @@ MonoBehaviour:
   fim: {fileID: 895483832}
   rodas: []
   eixoRoda: {x: 1, y: 0, z: 0}
-  somCarro: {fileID: 0}
+  somCarro: {fileID: 1687968747}
   raioRoda: 0.35
   balanco: 0.01
   somFreada: {fileID: 8300000, guid: 8ea08001841641a449488976690c0bc8, type: 3}
@@ -8645,7 +8645,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0711f51dd3673a04ba895bd665c1133c, type: 3}
+  m_Resource: {fileID: 8300000, guid: 14fa45378b8546847a7088d2f1fe3b43, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

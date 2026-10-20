@@ -22,7 +22,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Madeira_3
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_Parent: {fileID: 2100000, guid: 14720adab5bb7e8469ff9380262975ba, type: 2}
+  m_Parent: {fileID: 2100000, guid: 50f68d7fae6f8f847b8a7c33872eb85a, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -50,6 +50,8 @@ Material:
     m_Floats:
     - _Metallic: 0
     - _Smoothness: 0.84
-    m_Colors: []
+    m_Colors:
+    - _BaseColor: {r: 0.7924528, g: 0.66162336, b: 0.66162336, a: 1}
+    - _Color: {r: 0.7924528, g: 0.6616233, b: 0.6616233, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

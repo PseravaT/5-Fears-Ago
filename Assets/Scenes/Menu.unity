@@ -427,7 +427,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 165}
+  m_AnchoredPosition: {x: 35, y: 165}
   m_SizeDelta: {x: 573, y: 500}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &97040693
@@ -1330,7 +1330,7 @@ MonoBehaviour:
   fonte: {fileID: 523347427}
   toque: {fileID: 8300000, guid: 248b0a143596b1c499729f235cf7ae4b, type: 3}
   mensagem: {fileID: 8300000, guid: 7f2725eab3d035d49b2dbae819934cdd, type: 3}
-  sequenciaCarro: {fileID: 8300000, guid: 0dc88981776ef5346828d6da001a4c28, type: 3}
+  sequenciaCarro: {fileID: 8300000, guid: 8762c85d6bf5c6843ba7ce936efa65af, type: 3}
   fadeBotao: 1.4
   tempoToque: 12
   pausaAntesMensagem: 1.2
@@ -1338,6 +1338,7 @@ MonoBehaviour:
   duracaoSemAudio: 5
   pausaAposMensagem: 3
   duracaoFade: 1.5
+  pausaAntesDoSom: 2
   cenaJogo: Cutscene_Menu
   legendas:
   - tempo: 0
@@ -10373,7 +10374,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
