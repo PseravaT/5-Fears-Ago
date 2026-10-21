@@ -9,7 +9,8 @@ public class InteractionDotManager : MonoBehaviour
     [SerializeField] private Transform player;
 
     [Header("Configurações de Distância")]
-    [SerializeField] private float expandDotRadius = 1.5f;
+    [SerializeField] private float showDotRadius = 8f; // Distância para o ponto APARECER na tela
+    [SerializeField] private float expandDotRadius = 1.5f; // Distância para o ponto EXPANDIR
 
     [Header("Escala do Dot (UI)")]
     [SerializeField] private float normalSize = 10f;
@@ -21,7 +22,9 @@ public class InteractionDotManager : MonoBehaviour
 
     void Start()
     {
-        allInteractables.AddRange(Object.FindObjectsByType<Interagivel>());
+        // Se estiver usando uma versão mais antiga do Unity onde FindObjectsByType não existe, 
+        // mude para FindObjectsOfType<Interagivel>()
+        allInteractables.AddRange(Object.FindObjectsByType<Interagivel>(FindObjectsSortMode.None));
 
         foreach (var interactable in allInteractables)
         {
@@ -48,15 +51,27 @@ public class InteractionDotManager : MonoBehaviour
                 continue;
             }
 
-            // A MÁGICA ESTÁ AQUI: Pegamos a porcentagem da câmera (0.0 até 1.0)
+            // 1. Calcula a distância entre o jogador e o objeto primeiro
+            float distanceToPlayer = Vector3.Distance(player.position, interactable.transform.position);
+
+            // 2. Se estiver mais longe que o raio de visão configurado, esconde a bolinha e pula para o próximo
+            if (distanceToPlayer > showDotRadius)
+            {
+                dotTransform.gameObject.SetActive(false);
+                continue;
+            }
+
+            // 3. A MÁGICA ESTÁ AQUI: Pegamos a porcentagem da câmera (0.0 até 1.0)
             Vector3 viewportPoint = currentCam.WorldToViewportPoint(interactable.transform.position);
 
+            // Se estiver atrás da câmera, esconde
             if (viewportPoint.z <= 0f)
             {
                 dotTransform.gameObject.SetActive(false);
                 continue;
             }
 
+            // Se passou por todas as verificações (está perto e na frente da câmera), mostra a bolinha
             dotTransform.gameObject.SetActive(true);
 
             // Multiplicamos essa porcentagem pelo tamanho real da sua RawImage
@@ -68,8 +83,7 @@ public class InteractionDotManager : MonoBehaviour
             // Movemos a bolinha para o lugar exato
             dotTransform.anchoredPosition = canvasPos;
 
-            // Distância para expandir
-            float distanceToPlayer = Vector3.Distance(player.position, interactable.transform.position);
+            // 4. Lógica de expandir o tamanho se estiver muito perto
             float targetSize = normalSize;
             
             if (distanceToPlayer <= expandDotRadius)
@@ -99,12 +113,11 @@ public class InteractionDotManager : MonoBehaviour
         dotInstances.Add(interactable, dotRT);
     }
 
-    // Coloque isso no final do InteractionDotManager
+    // Função para ligar/desligar todo o sistema via UnityEvents
     public void AlternarDots(bool mostrar)
     {
-        this.enabled = mostrar; // Liga/desliga a atualização matemática
+        this.enabled = mostrar; 
         
-        // Esconde ou mostra as imagens das bolinhas
         foreach (var dot in dotInstances.Values)
         {
             if (dot != null) dot.gameObject.SetActive(mostrar);
