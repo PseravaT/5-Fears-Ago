@@ -12,10 +12,20 @@ public class Jogador : MonoBehaviour
     [FormerlySerializedAs("cameraRef")]
     public Transform eixo;
 
+    public Animator animator;          // arraste o Animator aqui (ou ele é buscado nos filhos)
+    public float suavizacaoAnim = 10f; // opcional: suaviza a transição do valor
+
     CharacterController cc;
     float velY;
+    float speedAtual;
 
-    void Awake() => cc = GetComponent<CharacterController>();
+    static readonly int SpeedHash = Animator.StringToHash("Speed");
+
+    void Awake()
+    {
+        cc = GetComponent<CharacterController>();
+        if (animator == null) animator = GetComponentInChildren<Animator>();
+    }
 
     void Update()
     {
@@ -40,5 +50,10 @@ public class Jogador : MonoBehaviour
             Quaternion alvo = Quaternion.LookRotation(mov);
             transform.rotation = Quaternion.Slerp(transform.rotation, alvo, velocidadeGiro * Time.deltaTime);
         }
+
+        // --- Animação ---
+        float alvoSpeed = mov.magnitude * velocidade; // 0 parado, 3 andando
+        speedAtual = Mathf.Lerp(speedAtual, alvoSpeed, suavizacaoAnim * Time.deltaTime);
+        animator.SetFloat(SpeedHash, speedAtual);
     }
 }
