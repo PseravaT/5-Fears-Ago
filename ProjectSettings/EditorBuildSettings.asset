@@ -14,5 +14,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Casa.unity
     guid: 64e21eef97973d846b2310d4c7df83b6
+  - enabled: 1
+    path: Assets/Scenes/Porta.unity
+    guid: 40932a4a3151b0f40b2ed9a4f8b040a4
+  - enabled: 1
+    path: Assets/Scenes/Cozinha.unity
+    guid: 98b37f8794bf3f8438e1f9c468e09ff9
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
