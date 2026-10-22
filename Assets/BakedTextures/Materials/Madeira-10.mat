@@ -48,8 +48,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metallic: 0.51
+    - _Metallic: 0
     - _Smoothness: 0.187
-    m_Colors: []
+    m_Colors:
+    - _BaseColor: {r: 0.33962262, g: 0.19670735, b: 0.107333556, a: 1}
+    - _Color: {r: 0.3396226, g: 0.19670731, b: 0.10733352, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
