@@ -8,6 +8,9 @@ public class ControleDePorta : MonoBehaviour
     [Header("Configurações da Porta")]
     public string nomeDaProximaSala; 
     public string nomeDaCenaDeTransicao; 
+    
+    [Header("Onde o jogador vai nascer?")]
+    public string nomeDoPontoDeSpawnNoDestino; // Nome exato do objeto vazio na próxima cena
 
     public void AbrirPorta()
     {
@@ -16,11 +19,12 @@ public class ControleDePorta : MonoBehaviour
             estaAberta = true;
             Debug.Log("Iniciando transição da porta...");
 
-            // Salva para onde o jogador vai na variável estática
+            // Salva a cena e o ponto de spawn exato
             DadosDeTransicao.proximaCena = nomeDaProximaSala;
+            DadosDeTransicao.pontoDeSpawnAlvo = nomeDoPontoDeSpawnNoDestino;
 
-            // Carrega a cena de transição
-            SceneManager.LoadScene(nomeDaCenaDeTransicao);
+            // Substitua por EfeitoFade.Instancia.MudarCenaComFade(nomeDaCenaDeTransicao); se estiver usando o script de Fade
+            SceneManager.LoadScene(nomeDaCenaDeTransicao); 
         }
     }
 }
