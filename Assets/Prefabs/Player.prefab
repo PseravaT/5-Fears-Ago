@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::walking
   speed: 1
-  turnSpeed: 100
+  turnSpeed: 150
   movement:
     m_Name: Movement
     m_Type: 0
@@ -127,10 +127,12 @@ MonoBehaviour:
   animator: {fileID: 7931323216913548472}
   inverterFrente: 0
   suavizacaoAnim: 0.05
-  nomeClipeGiro: Left
+  nomeClipeGiroEsquerda: Left
+  nomeClipeGiroDireita: Right
   duracaoGiroManual: 0
-  misturaEntreGiros: 0.15
-  maxGirosNaFila: 3
+  misturaEntreGiros: 0.2
+  suavizacaoParada: 0.4
+  suavizacaoRotacao: 0.2
   pivoGiro: {fileID: 0}
 --- !u!114 &3086330915376697228
 MonoBehaviour:

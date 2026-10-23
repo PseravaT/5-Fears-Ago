@@ -94,13 +94,13 @@ AnimatorStateMachine:
     m_Position: {x: 410, y: 70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6784403701221548907}
-    m_Position: {x: 177.05447, y: -147.89792, z: 0}
+    m_Position: {x: 180, y: -150, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -3044877082279951788}
-    m_Position: {x: 282.15085, y: -276.32843, z: 0}
+    m_State: {fileID: 3343129564537699827}
+    m_Position: {x: 263.24094, y: -298.40454, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 4378319215144138944}
-    m_Position: {x: 275.022, y: -382.0736, z: 0}
+    m_State: {fileID: 4316468856035261105}
+    m_Position: {x: 260, y: -370, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -133,32 +133,6 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 2667949614841947897, guid: 27e7bc02ce15e874e9cd17c7acede135, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
---- !u!1102 &-3044877082279951788
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Right
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: -3332656750375472118, guid: 27e7bc02ce15e874e9cd17c7acede135, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -283,7 +257,33 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &4378319215144138944
+--- !u!1102 &3343129564537699827
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Right
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: -3432490460952564900, guid: 27e7bc02ce15e874e9cd17c7acede135, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &4316468856035261105
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1

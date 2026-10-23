@@ -57,7 +57,6 @@ float velGiro, velGiroRef;   // velocidade angular atual (graus/s)
 
     void Start()
     {
-        Debug.Log($"Duração Left: {duracaoEsq:F2}s | Right: {duracaoDir:F2}s");
         controller = GetComponent<CharacterController>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
 
@@ -130,8 +129,6 @@ float velGiro, velGiroRef;   // velocidade angular atual (graus/s)
         }
         else velGiro = 0f;
 
-        
-
         // Andando: A/D curvam o personagem enquanto ele anda
         RodarEmTorno(x * turnSpeed * Time.deltaTime);
 
@@ -195,9 +192,9 @@ float velGiro, velGiroRef;   // velocidade angular atual (graus/s)
 
     IEnumerator GirarFixo(int vezes, float sentido)
     {
+        velGiro = 0f;
         girando = true;
         giroAtual = 0f;
-        velGiro = 0f;
         sentido = Mathf.Sign(sentido);
 
         float duracao = sentido < 0f ? duracaoEsq : duracaoDir;
