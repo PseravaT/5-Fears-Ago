@@ -1,94 +1,97 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.Rendering; // Necessário para controlar o Blur (Volume) no URP
 
 public class GerenciadorDeInspecao : MonoBehaviour
 {
     public static GerenciadorDeInspecao Instancia;
 
-    [Header("O Palco de Inspeção (Sala Escura)")]
-    [SerializeField] private GameObject cameraDeInspecao; // A Câmera Virtual do Cinemachine
-    [SerializeField] private Transform pontoDeInspecao; // Objeto vazio onde o clone vai flutuar
+    [Header("Configurações na Tela")]
+    [Tooltip("Distância que o objeto vai flutuar na frente da câmera")]
+    [SerializeField] private float distanciaDaCamera = 1.5f; 
+    [SerializeField] private float velocidadeDeRotacao = 150f;
 
-    [Header("Configurações de Rotação")]
-    [SerializeField] private float velocidadeDeRotacao = 100f;
+    [Header("Efeito de Blur (Fundo)")]
+    [SerializeField] private Volume volumeDeBlur; // O volume do URP que fará o desfoque
 
     [Header("Eventos Globais (Inspector)")]
-    public UnityEvent aoIniciarInspecao; // Coloque o walking(false) e AlternarDots(false) aqui
-    public UnityEvent aoTerminarInspecao; // Coloque o walking(true) e AlternarDots(true) aqui
+    public UnityEvent aoIniciarInspecao;
+    public UnityEvent aoTerminarInspecao;
 
     private GameObject objetoSendoInspecionado;
     private bool estaInspecionando = false;
     private Vector2 posicaoAnteriorDoMouse;
+    private Transform cameraTransform;
 
     void Awake()
     {
-        // Transforma esse script num Singleton (Fácil de achar pelo jogo todo)
         if (Instancia == null) Instancia = this;
         else Destroy(gameObject);
     }
 
-    void Start()
-    {
-        cameraDeInspecao.SetActive(false); // Garante que a câmera comece desligada
-    }
 
-    // Qualquer item do jogo vai chamar isso enviando seu modelo 3D
     public void IniciarInspecao(GameObject modelo3D)
     {
         if (estaInspecionando) return;
 
-        cameraDeInspecao.SetActive(true);
+        cameraTransform = Camera.main.transform;
+        Vector3 posicaoSpawn = cameraTransform.position + (cameraTransform.forward * distanciaDaCamera);
 
-        // Cria uma cópia exata do objeto no ponto central da câmera
-        objetoSendoInspecionado = Instantiate(modelo3D, pontoDeInspecao.position, Quaternion.identity);
-        objetoSendoInspecionado.transform.SetParent(pontoDeInspecao);
+        objetoSendoInspecionado = Instantiate(modelo3D, posicaoSpawn, Quaternion.identity);
+        objetoSendoInspecionado.transform.SetParent(cameraTransform);
 
-        // Prevenção: Se o objeto tiver física, desliga para ele não cair no abismo
         if (objetoSendoInspecionado.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.isKinematic = true; 
         }
 
-        aoIniciarInspecao?.Invoke(); // Trava o jogador
+        // --- NOVA LINHA: Muda a layer do objeto e de todos os filhos dele ---
+        MudarLayerRecursivo(objetoSendoInspecionado.transform, LayerMask.NameToLayer("Inspecao"));
+
+        if (volumeDeBlur != null) volumeDeBlur.weight = 1f;
+
+        aoIniciarInspecao?.Invoke();
         estaInspecionando = true;
+    }
+
+    // --- NOVA FUNÇÃO: Coloque isso no final do script ---
+    // Essa função garante que se o seu machado for feito de 2 partes (cabo e lâmina), as duas sejam iluminadas
+    private void MudarLayerRecursivo(Transform obj, int novaLayer)
+    {
+        if (novaLayer == -1) return; // Prevenção de erro caso esqueça de criar a layer
+        
+        obj.gameObject.layer = novaLayer;
+        foreach (Transform filho in obj)
+        {
+            MudarLayerRecursivo(filho, novaLayer);
+        }
     }
 
     void Update()
     {
         if (!estaInspecionando) return;
 
-        // --- LÓGICA DO VÍDEO (Adaptada para Novo Input System) ---
-
-        // Quando clica: Grava a posição inicial do mouse
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             posicaoAnteriorDoMouse = Mouse.current.position.ReadValue();
         }
 
-        // Enquanto segura o clique: Calcula a rotação
         if (Mouse.current.leftButton.isPressed && objetoSendoInspecionado != null)
         {
-            Vector2 posicaoAtualDoMouse = Mouse.current.position.ReadValue();
-            Vector2 diferencaMouse = posicaoAtualDoMouse - posicaoAnteriorDoMouse;
+            Vector2 posicaoAtual = Mouse.current.position.ReadValue();
+            Vector2 dif = posicaoAtual - posicaoAnteriorDoMouse;
 
-            // Invertemos X e Y como no vídeo para a rotação fazer sentido no mouse
-            float rotacaoX = diferencaMouse.y;
-            float rotacaoY = -diferencaMouse.x;
+            float rotX = dif.y;
+            float rotY = -dif.x;
 
-            Quaternion rotacao = Quaternion.Euler(
-                rotacaoX * velocidadeDeRotacao * Time.deltaTime,
-                rotacaoY * velocidadeDeRotacao * Time.deltaTime,
-                0
-            );
+            // Roda o objeto baseando-se no eixo da câmera, para o mouse não bugar quando olhar de lado
+            objetoSendoInspecionado.transform.Rotate(cameraTransform.up, rotY * velocidadeDeRotacao * Time.deltaTime, Space.World);
+            objetoSendoInspecionado.transform.Rotate(cameraTransform.right, rotX * velocidadeDeRotacao * Time.deltaTime, Space.World);
 
-            // Aplica a rotação no objeto
-            objetoSendoInspecionado.transform.rotation = rotacao * objetoSendoInspecionado.transform.rotation;
-
-            posicaoAnteriorDoMouse = posicaoAtualDoMouse;
+            posicaoAnteriorDoMouse = posicaoAtual;
         }
 
-        // --- SAIR DA INSPEÇÃO ---
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             TerminarInspecao();
@@ -99,12 +102,13 @@ public class GerenciadorDeInspecao : MonoBehaviour
     {
         if (objetoSendoInspecionado != null)
         {
-            Destroy(objetoSendoInspecionado); // Apaga a cópia que estávamos olhando
+            Destroy(objetoSendoInspecionado);
         }
 
-        cameraDeInspecao.SetActive(false); // Desliga a câmera e volta pro jogador
-        aoTerminarInspecao?.Invoke(); // Destrava o jogador
+        // Desliga o desfoque de fundo (peso 0)
+        if (volumeDeBlur != null) volumeDeBlur.weight = 0f;
 
+        aoTerminarInspecao?.Invoke();
         estaInspecionando = false;
     }
 }
