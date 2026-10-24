@@ -40,8 +40,8 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Metallic: 0.374
-    - _Smoothness: 0.132
+    - _Metallic: 0.393
+    - _Smoothness: 0
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
