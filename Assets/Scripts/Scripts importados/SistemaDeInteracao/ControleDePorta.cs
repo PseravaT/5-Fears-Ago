@@ -3,28 +3,75 @@ using UnityEngine.SceneManagement;
 
 public class ControleDePorta : MonoBehaviour
 {
-    private bool estaAberta = false;
-    
-    [Header("Configurações da Porta")]
+    [Header("Status da Porta")]
+    public bool estaTrancada = false; // Marque isso no Inspector se a porta não puder ser aberta
+    [TextArea(2, 4)]
+    public string textoInteracao = "Parece que deixaram a porta aberta..."; // O texto que aparece no primeiro clique
+
+    [Header("Configurações de Transição")]
     public string nomeDaProximaSala; 
     public string nomeDaCenaDeTransicao; 
-    
-    [Header("Onde o jogador vai nascer?")]
-    public string nomeDoPontoDeSpawnNoDestino; // Nome exato do objeto vazio na próxima cena
+    public string nomeDoPontoDeSpawnNoDestino;
 
-    public void AbrirPorta()
+    [Header("Referências")]
+    public GerenciadorDeDialogo gerenciadorDeDialogo;
+
+    private bool lendoMensagem = false;
+    private bool emTransicao = false;
+
+    // Esta é a função que o seu 'Interagivel' vai chamar agora
+    public void Interagir()
     {
-        if(!estaAberta)
+        if (emTransicao) return; // Impede que o jogador clique várias vezes e quebre o jogo durante o fade
+
+        // PASSO 1: O jogador clicou a primeira vez -> Mostra o texto
+        if (!lendoMensagem)
         {
-            estaAberta = true;
-            Debug.Log("Iniciando transição da porta...");
+            lendoMensagem = true;
+            
+            if (gerenciadorDeDialogo != null)
+            {
+                gerenciadorDeDialogo.MostrarTexto(textoInteracao);
+            }
+            else
+            {
+                Debug.LogWarning("Faltou arrastar o GerenciadorDeDialogo para a porta!");
+            }
+        }
+        // PASSO 2: O jogador clicou a segunda vez (para fechar o texto) -> Decide se entra ou não
+        else
+        {
+            lendoMensagem = false;
+            
+            if (gerenciadorDeDialogo != null)
+            {
+                gerenciadorDeDialogo.EsconderTexto();
+            }
 
-            // Salva a cena e o ponto de spawn exato
-            DadosDeTransicao.proximaCena = nomeDaProximaSala;
-            DadosDeTransicao.pontoDeSpawnAlvo = nomeDoPontoDeSpawnNoDestino;
+            // Se não estiver trancada, faz a viagem
+            if (!estaTrancada)
+            {
+                emTransicao = true;
+                Debug.Log("Iniciando transição da porta...");
 
-            // Substitua por EfeitoFade.Instancia.MudarCenaComFade(nomeDaCenaDeTransicao); se estiver usando o script de Fade
-            SceneManager.LoadScene(nomeDaCenaDeTransicao); 
+                DadosDeTransicao.proximaCena = nomeDaProximaSala;
+                DadosDeTransicao.pontoDeSpawnAlvo = nomeDoPontoDeSpawnNoDestino;
+
+                // Usa o sistema de Fade se ele existir na cena
+                if (EfeitoFade.Instancia != null)
+                {
+                    EfeitoFade.Instancia.MudarCenaComFade(nomeDaCenaDeTransicao);
+                }
+                else
+                {
+                    SceneManager.LoadScene(nomeDaCenaDeTransicao);
+                }
+            }
+            // Se estiver trancada, o texto simplesmente some e o jogador continua jogando normalmente
+            else
+            {
+                Debug.Log("A porta está trancada. Nenhuma transição ocorrerá.");
+            }
         }
     }
 }

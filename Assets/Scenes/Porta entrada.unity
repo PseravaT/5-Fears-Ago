@@ -599,6 +599,7 @@ GameObject:
   - component: {fileID: 1270670188}
   - component: {fileID: 1270670187}
   - component: {fileID: 1270670186}
+  - component: {fileID: 1270670190}
   m_Layer: 0
   m_Name: Pivo esquerdo
   m_TagString: Untagged
@@ -701,6 +702,28 @@ Transform:
   - {fileID: 1407589437}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1270670190
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270670185}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a7976e837013cf146b8826c96837abd5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1293478117
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +736,7 @@ GameObject:
   - component: {fileID: 1293478120}
   - component: {fileID: 1293478119}
   - component: {fileID: 1293478118}
+  - component: {fileID: 1293478122}
   m_Layer: 0
   m_Name: Pivo direito
   m_TagString: Untagged
@@ -815,6 +839,28 @@ Transform:
   - {fileID: 1637084549}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1293478122
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1293478117}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a17a4a0cf32c5e742a716263ec66e851, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1389352752
 GameObject:
   m_ObjectHideFlags: 0

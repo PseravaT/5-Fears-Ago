@@ -5,11 +5,10 @@ using System.Collections;
 public class CarregadorDeTransicao : MonoBehaviour
 {
     [Header("Tempo de Animação")]
-    public float tempoDeEspera = 2.5f; // Tempo que a tela da porta fica aparecendo
+    public float tempoDeEspera = 2.5f;
 
     void Start()
     {
-        // Assim que a cena da porta carrega, ele começa a contar o tempo
         StartCoroutine(CarregarProximaCena());
     }
 
@@ -19,8 +18,16 @@ public class CarregadorDeTransicao : MonoBehaviour
 
         if (!string.IsNullOrEmpty(DadosDeTransicao.proximaCena))
         {
-            // NOVA LINHA: Substitui o SceneManager.LoadScene
-            EfeitoFade.Instancia.MudarCenaComFade(DadosDeTransicao.proximaCena);
+            // TRAVA DE SEGURANÇA: Só tenta fazer o Fade se o objeto do Fade existir
+            if (EfeitoFade.Instancia != null)
+            {
+                EfeitoFade.Instancia.MudarCenaComFade(DadosDeTransicao.proximaCena);
+            }
+            else
+            {
+                Debug.LogWarning("Sistema de Fade ausente. Carregando a cena diretamente!");
+                SceneManager.LoadScene(DadosDeTransicao.proximaCena);
+            }
         }
         else
         {
