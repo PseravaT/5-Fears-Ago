@@ -75,11 +75,19 @@ float velGiro, velGiroRef;   // velocidade angular atual (graus/s)
 
     void OnEnable()  { movement.Enable(); }
 
-    void OnDisable()
+void OnDisable()
     {
-        movement.Disable();
+        if (movement != null) movement.Disable();
+        
         giroAtual = 0f;
         girando = false;
+        velGiro = 0f; // Corta qualquer rotação residual pela raiz
+
+        // O SEGREDO ESTÁ AQUI: Força o Animator a parar instantaneamente
+        if (animator != null)
+        {
+            animator.SetFloat(SpeedHash, 0f);
+        }
     }
 
     void AtualizarVelocidadeAnim(float valor)
@@ -100,13 +108,13 @@ float velGiro, velGiroRef;   // velocidade angular atual (graus/s)
             return;
         }
 
-        // Q = giro de 90° à esquerda | E = giro completo (4 x 90°)
-        var teclado = Keyboard.current;
-        if (teclado != null)
-        {
-            if (teclado.qKey.wasPressedThisFrame) { IniciarGiroFixo(1, -1f); return; }
-            if (teclado.eKey.wasPressedThisFrame) { IniciarGiroFixo(4, -1f); return; }
-        }
+        // // Q = giro de 90° à esquerda | E = giro completo (4 x 90°)
+        // var teclado = Keyboard.current;
+        // if (teclado != null)
+        // {
+        //     if (teclado.qKey.wasPressedThisFrame) { IniciarGiroFixo(1, -1f); return; }
+        //     if (teclado.eKey.wasPressedThisFrame) { IniciarGiroFixo(4, -1f); return; }
+        // }
 
         float eixoY = inverterFrente ? -inputValor.y : inputValor.y;
 
