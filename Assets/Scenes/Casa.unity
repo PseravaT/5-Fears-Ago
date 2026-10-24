@@ -155,7 +155,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4f234c8419a26fa40a6c82a0cd32ec1f, type: 3}
   - {fileID: 8300000, guid: 1dcfc87583827fe418686a4e0011e954, type: 3}
   - {fileID: 8300000, guid: 5a79ae1c606a2ff49a10026a5695baf9, type: 3}
-  volumePassos: 0.08
+  volumePassos: 0.03
   intervaloFrente: 0.7
   intervaloRe: 0.6
   atrasoPrimeiroPasso: 0.25
