@@ -262,7 +262,8 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: "Meu av\xF4, n\xE3o envelheceu nenhum dia."
+          m_StringArgument: "Tenho que me apressar, as coisas ja n\xE3o s\xE3o mais
+            as mesmas !"
           m_BoolArgument: 0
         m_CallState: 2
   aoSairDaVisao:
@@ -4753,7 +4754,7 @@ PrefabInstance:
     - target: {fileID: 7339356831882890532, guid: 63214bc00ca3e0e40b71f40251bf2947, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3421b33fa0e66614da6db44d7b6ba7bd, type: 2}
+      objectReference: {fileID: 2100000, guid: f76dd2084bf9f7546b560dd34a72f227, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6053,6 +6054,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1312844082}
+        m_TargetAssemblyTypeName: GerenciadorDeDialogo, Assembly-CSharp
+        m_MethodName: MostrarTexto
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: "Isso definitivamente n\xE3o era assim !"
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1468363403
@@ -8071,6 +8084,10 @@ PrefabInstance:
       propertyPath: componenteDeTexto
       value: 
       objectReference: {fileID: 184174566}
+    - target: {fileID: 4208618356463960897, guid: 28b3793ef54a97b44a3f3eb98a108abb, type: 3}
+      propertyPath: tempoParaAparecer
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4410427205668323717, guid: 28b3793ef54a97b44a3f3eb98a108abb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.95773
