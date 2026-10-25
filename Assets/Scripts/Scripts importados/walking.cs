@@ -75,7 +75,12 @@ float velGiro, velGiroRef;   // velocidade angular atual (graus/s)
 
     void OnEnable()  { movement.Enable(); }
 
-void OnDisable()
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log("Colidiu com: " + hit.gameObject.name, hit.gameObject);
+    }
+
+    void OnDisable()
     {
         if (movement != null) movement.Disable();
         
