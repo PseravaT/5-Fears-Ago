@@ -25,11 +25,11 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _ColorBits: 8
-    - _Contrast: 1.05
-    - _DitherStrength: 0.98
-    - _Saturation: 0.92
-    - _TargetHeight: 360
+    - _ColorBits: 7
+    - _Contrast: 1.04
+    - _DitherStrength: 0
+    - _Saturation: 1
+    - _TargetHeight: 5000
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
