@@ -4,8 +4,11 @@ using System.Collections.Generic;
 public class InteractionDotManager : MonoBehaviour
 {
     [Header("Referências")]
+    [Tooltip("Arraste o Prefab da sua Interrogação (UI) aqui")]
     [SerializeField] private GameObject dotPrefab;
+    [Tooltip("Arraste a RawImage que renderiza o jogo (Filtro PS1) aqui. NÃO arraste o Canvas!")]
     [SerializeField] private RectTransform uiContainer; 
+    [Tooltip("Arraste o TestPlayer aqui")]
     [SerializeField] private Transform player;
 
     [Header("Configurações de Distância")]
@@ -13,8 +16,8 @@ public class InteractionDotManager : MonoBehaviour
     [SerializeField] private float expandDotRadius = 1.5f; // Distância para o ponto EXPANDIR
 
     [Header("Escala do Dot (UI)")]
-    [SerializeField] private float normalSize = 10f;
-    [SerializeField] private float expandedSize = 25f;
+    [SerializeField] private float normalSize = 40f; // Tamanho normal (maior para a interrogação)
+    [SerializeField] private float expandedSize = 80f; // Tamanho expandido
     [SerializeField] private float scaleSpeed = 12f;
 
     private List<Interagivel> allInteractables = new List<Interagivel>();
@@ -22,8 +25,7 @@ public class InteractionDotManager : MonoBehaviour
 
     void Start()
     {
-        // Se estiver usando uma versão mais antiga do Unity onde FindObjectsByType não existe, 
-        // mude para FindObjectsOfType<Interagivel>()
+        // Busca todos os objetos interagíveis na cena
         allInteractables.AddRange(Object.FindObjectsByType<Interagivel>(FindObjectsSortMode.None));
 
         foreach (var interactable in allInteractables)
@@ -38,60 +40,63 @@ public class InteractionDotManager : MonoBehaviour
     void Update()
     {
         Camera currentCam = Camera.main; 
-        if (currentCam == null || player == null) return;
+        
+        // Trava de segurança para evitar erros caso falte alguma referência
+        if (currentCam == null || player == null || uiContainer == null) return;
 
         foreach (var pair in dotInstances)
         {
             Interagivel interactable = pair.Key;
             RectTransform dotTransform = pair.Value;
 
+            // Se o objeto não puder mais ser interagido (ex: já pegou a chave), esconde
             if (!interactable.CanInteract())
             {
                 dotTransform.gameObject.SetActive(false);
                 continue;
             }
 
-            // 1. Calcula a distância entre o jogador e o objeto primeiro
+            // 1. Calcula a distância real em 3D entre o jogador e o objeto
             float distanceToPlayer = Vector3.Distance(player.position, interactable.transform.position);
 
-            // 2. Se estiver mais longe que o raio de visão configurado, esconde a bolinha e pula para o próximo
+            // 2. Se estiver muito longe, esconde a interrogação e pula para o próximo
             if (distanceToPlayer > showDotRadius)
             {
                 dotTransform.gameObject.SetActive(false);
                 continue;
             }
 
-            // 3. A MÁGICA ESTÁ AQUI: Pegamos a porcentagem da câmera (0.0 até 1.0)
+            // 3. Converte a posição 3D para a Porcentagem da Tela (Viewport)
             Vector3 viewportPoint = currentCam.WorldToViewportPoint(interactable.transform.position);
 
-            // Se estiver atrás da câmera, esconde
+            // Se o Z for menor ou igual a zero, o objeto está nas costas do jogador (esconde)
             if (viewportPoint.z <= 0f)
             {
                 dotTransform.gameObject.SetActive(false);
                 continue;
             }
 
-            // Se passou por todas as verificações (está perto e na frente da câmera), mostra a bolinha
+            // Passou por todas as verificações (está perto e na frente da câmera), então mostra!
             dotTransform.gameObject.SetActive(true);
 
-            // Multiplicamos essa porcentagem pelo tamanho real da sua RawImage
+            // 4. A MÁGICA DA RAWIMAGE: 
+            // Multiplica a porcentagem pelo tamanho real da RawImage e subtrai a metade para centralizar perfeitamente
             Vector2 canvasPos = new Vector2(
                 (viewportPoint.x * uiContainer.rect.width) - (uiContainer.rect.width * 0.5f),
                 (viewportPoint.y * uiContainer.rect.height) - (uiContainer.rect.height * 0.5f)
             );
 
-            // Movemos a bolinha para o lugar exato
+            // Move a interrogação para o lugar exato calculado
             dotTransform.anchoredPosition = canvasPos;
 
-            // 4. Lógica de expandir o tamanho se estiver muito perto
+            // 5. Lógica de animação de tamanho (escala)
             float targetSize = normalSize;
-            
             if (distanceToPlayer <= expandDotRadius)
             {
                 targetSize = expandedSize;
             }
 
-            // Animação do tamanho
+            // Faz a transição suave do tamanho atual para o novo tamanho
             float currentSize = dotTransform.sizeDelta.x;
             float newSize = Mathf.Lerp(currentSize, targetSize, scaleSpeed * Time.deltaTime);
             dotTransform.sizeDelta = new Vector2(newSize, newSize);
@@ -100,15 +105,16 @@ public class InteractionDotManager : MonoBehaviour
 
     void CreateDotForInteractable(Interagivel interactable)
     {
-        // Instancia os pontos como filhos da RawImage
+        // Instancia a interrogação como FILHA da RawImage
         GameObject newDot = Instantiate(dotPrefab, uiContainer);
         RectTransform dotRT = newDot.GetComponent<RectTransform>();
         
         dotRT.sizeDelta = new Vector2(normalSize, normalSize);
         
-        // Garante que a âncora do ponto seja o centro da RawImage
+        // Garante que as âncoras e o pivô da interrogação sejam exatamente o centro
         dotRT.anchorMin = new Vector2(0.5f, 0.5f);
         dotRT.anchorMax = new Vector2(0.5f, 0.5f);
+        dotRT.pivot = new Vector2(0.5f, 0.5f); 
         
         dotInstances.Add(interactable, dotRT);
     }

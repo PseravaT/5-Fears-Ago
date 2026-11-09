@@ -1216,7 +1216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GerenciadorDeInspecao
   distanciaDaCamera: 2
   velocidadeDeRotacao: 20
-  volumeDeBlur: {fileID: 0}
+  volumeDeBlur: {fileID: 600862015}
   aoIniciarInspecao:
     m_PersistentCalls:
       m_Calls:
@@ -1652,6 +1652,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &600862014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 600862016}
+  - component: {fileID: 600862015}
+  m_Layer: 0
+  m_Name: VolumeBlurInspecao
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &600862015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600862014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: 3fc365e7e1c01894699412e49d714ee1, type: 2}
+--- !u!4 &600862016
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600862014}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.92127, y: 0, z: -83.42376}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &603246382
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3185,6 +3234,10 @@ PrefabInstance:
       value: 10.802
       objectReference: {fileID: 0}
     - target: {fileID: -2214572697720848420, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
+      propertyPath: m_Range
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -2214572697720848420, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
       propertyPath: m_Color.b
       value: 0.18356179
       objectReference: {fileID: 0}
@@ -3198,7 +3251,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2214572697720848420, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
       propertyPath: m_Intensity
-      value: 4
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: -2090608591832345471, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -4870,7 +4923,7 @@ GameObject:
   - component: {fileID: 1118688278}
   - component: {fileID: 1118688277}
   - component: {fileID: 1118688276}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LuzDeInspecaoDireita
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4917,8 +4970,8 @@ Light:
   serializedVersion: 13
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 4.23
-  m_Range: 10
+  m_Intensity: 26
+  m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -4980,7 +5033,7 @@ Transform:
   m_GameObject: {fileID: 1118688275}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.3752381, y: 2.5057528, z: 0.6754714}
+  m_LocalPosition: {x: -1.308, y: 2.64, z: 0.809}
   m_LocalScale: {x: 0.23008831, y: 0.3652701, z: 0.12578614}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5594,7 +5647,7 @@ GameObject:
   - component: {fileID: 1336095339}
   - component: {fileID: 1336095341}
   - component: {fileID: 1336095340}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LuzDeInspecaoCorredor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5610,7 +5663,7 @@ Transform:
   m_GameObject: {fileID: 1336095338}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.60352725, y: 2.577, z: 0.046}
+  m_LocalPosition: {x: -0.60352725, y: 2.577, z: 0.218}
   m_LocalScale: {x: 0.06628526, y: 1, z: 0.29307464}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6198,7 +6251,7 @@ Transform:
   m_GameObject: {fileID: 1439556516}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0008405326, y: -0.99888885, z: 0.031184847, w: -0.035326906}
-  m_LocalPosition: {x: -0.14866638, y: 1.572052, z: -1.0602417}
+  m_LocalPosition: {x: 79.164, y: -8.916, z: 19.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6215,7 +6268,7 @@ GameObject:
   - component: {fileID: 1442256945}
   - component: {fileID: 1442256944}
   - component: {fileID: 1442256943}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LuzDeInspecaoEsquerda
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6262,8 +6315,8 @@ Light:
   serializedVersion: 13
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 4.23
-  m_Range: 10
+  m_Intensity: 26
+  m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -6325,7 +6378,7 @@ Transform:
   m_GameObject: {fileID: 1442256942}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.75601, y: 8.4508095, z: 0.6966399}
+  m_LocalPosition: {x: 1.665, y: 8.4508095, z: 0.822}
   m_LocalScale: {x: 0.27136615, y: 1, z: 0.098814234}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9121,6 +9174,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8126860422447525244, guid: 73329abfb45553a4fa0c45b5a06ad470, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.41569686
+      objectReference: {fileID: 0}
+    - target: {fileID: 8126860422447525244, guid: 73329abfb45553a4fa0c45b5a06ad470, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4158432
+      objectReference: {fileID: 0}
     - target: {fileID: 8543059138939528687, guid: 73329abfb45553a4fa0c45b5a06ad470, type: 3}
       propertyPath: m_UiScaleMode
       value: 1
@@ -9328,3 +9389,4 @@ SceneRoots:
   - {fileID: 548278946}
   - {fileID: 1954759411}
   - {fileID: 1576544231}
+  - {fileID: 600862016}
