@@ -1,9 +1,12 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.Events;
 
 public class GerenciadorDeDialogo : MonoBehaviour
 {
+    public static GerenciadorDeDialogo Instancia;
+
     [Header("Elementos da Interface")]
     [SerializeField] private GameObject painelBalao;
     [SerializeField] private TextMeshProUGUI componenteDeTexto;
@@ -12,7 +15,15 @@ public class GerenciadorDeDialogo : MonoBehaviour
     [SerializeField] private float tempoParaAparecer = 1.5f; // Tempo que o balão espera antes de surgir
     [SerializeField] private float delayEntreLetras = 0.05f; // Velocidade da máquina de escrever
 
+    [Header("Eventos")]
+    public UnityEvent aoFecharDialogo;
+
     private Coroutine corrotinaAtual;
+
+    void Awake()
+    {
+        if (Instancia == null) Instancia = this;
+    }
 
     void Start()
     {
@@ -34,20 +45,23 @@ public class GerenciadorDeDialogo : MonoBehaviour
     private IEnumerator RotinaMostrarBalão(string mensagem)
     {
         // 1. Garante que a caixa preta está invisível enquanto a câmara viaja
-        painelBalao.SetActive(false);
-        componenteDeTexto.text = "";
+        if (painelBalao != null) painelBalao.SetActive(false);
+        if (componenteDeTexto != null) componenteDeTexto.text = "";
 
         // 2. Espera o tempo configurado (ex: o tempo da transição do Cinemachine)
         yield return new WaitForSeconds(tempoParaAparecer);
 
         // 3. Agora sim, ativa a caixa preta e começa o diálogo
-        painelBalao.SetActive(true);
+        if (painelBalao != null) painelBalao.SetActive(true);
 
         // 4. Efeito de digitação letra a letra
-        foreach (char letra in mensagem.ToCharArray())
+        if (componenteDeTexto != null)
         {
-            componenteDeTexto.text += letra;
-            yield return new WaitForSeconds(delayEntreLetras);
+            foreach (char letra in mensagem.ToCharArray())
+            {
+                componenteDeTexto.text += letra;
+                yield return new WaitForSeconds(delayEntreLetras);
+            }
         }
     }
 
@@ -59,7 +73,9 @@ public class GerenciadorDeDialogo : MonoBehaviour
             StopCoroutine(corrotinaAtual);
         }
         
-        painelBalao.SetActive(false);
-        componenteDeTexto.text = "";
+        if (painelBalao != null) painelBalao.SetActive(false);
+        if (componenteDeTexto != null) componenteDeTexto.text = "";
+
+        aoFecharDialogo?.Invoke();
     }
 }

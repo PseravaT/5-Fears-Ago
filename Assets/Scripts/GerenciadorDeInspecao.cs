@@ -65,7 +65,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         }
         else if (painelTextoDetalhado != null)
         {
-            // Fallback automático: se esqueceu de arrastar o TextMeshPro no Inspector, busca dentro do painel
+            // Fallback automático se esqueceu de arrastar o TextMeshPro no Inspector
             componenteTextoHistoria = painelTextoDetalhado.GetComponentInChildren<TMPro.TextMeshProUGUI>(true);
             if (componenteTextoHistoria != null)
                 componenteTextoHistoria.text = textoItem;
@@ -79,6 +79,12 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
         aoIniciarInspecao?.Invoke();
         estaInspecionando = true;
+    }
+
+    // Sobrecarga para compatibilidade
+    public void IniciarInspecao(GameObject modelo3D)
+    {
+        IniciarInspecao(modelo3D, "");
     }
 
     private void MudarLayerRecursivo(Transform obj, int novaLayer)
@@ -145,16 +151,16 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
     private void TerminarInspecao()
     {
-        // Destrói o modelo 3D flutuante
+        // 1. Destrói o modelo 3D flutuante
         if (objetoSendoInspecionado != null)
         {
             Destroy(objetoSendoInspecionado);
         }
 
-        // Desliga o desfoque de fundo (peso 0)
+        // 2. Desliga o desfoque de fundo (peso 0)
         if (volumeDeBlur != null) volumeDeBlur.weight = 0f;
 
-        // --- DESLIGA A UI DE INSPEÇÃO ---
+        // 3. Desliga a UI de inspeção
         lendoTelaPreta = false;
         if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(false);
