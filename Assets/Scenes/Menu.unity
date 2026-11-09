@@ -8707,7 +8707,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -415136158766342463, guid: f118350aa36277a4ea3df14258323958, type: 3}
       propertyPath: m_RendererIndex
-      value: -1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -415136158766342463, guid: f118350aa36277a4ea3df14258323958, type: 3}
       propertyPath: m_RenderPostProcessing

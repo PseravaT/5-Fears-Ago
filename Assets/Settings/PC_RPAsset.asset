@@ -21,6 +21,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b84ca920ea19b5b4b8befce22b75d62e, type: 2}
   - {fileID: 11400000, guid: d984bf75a8fadda408882f7c87013383, type: 2}
   - {fileID: 11400000, guid: b16488fd2978a3a4b80c466e5b9ecaf5, type: 2}
+  - {fileID: 11400000, guid: 27ab9ba70268ecd4aa24e115b794cc38, type: 2}
   m_DefaultRendererIndex: 0
   m_RequireDepthTexture: 1
   m_RequireOpaqueTexture: 1
@@ -29,7 +30,7 @@ MonoBehaviour:
   m_SupportsHDR: 1
   m_HDRColorBufferPrecision: 0
   m_MSAA: 1
-  m_RenderScale: 3
+  m_RenderScale: 1
   m_UpscalingFilter: 0
   m_FsrOverrideSharpness: 0
   m_FsrSharpness: 0.92
@@ -48,7 +49,7 @@ MonoBehaviour:
   m_MainLightShadowsSupported: 1
   m_MainLightShadowmapResolution: 2048
   m_AdditionalLightsRenderingMode: 1
-  m_AdditionalLightsPerObjectLimit: 4
+  m_AdditionalLightsPerObjectLimit: 0
   m_AdditionalLightShadowsSupported: 1
   m_AdditionalLightsShadowmapResolution: 256
   m_AdditionalLightsShadowResolutionTierLow: 256

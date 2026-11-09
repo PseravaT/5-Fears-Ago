@@ -45,7 +45,7 @@ Material:
     - _AlphaToMask: 1
     - _Cull: 0
     - _Cutoff: 0.43
-    - _Metallic: 0
+    - _Metallic: 0.89
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

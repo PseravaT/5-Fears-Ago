@@ -32,7 +32,7 @@ Material:
     m_Floats:
     - _Forca: 0.07
     m_Colors:
-    - _Cor: {r: 0.20002669, g: 0.21783774, b: 0.2924528, a: 1}
+    - _Cor: {r: 0.3396226, g: 0.24894354, b: 0.23228902, a: 0.54509807}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &934711228532625186

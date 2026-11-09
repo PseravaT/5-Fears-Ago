@@ -70,13 +70,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   m_Settings:
-    AOMethod: 0
+    AOMethod: 1
     Downsample: 0
     AfterOpaque: 0
     Source: 1
     NormalSamples: 1
-    Intensity: 9
-    DirectLightingStrength: 0.541
+    Intensity: 30
+    DirectLightingStrength: 0.24
     Radius: 1
     Samples: 1
     BlurQuality: 0
@@ -98,7 +98,7 @@ MonoBehaviour:
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 0
-  passMaterial: {fileID: 2100000, guid: 99c475c438d1dc246bab368ca5b72f1e, type: 2}
+  passMaterial: {fileID: 2100000, guid: adec66cc4c8dd094ba8a23b7b1f32082, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
