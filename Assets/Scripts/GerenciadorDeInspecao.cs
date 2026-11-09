@@ -1,11 +1,19 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.InputSystem; // Mantendo o Novo Input System
 using UnityEngine.Events;
 using UnityEngine.Rendering; // Necessário para controlar o Blur (Volume) no URP
 
 public class GerenciadorDeInspecao : MonoBehaviour
 {
     public static GerenciadorDeInspecao Instancia;
+
+    [Header("UI de Leitura (Tecla Q)")]
+    public GameObject telaGuiasDeTecla;     // O objeto pai que liga/desliga o "Esc" e o "Q"
+    public GameObject painelTextoDetalhado; // A tela preta com transparência
+    public TMPro.TextMeshProUGUI componenteTextoHistoria; // Onde vai aparecer o texto do item
+    public TMPro.TextMeshProUGUI textoBotaoQ; // O texto do canto inferior direito
+
+    private bool lendoTelaPreta = false;
 
     [Header("Configurações na Tela")]
     [Tooltip("Distância que o objeto vai flutuar na frente da câmera")]
@@ -30,8 +38,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         else Destroy(gameObject);
     }
 
-
-    public void IniciarInspecao(GameObject modelo3D)
+    public void IniciarInspecao(GameObject modelo3D, string textoItem = "")
     {
         if (estaInspecionando) return;
 
@@ -46,17 +53,34 @@ public class GerenciadorDeInspecao : MonoBehaviour
             rb.isKinematic = true; 
         }
 
-        // --- NOVA LINHA: Muda a layer do objeto e de todos os filhos dele ---
+        // Muda a layer do objeto e de todos os filhos dele para a luz de inspeção os pegar
         MudarLayerRecursivo(objetoSendoInspecionado.transform, LayerMask.NameToLayer("Inspecao"));
 
         if (volumeDeBlur != null) volumeDeBlur.weight = 1f;
+
+        // --- PREPARAÇÃO DA UI AO INICIAR A INSPEÇÃO ---
+        if (componenteTextoHistoria != null)
+        {
+            componenteTextoHistoria.text = textoItem;
+        }
+        else if (painelTextoDetalhado != null)
+        {
+            // Fallback automático: se esqueceu de arrastar o TextMeshPro no Inspector, busca dentro do painel
+            componenteTextoHistoria = painelTextoDetalhado.GetComponentInChildren<TMPro.TextMeshProUGUI>(true);
+            if (componenteTextoHistoria != null)
+                componenteTextoHistoria.text = textoItem;
+        }
+
+        if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(true);
+        lendoTelaPreta = false;
+        
+        if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
+        if (textoBotaoQ != null) textoBotaoQ.text = "pressione Q para ler detalhes";
 
         aoIniciarInspecao?.Invoke();
         estaInspecionando = true;
     }
 
-    // --- NOVA FUNÇÃO: Coloque isso no final do script ---
-    // Essa função garante que se o seu machado for feito de 2 partes (cabo e lâmina), as duas sejam iluminadas
     private void MudarLayerRecursivo(Transform obj, int novaLayer)
     {
         if (novaLayer == -1) return; // Prevenção de erro caso esqueça de criar a layer
@@ -72,12 +96,14 @@ public class GerenciadorDeInspecao : MonoBehaviour
     {
         if (!estaInspecionando) return;
 
+        // Salva a posição inicial do clique do mouse
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             posicaoAnteriorDoMouse = Mouse.current.position.ReadValue();
         }
 
-        if (Mouse.current.leftButton.isPressed && objetoSendoInspecionado != null)
+        // Só permite girar o objeto se a tela preta com texto NÃO estiver aberta
+        if (Mouse.current.leftButton.isPressed && objetoSendoInspecionado != null && !lendoTelaPreta)
         {
             Vector2 posicaoAtual = Mouse.current.position.ReadValue();
             Vector2 dif = posicaoAtual - posicaoAnteriorDoMouse;
@@ -92,6 +118,25 @@ public class GerenciadorDeInspecao : MonoBehaviour
             posicaoAnteriorDoMouse = posicaoAtual;
         }
 
+        // --- CONTROLE DO BOTÃO Q (TELA PRETA) ---
+        if (Keyboard.current.qKey.wasPressedThisFrame)
+        {
+            lendoTelaPreta = !lendoTelaPreta; // Alterna entre ligado e desligado
+            
+            if (painelTextoDetalhado != null) 
+                painelTextoDetalhado.SetActive(lendoTelaPreta); 
+
+            if (textoBotaoQ != null)
+            {
+                // Muda a frase do botão Q dependendo da tela
+                if (lendoTelaPreta)
+                    textoBotaoQ.text = "pressione Q para voltar a inspeção";
+                else
+                    textoBotaoQ.text = "pressione Q para ler detalhes";
+            }
+        }
+
+        // --- CONTROLE DO BOTÃO ESC (SAIR) ---
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             TerminarInspecao();
@@ -100,6 +145,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
     private void TerminarInspecao()
     {
+        // Destrói o modelo 3D flutuante
         if (objetoSendoInspecionado != null)
         {
             Destroy(objetoSendoInspecionado);
@@ -107,6 +153,11 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
         // Desliga o desfoque de fundo (peso 0)
         if (volumeDeBlur != null) volumeDeBlur.weight = 0f;
+
+        // --- DESLIGA A UI DE INSPEÇÃO ---
+        lendoTelaPreta = false;
+        if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
+        if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(false);
 
         aoTerminarInspecao?.Invoke();
         estaInspecionando = false;
