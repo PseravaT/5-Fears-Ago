@@ -8308,6 +8308,7 @@ GameObject:
   - component: {fileID: 1954759411}
   - component: {fileID: 1954759410}
   - component: {fileID: 1954759412}
+  - component: {fileID: 1954759413}
   m_Layer: 0
   m_Name: DamageManager
   m_TagString: Untagged
@@ -8328,6 +8329,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamageSystem
   crtMaterial: {fileID: 2100000, guid: 6de91a2ab3ab1ef4f9d5e9c4800262e5, type: 2}
+  outrosMateriaisCRT: []
+  persistirEntreCenas: 1
   maxHits: 3
   stageColors:
   - {r: 1, g: 0.5755987, b: 0.19999999, a: 1}
@@ -8548,6 +8551,39 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1954759413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954759409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecbe171622b7ab04da3e0c65e7c08716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SistemaDeVida
+  vidaMaxima: 3
+  vidaAtualInspector: 3
+  estagioDeDanoInspector: 0
+  damageSystem: {fileID: 1954759410}
+  persistirEntreCenas: 1
+  resetarNoMenu: 1
+  aoErrarPuzzle:
+    m_PersistentCalls:
+      m_Calls: []
+  aoEntrarEstagio1:
+    m_PersistentCalls:
+      m_Calls: []
+  aoEntrarEstagio2:
+    m_PersistentCalls:
+      m_Calls: []
+  aoMorrer:
+    m_PersistentCalls:
+      m_Calls: []
+  aoResetarVida:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1972992906
 GameObject:
   m_ObjectHideFlags: 0

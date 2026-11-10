@@ -31,6 +31,8 @@ public class ControleDePorta : MonoBehaviour
             
             if (gerenciadorDeDialogo != null)
             {
+                gerenciadorDeDialogo.aoFecharDialogo.RemoveListener(FinalizarLeituraDaPorta);
+                gerenciadorDeDialogo.aoFecharDialogo.AddListener(FinalizarLeituraDaPorta);
                 gerenciadorDeDialogo.MostrarTexto(textoInteracao);
             }
             else
@@ -38,40 +40,51 @@ public class ControleDePorta : MonoBehaviour
                 Debug.LogWarning("Faltou arrastar o GerenciadorDeDialogo para a porta!");
             }
         }
-        // PASSO 2: O jogador clicou a segunda vez (para fechar o texto) -> Decide se entra ou não
+        // PASSO 2: O jogador fechou o texto -> Decide se entra ou não
         else
         {
-            lendoMensagem = false;
-            
-            if (gerenciadorDeDialogo != null)
+            FinalizarLeituraDaPorta();
+        }
+    }
+
+    private void FinalizarLeituraDaPorta()
+    {
+        if (!lendoMensagem) return;
+
+        lendoMensagem = false;
+
+        if (gerenciadorDeDialogo != null)
+        {
+            gerenciadorDeDialogo.aoFecharDialogo.RemoveListener(FinalizarLeituraDaPorta);
+            if (gerenciadorDeDialogo.DialogoEstaAtivo)
             {
                 gerenciadorDeDialogo.EsconderTexto();
             }
+        }
 
-            // Se não estiver trancada, faz a viagem
-            if (!estaTrancada)
+        // Se não estiver trancada, faz a viagem
+        if (!estaTrancada)
+        {
+            emTransicao = true;
+            Debug.Log("Iniciando transição da porta...");
+
+            DadosDeTransicao.proximaCena = nomeDaProximaSala;
+            DadosDeTransicao.pontoDeSpawnAlvo = nomeDoPontoDeSpawnNoDestino;
+
+            // Usa o sistema de Fade se ele existir na cena
+            if (EfeitoFade.Instancia != null)
             {
-                emTransicao = true;
-                Debug.Log("Iniciando transição da porta...");
-
-                DadosDeTransicao.proximaCena = nomeDaProximaSala;
-                DadosDeTransicao.pontoDeSpawnAlvo = nomeDoPontoDeSpawnNoDestino;
-
-                // Usa o sistema de Fade se ele existir na cena
-                if (EfeitoFade.Instancia != null)
-                {
-                    EfeitoFade.Instancia.MudarCenaComFade(nomeDaCenaDeTransicao);
-                }
-                else
-                {
-                    SceneManager.LoadScene(nomeDaCenaDeTransicao);
-                }
+                EfeitoFade.Instancia.MudarCenaComFade(nomeDaCenaDeTransicao);
             }
-            // Se estiver trancada, o texto simplesmente some e o jogador continua jogando normalmente
             else
             {
-                Debug.Log("A porta está trancada. Nenhuma transição ocorrerá.");
+                SceneManager.LoadScene(nomeDaCenaDeTransicao);
             }
+        }
+        // Se estiver trancada, o texto simplesmente some e o jogador continua jogando normalmente
+        else
+        {
+            Debug.Log("A porta está trancada. Nenhuma transição ocorrerá.");
         }
     }
 }

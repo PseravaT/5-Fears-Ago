@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -66,9 +68,15 @@ public class DamageStage
 
 public class DamageSystem : MonoBehaviour
 {
+    public static DamageSystem Instancia { get; private set; }
+
     [Header("Referencias")]
     [Tooltip("Mesmo material usado no Pass Material da Full Screen Pass Renderer Feature")]
     public Material crtMaterial;
+    [Tooltip("Opcional: outros materiais CRT de outras cenas (ex: Cozinha). O script tambem sincroniza automaticamente todos os materiais Custom/CRTFilterURP carregados.")]
+    public Material[] outrosMateriaisCRT;
+    [Tooltip("Se ligado, mantem o DamageManager vivo ao trocar de cena (Sala <-> Cozinha) para nao perder o dano, o batimento e a musica")]
+    public bool persistirEntreCenas = true;
 
     [Header("Dano")]
     [Tooltip("Hits ate perder. Com 3: padrao (0) > amarelo (1) > vermelho (2) > preto (3 = perdeu)")]
@@ -201,6 +209,9 @@ public class DamageSystem : MonoBehaviour
     bool musicPending;             // musica nova esperando o delay acabar
     float musicDelayTimer;
 
+    // Lista de todos os materiais CRT ativos (Sala, Cozinha, etc.) para manter o efeito visual em todas as cenas
+    readonly List<Material> materiaisCRTAtivos = new List<Material>();
+
     static readonly int DamageLevelId = Shader.PropertyToID("_DamageLevel");
     static readonly int PulsePhaseId = Shader.PropertyToID("_PulsePhase");
     static readonly int HitFlashId = Shader.PropertyToID("_HitFlash");
@@ -229,12 +240,28 @@ public class DamageSystem : MonoBehaviour
     public int ShownHits => shownHits;
     bool ShownDead => shownHits >= maxHits;
 
+    void Awake()
+    {
+        if (Instancia != null && Instancia != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instancia = this;
+        if (persistirEntreCenas && transform.parent == null)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
     // Chame isso quando o jogador errar um puzzle
     public void TakeDamage(int amount = 1)
     {
         if (IsDead) return;
 
         hits = Mathf.Min(hits + amount, maxHits);
+        SistemaDeVida.SincronizarPeloDamageSystem(hits, maxHits);
 
         // 1) o som de dano toca na hora
         AudioClip clip = damageClip;
@@ -262,6 +289,7 @@ public class DamageSystem : MonoBehaviour
         hits = Mathf.Max(hits - amount, 0);
         shownHits = hits;
         effectsPending = false;
+        SistemaDeVida.SincronizarPeloDamageSystem(hits, maxHits);
     }
 
     public void ResetDamage()
@@ -269,6 +297,30 @@ public class DamageSystem : MonoBehaviour
         hits = 0;
         shownHits = 0;
         effectsPending = false;
+        SistemaDeVida.SincronizarPeloDamageSystem(hits, maxHits);
+    }
+
+    // Permite que o SistemaDeVida defina diretamente o estagio de dano (com ou sem som de impacto)
+    public void SetDamageStage(int targetHits, bool playEffects = true)
+    {
+        targetHits = Mathf.Clamp(targetHits, 0, maxHits);
+        if (targetHits == hits) return;
+
+        if (targetHits == 0)
+        {
+            ResetDamage();
+        }
+        else if (targetHits > hits && playEffects)
+        {
+            TakeDamage(targetHits - hits);
+        }
+        else
+        {
+            hits = targetHits;
+            shownHits = hits;
+            effectsPending = false;
+            SistemaDeVida.SincronizarPeloDamageSystem(hits, maxHits);
+        }
     }
 
     // Chamado quando o som de dano acaba: agora os efeitos mostram o dano novo
@@ -306,6 +358,15 @@ public class DamageSystem : MonoBehaviour
 
     void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        AtualizarListaMateriaisCRT();
+
+        // Garante que existe um componente SistemaDeVida ativo junto ao DamageSystem
+        if (SistemaDeVida.Instancia == null && GetComponent<SistemaDeVida>() == null)
+        {
+            gameObject.AddComponent<SistemaDeVida>();
+        }
+
         currentColor = Color.clear;
         veinReach = 0f;
         brushReachNow = 0f;
@@ -322,6 +383,62 @@ public class DamageSystem : MonoBehaviour
             heartbeatSource.loop = true;
             heartbeatSource.playOnAwake = false;
             heartbeatSource.volume = 0f;
+        }
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Menu")
+        {
+            ResetDamage();
+        }
+        AtualizarListaMateriaisCRT();
+    }
+
+    void AtualizarListaMateriaisCRT()
+    {
+        materiaisCRTAtivos.Clear();
+        if (crtMaterial != null)
+            materiaisCRTAtivos.Add(crtMaterial);
+
+        if (outrosMateriaisCRT != null)
+        {
+            foreach (var mat in outrosMateriaisCRT)
+            {
+                if (mat != null && !materiaisCRTAtivos.Contains(mat))
+                    materiaisCRTAtivos.Add(mat);
+            }
+        }
+
+        // Busca automaticamente todos os materiais CRT carregados (ex: Cozinha, Fora, Casa) exceto o do Menu
+        var todosMateriais = Resources.FindObjectsOfTypeAll<Material>();
+        foreach (var mat in todosMateriais)
+        {
+            if (mat != null && mat.shader != null &&
+                mat.shader.name == "Custom/CRTFilterURP" &&
+                !mat.name.Contains("Menu") &&
+                !materiaisCRTAtivos.Contains(mat))
+            {
+                materiaisCRTAtivos.Add(mat);
+            }
+        }
+    }
+
+    void SetCrtFloat(int id, float val)
+    {
+        for (int i = 0; i < materiaisCRTAtivos.Count; i++)
+        {
+            if (materiaisCRTAtivos[i] != null)
+                materiaisCRTAtivos[i].SetFloat(id, val);
+        }
+    }
+
+    void SetCrtColor(int id, Color val)
+    {
+        for (int i = 0; i < materiaisCRTAtivos.Count; i++)
+        {
+            if (materiaisCRTAtivos[i] != null)
+                materiaisCRTAtivos[i].SetColor(id, val);
         }
     }
 
@@ -392,23 +509,23 @@ public class DamageSystem : MonoBehaviour
         veinReach = Mathf.Lerp(veinReach, targetReach, k);
         brushReachNow = Mathf.Lerp(brushReachNow, targetBrushReach, k);
 
-        crtMaterial.SetColor(VeinColorId, veinColor);
-        crtMaterial.SetFloat(VeinDensityId, veinDensity);
-        crtMaterial.SetFloat(VeinWidthId, veinWidth);
-        crtMaterial.SetFloat(VeinReachId, veinReach);
-        crtMaterial.SetFloat(VeinFpsId, veinFps);
-        crtMaterial.SetFloat(VeinFramesId, veinFrames);
-        crtMaterial.SetFloat(VeinBoilId, veinBoil);
-        crtMaterial.SetColor(VeinOutlineColorId, veinOutlineColor);
-        crtMaterial.SetFloat(VeinOutlineId, veinOutline);
-        crtMaterial.SetFloat(VeinOutlineJitterId, veinScribble);
-        crtMaterial.SetColor(BrushColorId, brushColorNow);
-        crtMaterial.SetFloat(BrushReachId, brushReachNow);
-        crtMaterial.SetFloat(BrushThicknessId, brushThicknessNow);
-        crtMaterial.SetFloat(BrushDensityId, brushDensityNow);
-        crtMaterial.SetFloat(BrushRoughId, brushRoughNow);
-        crtMaterial.SetFloat(VeinRoughId, veinRoughNow);
-        crtMaterial.SetFloat(VeinOutlineRoughId, outlineRoughNow);
+        SetCrtColor(VeinColorId, veinColor);
+        SetCrtFloat(VeinDensityId, veinDensity);
+        SetCrtFloat(VeinWidthId, veinWidth);
+        SetCrtFloat(VeinReachId, veinReach);
+        SetCrtFloat(VeinFpsId, veinFps);
+        SetCrtFloat(VeinFramesId, veinFrames);
+        SetCrtFloat(VeinBoilId, veinBoil);
+        SetCrtColor(VeinOutlineColorId, veinOutlineColor);
+        SetCrtFloat(VeinOutlineId, veinOutline);
+        SetCrtFloat(VeinOutlineJitterId, veinScribble);
+        SetCrtColor(BrushColorId, brushColorNow);
+        SetCrtFloat(BrushReachId, brushReachNow);
+        SetCrtFloat(BrushThicknessId, brushThicknessNow);
+        SetCrtFloat(BrushDensityId, brushDensityNow);
+        SetCrtFloat(BrushRoughId, brushRoughNow);
+        SetCrtFloat(VeinRoughId, veinRoughNow);
+        SetCrtFloat(VeinOutlineRoughId, outlineRoughNow);
     }
 
     AudioSource GetSfx()
@@ -556,7 +673,7 @@ public class DamageSystem : MonoBehaviour
                 ApplyShownDamage();
         }
 
-        if (crtMaterial == null) return;
+        if (materiaisCRTAtivos.Count == 0 && crtMaterial == null) return;
 
         float target = maxHits > 0 ? (float)shownHits / maxHits : 0f;
         currentLevel = Mathf.SmoothDamp(currentLevel, target, ref levelVelocity, levelSmoothTime);
@@ -595,7 +712,7 @@ public class DamageSystem : MonoBehaviour
         }
         float k = 1f - Mathf.Exp(-3f * Time.deltaTime / Mathf.Max(0.01f, colorTransitionTime));
         currentColor = Color.Lerp(currentColor, targetColor, k);
-        crtMaterial.SetColor(DamageColorId, currentColor);
+        SetCrtColor(DamageColorId, currentColor);
 
         // Perdeu: escurece ate preto
         darkness = Mathf.MoveTowards(darkness, ShownDead ? 1f : 0f, Time.deltaTime / Mathf.Max(0.01f, blackoutTime));
@@ -618,10 +735,10 @@ public class DamageSystem : MonoBehaviour
             }
         }
 
-        crtMaterial.SetFloat(DamageLevelId, currentLevel);
-        crtMaterial.SetFloat(PulsePhaseId, phase);
-        crtMaterial.SetFloat(HitFlashId, flash * flash); // curva quadratica: ataque forte, queda suave
-        crtMaterial.SetFloat(DamageDarknessId, Mathf.SmoothStep(0f, 1f, darkness));
+        SetCrtFloat(DamageLevelId, currentLevel);
+        SetCrtFloat(PulsePhaseId, phase);
+        SetCrtFloat(HitFlashId, flash * flash); // curva quadratica: ataque forte, queda suave
+        SetCrtFloat(DamageDarknessId, Mathf.SmoothStep(0f, 1f, darkness));
 
         UpdateVeins();
         UpdateAudio();
@@ -631,6 +748,8 @@ public class DamageSystem : MonoBehaviour
     // O material e um asset: sem isso, os valores de dano ficam salvos nele depois do Play
     void OnDisable()
     {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
         for (int i = 0; i < 2; i++)
             if (musicSrc[i] != null) { musicSrc[i].Stop(); musicSrc[i].volume = 0f; }
 
@@ -640,13 +759,12 @@ public class DamageSystem : MonoBehaviour
             heartbeatSource.volume = 0f;
         }
 
-        if (crtMaterial == null) return;
-        crtMaterial.SetFloat(DamageLevelId, 0f);
-        crtMaterial.SetFloat(PulsePhaseId, 0f);
-        crtMaterial.SetFloat(HitFlashId, 0f);
-        crtMaterial.SetColor(DamageColorId, Color.clear);
-        crtMaterial.SetFloat(DamageDarknessId, 0f);
-        crtMaterial.SetFloat(VeinReachId, 0f);
-        crtMaterial.SetFloat(BrushReachId, 0f);
+        SetCrtFloat(DamageLevelId, 0f);
+        SetCrtFloat(PulsePhaseId, 0f);
+        SetCrtFloat(HitFlashId, 0f);
+        SetCrtColor(DamageColorId, Color.clear);
+        SetCrtFloat(DamageDarknessId, 0f);
+        SetCrtFloat(VeinReachId, 0f);
+        SetCrtFloat(BrushReachId, 0f);
     }
 }

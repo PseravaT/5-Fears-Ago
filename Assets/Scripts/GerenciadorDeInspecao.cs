@@ -29,8 +29,13 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
     private GameObject objetoSendoInspecionado;
     private bool estaInspecionando = false;
+    private int frameInicioInspecao = -1;
+    private int ultimoFrameFechado = -1;
     private Vector2 posicaoAnteriorDoMouse;
     private Transform cameraTransform;
+
+    public bool EstaInspecionando => estaInspecionando;
+    public bool FechouNesteFrame => Time.frameCount == ultimoFrameFechado;
 
     void Awake()
     {
@@ -77,8 +82,16 @@ public class GerenciadorDeInspecao : MonoBehaviour
         if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
         if (textoBotaoQ != null) textoBotaoQ.text = "pressione Q para ler detalhes";
 
+        // Conecta ao fim do diálogo para que terminar a última fala (com E/clique) também saia da inspeção
+        if (GerenciadorDeDialogo.Instancia != null)
+        {
+            GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(TerminarInspecao);
+            GerenciadorDeDialogo.Instancia.aoFecharDialogo.AddListener(TerminarInspecao);
+        }
+
         aoIniciarInspecao?.Invoke();
         estaInspecionando = true;
+        frameInicioInspecao = Time.frameCount;
     }
 
     // Sobrecarga para compatibilidade
@@ -142,15 +155,38 @@ public class GerenciadorDeInspecao : MonoBehaviour
             }
         }
 
-        // --- CONTROLE DO BOTÃO ESC (SAIR) ---
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        // --- CONTROLE DO BOTÃO ESC OU E (SAIR DA INSPEÇÃO) ---
+        if (Keyboard.current != null && Time.frameCount > frameInicioInspecao)
         {
-            TerminarInspecao();
+            bool apertouEsc = Keyboard.current.escapeKey.wasPressedThisFrame;
+            bool dialogoAtivo = GerenciadorDeDialogo.Instancia != null && GerenciadorDeDialogo.Instancia.DialogoEstaAtivo;
+
+            // Se apertar ESC (a qualquer momento) ou apertar E (quando não houver mais falas de diálogo ativas)
+            if (apertouEsc || (!dialogoAtivo && Keyboard.current.eKey.wasPressedThisFrame))
+            {
+                TerminarInspecao();
+            }
         }
     }
 
-    private void TerminarInspecao()
+    public void TerminarInspecao()
     {
+        if (!estaInspecionando) return;
+
+        estaInspecionando = false;
+        ultimoFrameFechado = Time.frameCount;
+
+        if (GerenciadorDeDialogo.Instancia != null)
+        {
+            GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(TerminarInspecao);
+
+            // Se saiu da inspeção (ex: via ESC) enquanto o diálogo ainda estava aberto, fecha o diálogo também
+            if (GerenciadorDeDialogo.Instancia.DialogoEstaAtivo)
+            {
+                GerenciadorDeDialogo.Instancia.EsconderTexto();
+            }
+        }
+
         // 1. Destrói o modelo 3D flutuante
         if (objetoSendoInspecionado != null)
         {
@@ -166,6 +202,13 @@ public class GerenciadorDeInspecao : MonoBehaviour
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(false);
 
         aoTerminarInspecao?.Invoke();
-        estaInspecionando = false;
+    }
+
+    void OnDisable()
+    {
+        if (GerenciadorDeDialogo.Instancia != null)
+        {
+            GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(TerminarInspecao);
+        }
     }
 }

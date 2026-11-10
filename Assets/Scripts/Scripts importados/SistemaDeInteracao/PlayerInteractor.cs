@@ -10,6 +10,22 @@ public class PlayerInteractor : MonoBehaviour
 
     void Update()
     {
+        // Se um diálogo já estiver aberto (ou acabou de fechar neste exato frame com a tecla E),
+        // não dispara uma nova interação por cima para não reiniciar o diálogo.
+        if (GerenciadorDeDialogo.Instancia != null &&
+            (GerenciadorDeDialogo.Instancia.DialogoEstaAtivo || GerenciadorDeDialogo.Instancia.FechouNesteFrame))
+        {
+            return;
+        }
+
+        // Se uma inspeção 3D estiver ativa (ou acabou de fechar neste exato frame com a tecla E),
+        // não dispara uma nova interação por cima.
+        if (GerenciadorDeInspecao.Instancia != null &&
+            (GerenciadorDeInspecao.Instancia.EstaInspecionando || GerenciadorDeInspecao.Instancia.FechouNesteFrame))
+        {
+            return;
+        }
+
         // 3. Atualize a verificação da tecla para o novo sistema
         if (Keyboard.current != null && Keyboard.current[botaoDeInteracao].wasPressedThisFrame)
         {

@@ -1679,6 +1679,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1898147092}
     - target: {fileID: 4208618356463960897, guid: 28b3793ef54a97b44a3f3eb98a108abb, type: 3}
+      propertyPath: delayEntreLetras
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4208618356463960897, guid: 28b3793ef54a97b44a3f3eb98a108abb, type: 3}
       propertyPath: componenteDeTexto
       value: 
       objectReference: {fileID: 1220786893}

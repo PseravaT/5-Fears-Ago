@@ -19,12 +19,20 @@ public class ControleCameraInteracao : MonoBehaviour
     {
         if (estaInteragindo) return;
 
-        cameraDesteObjeto.SetActive(true);
+        estaInteragindo = true;
+
+        if (cameraDesteObjeto != null)
+            cameraDesteObjeto.SetActive(true);
+
+        // Conecta automaticamente ao fim do diálogo para sair da visão igual ao ESC
+        if (GerenciadorDeDialogo.Instancia != null)
+        {
+            GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(SairDaVisao);
+            GerenciadorDeDialogo.Instancia.aoFecharDialogo.AddListener(SairDaVisao);
+        }
         
         // Dispara tudo que você configurar no Inspector para desligar
         aoEntrarNaVisao?.Invoke(); 
-
-        estaInteragindo = true;
     }
 
     void Update()
@@ -35,13 +43,35 @@ public class ControleCameraInteracao : MonoBehaviour
         }
     }
 
-    private void SairDaVisao()
+    public void SairDaVisao()
     {
-        cameraDesteObjeto.SetActive(false);
+        if (!estaInteragindo) return;
+
+        estaInteragindo = false;
+
+        if (GerenciadorDeDialogo.Instancia != null)
+        {
+            GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(SairDaVisao);
+
+            // Se saiu apertando ESC enquanto o diálogo ainda estava aberto, esconde o diálogo também
+            if (GerenciadorDeDialogo.Instancia.DialogoEstaAtivo)
+            {
+                GerenciadorDeDialogo.Instancia.EsconderTexto();
+            }
+        }
+
+        if (cameraDesteObjeto != null)
+            cameraDesteObjeto.SetActive(false);
         
         // Dispara tudo que você configurar no Inspector para religar
         aoSairDaVisao?.Invoke();
+    }
 
-        estaInteragindo = false;
+    void OnDisable()
+    {
+        if (GerenciadorDeDialogo.Instancia != null)
+        {
+            GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(SairDaVisao);
+        }
     }
 }
