@@ -24,9 +24,17 @@ public class ControleCameraInteracao : MonoBehaviour
         if (cameraDesteObjeto != null)
             cameraDesteObjeto.SetActive(true);
 
-        // Conecta automaticamente ao fim do diálogo para sair da visão igual ao ESC
-        if (GerenciadorDeDialogo.Instancia != null)
+        PuzzleIngredientes puzzleNesteObjeto = GetComponent<PuzzleIngredientes>();
+
+        if (puzzleNesteObjeto != null)
         {
+            // Se este objeto tem um PuzzleIngredientes, espera o diálogo terminar para abrir o puzzle
+            // (sem sair da visão da câmera ainda!)
+            puzzleNesteObjeto.EsperarDialogoEIniciarPuzzle();
+        }
+        else if (GerenciadorDeDialogo.Instancia != null)
+        {
+            // Objeto comum sem puzzle: sai da visão da câmera quando o diálogo fechar
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(SairDaVisao);
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.AddListener(SairDaVisao);
         }
@@ -48,6 +56,16 @@ public class ControleCameraInteracao : MonoBehaviour
         if (!estaInteragindo) return;
 
         estaInteragindo = false;
+
+        // Se tinha um puzzle esperando o diálogo ou aberto neste objeto, cancela/fecha junto com a saída
+        if (TryGetComponent<PuzzleIngredientes>(out var puzzle))
+        {
+            puzzle.CancelarEsperaDeDialogo();
+            if (puzzle.EstaAtivo)
+            {
+                puzzle.FecharPuzzle(cancelado: true);
+            }
+        }
 
         if (GerenciadorDeDialogo.Instancia != null)
         {

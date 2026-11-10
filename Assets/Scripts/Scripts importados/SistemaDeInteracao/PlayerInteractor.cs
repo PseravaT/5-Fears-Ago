@@ -26,6 +26,14 @@ public class PlayerInteractor : MonoBehaviour
             return;
         }
 
+        // Se o Puzzle de Ingredientes estiver ativo (ou acabou de fechar com E),
+        // não deixa interagir com o objeto novamente para não reabrir o diálogo no meio do puzzle!
+        if (PuzzleIngredientes.Instancia != null &&
+            (PuzzleIngredientes.Instancia.EstaAtivo || PuzzleIngredientes.Instancia.FechouNesteFrame))
+        {
+            return;
+        }
+
         // 3. Atualize a verificação da tecla para o novo sistema
         if (Keyboard.current != null && Keyboard.current[botaoDeInteracao].wasPressedThisFrame)
         {

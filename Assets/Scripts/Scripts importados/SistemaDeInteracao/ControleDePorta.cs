@@ -7,11 +7,21 @@ public class ControleDePorta : MonoBehaviour
     public bool estaTrancada = false; // Marque isso no Inspector se a porta não puder ser aberta
     [TextArea(2, 4)]
     public string textoInteracao = "Parece que deixaram a porta aberta..."; // O texto que aparece no primeiro clique
+    [Tooltip("Texto opcional quando a porta acabou de ser destrancada")]
+    [TextArea(2, 4)]
+    public string textoQuandoDestrancada = "A porta se destrancou!";
 
     [Header("Configurações de Transição")]
     public string nomeDaProximaSala; 
     public string nomeDaCenaDeTransicao; 
     public string nomeDoPontoDeSpawnNoDestino;
+
+    [Header("Efeitos Sonoros (Opcional)")]
+    [Tooltip("Som de tranca/maçaneta emperrada tocado ao interagir com a porta trancada")]
+    public AudioClip somPortaTrancada;
+    [Range(0f, 1f)] public float volumeSomTrancada = 1f;
+    [Tooltip("Opcional: AudioSource específico. Se vazio, o script cria ou usa o do próprio objeto")]
+    public AudioSource audioSource;
 
     [Header("Referências")]
     public GerenciadorDeDialogo gerenciadorDeDialogo;
@@ -28,6 +38,12 @@ public class ControleDePorta : MonoBehaviour
         if (!lendoMensagem)
         {
             lendoMensagem = true;
+
+            // Se estiver trancada, toca o som da maçaneta forçada / tranca
+            if (estaTrancada && somPortaTrancada != null)
+            {
+                TocarSomTrancada();
+            }
             
             if (gerenciadorDeDialogo != null)
             {
@@ -86,5 +102,40 @@ public class ControleDePorta : MonoBehaviour
         {
             Debug.Log("A porta está trancada. Nenhuma transição ocorrerá.");
         }
+    }
+
+    /// <summary>
+    /// Destranca a porta (pode ser chamado no evento AoConcluirPuzzle do PuzzleIngredientes).
+    /// </summary>
+    public void DestrancarPorta()
+    {
+        estaTrancada = false;
+        if (!string.IsNullOrEmpty(textoQuandoDestrancada))
+        {
+            textoInteracao = textoQuandoDestrancada;
+        }
+        Debug.Log("A porta foi destrancada com sucesso!");
+    }
+
+    public void TrancarPorta()
+    {
+        estaTrancada = true;
+    }
+
+    private void TocarSomTrancada()
+    {
+        if (somPortaTrancada == null) return;
+
+        if (audioSource == null)
+        {
+            if (!TryGetComponent<AudioSource>(out audioSource))
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.playOnAwake = false;
+                audioSource.spatialBlend = 0f;
+            }
+        }
+
+        audioSource.PlayOneShot(somPortaTrancada, volumeSomTrancada);
     }
 }

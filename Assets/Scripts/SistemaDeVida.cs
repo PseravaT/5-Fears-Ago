@@ -81,8 +81,9 @@ public class SistemaDeVida : MonoBehaviour
         if (Instancia == null)
         {
             Instancia = this;
-            if (persistirEntreCenas && transform.parent == null)
+            if (persistirEntreCenas)
             {
+                transform.SetParent(null);
                 DontDestroyOnLoad(gameObject);
             }
         }
@@ -128,6 +129,14 @@ public class SistemaDeVida : MonoBehaviour
         }
 
         damageSystem = Object.FindFirstObjectByType<DamageSystem>();
+
+        // Se a cena atual (ex: testando a Cozinha direto pelo Play) não tiver o DamageManager na Hierarchy,
+        // adiciona o DamageSystem automaticamente neste objeto para que o efeito visual CRT funcione sempre!
+        if (damageSystem == null)
+        {
+            damageSystem = gameObject.AddComponent<DamageSystem>();
+        }
+
         return damageSystem;
     }
 
@@ -252,34 +261,32 @@ public class SistemaDeVida : MonoBehaviour
 
     /// <summary>
     /// Atalho estático: chame SistemaDeVida.RegistrarErroGlobal() de qualquer script de puzzle.
+    /// Se ainda não houver um DamageManager / SistemaDeVida na cena atual, ele cria um global automaticamente!
     /// </summary>
     public static void RegistrarErroGlobal(int erros = 1)
     {
-        if (Instancia != null)
+        if (Instancia == null)
         {
-            Instancia.TomarDano(erros);
-            return;
+            DamageSystem dsExistente = DamageSystem.Instancia != null
+                ? DamageSystem.Instancia
+                : Object.FindFirstObjectByType<DamageSystem>();
+
+            if (dsExistente != null)
+            {
+                Instancia = dsExistente.GetComponent<SistemaDeVida>();
+                if (Instancia == null)
+                    Instancia = dsExistente.gameObject.AddComponent<SistemaDeVida>();
+            }
+            else
+            {
+                GameObject goGlobal = new GameObject("[DamageManager Global]");
+                DontDestroyOnLoad(goGlobal);
+                dsExistente = goGlobal.AddComponent<DamageSystem>();
+                Instancia = goGlobal.AddComponent<SistemaDeVida>();
+            }
         }
 
-        // Caso não exista objeto SistemaDeVida na cena, ainda assim atualiza e aciona o DamageSystem
-        if (!s_inicializado)
-        {
-            s_vidaMaxima = 3;
-            s_estagioAtual = 0;
-            s_inicializado = true;
-        }
-
-        if (s_estagioAtual >= s_vidaMaxima) return;
-        s_estagioAtual = Mathf.Min(s_estagioAtual + erros, s_vidaMaxima);
-
-        DamageSystem ds = DamageSystem.Instancia != null
-            ? DamageSystem.Instancia
-            : Object.FindFirstObjectByType<DamageSystem>();
-
-        if (ds != null && ds.Hits < s_estagioAtual)
-        {
-            ds.TakeDamage(s_estagioAtual - ds.Hits);
-        }
+        Instancia.TomarDano(erros);
     }
 
     // Usado pelo DamageSystem quando você aperta as teclas de teste (T / R) direto nele

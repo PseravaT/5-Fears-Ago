@@ -83,7 +83,8 @@ public class GerenciadorDeInspecao : MonoBehaviour
         if (textoBotaoQ != null) textoBotaoQ.text = "pressione Q para ler detalhes";
 
         // Conecta ao fim do diálogo para que terminar a última fala (com E/clique) também saia da inspeção
-        if (GerenciadorDeDialogo.Instancia != null)
+        // apenas se o diálogo começou DURANTE ou DEPOIS do início da inspeção (não fecha o 3D logo ao nascer!)
+        if (GerenciadorDeDialogo.Instancia != null && GerenciadorDeDialogo.Instancia.DialogoEstaAtivo)
         {
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(TerminarInspecao);
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.AddListener(TerminarInspecao);

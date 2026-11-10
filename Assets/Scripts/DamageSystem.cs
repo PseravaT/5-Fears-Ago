@@ -249,8 +249,9 @@ public class DamageSystem : MonoBehaviour
         }
 
         Instancia = this;
-        if (persistirEntreCenas && transform.parent == null)
+        if (persistirEntreCenas)
         {
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
         }
     }

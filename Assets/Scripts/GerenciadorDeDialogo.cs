@@ -17,7 +17,9 @@ public class GerenciadorDeDialogo : MonoBehaviour
 
     [Header("Configurações de Tempo")]
     [SerializeField] private float tempoParaAparecer = 1.5f; // Tempo que o balão espera antes de surgir
-    [SerializeField] private float delayEntreLetras = 0.05f; // Velocidade da máquina de escrever
+    [SerializeField] private float delayEntreLetras = 0.05f; // Velocidade padrão da máquina de escrever
+    [Tooltip("Velocidade da digitação enquanto estiver segurando a tecla E (ex: 0.01s = 5x mais rápido)")]
+    [SerializeField] private float delayAoAcelerar = 0.01f;
 
     [Header("Animação do Ícone (Triângulo)")]
     [SerializeField] private float velocidadeFlutuacao = 6f;
@@ -103,6 +105,23 @@ public class GerenciadorDeDialogo : MonoBehaviour
 
         // Ação de interação opcional configurada do Novo Input System
         if (acaoInteragir != null && acaoInteragir.action != null && acaoInteragir.action.WasPressedThisFrame())
+            return true;
+
+        return false;
+    }
+
+    private bool JogadorEstaSegurandoAcelerar()
+    {
+        // Segurando tecla E
+        if (Keyboard.current != null && Keyboard.current.eKey.isPressed)
+            return true;
+
+        // Segurando botão esquerdo do mouse
+        if (Mouse.current != null && Mouse.current.leftButton.isPressed)
+            return true;
+
+        // Ação opcional mantida pressionada
+        if (acaoInteragir != null && acaoInteragir.action != null && acaoInteragir.action.IsPressed())
             return true;
 
         return false;
@@ -217,11 +236,18 @@ public class GerenciadorDeDialogo : MonoBehaviour
             foreach (char letra in mensagem.ToCharArray())
             {
                 componenteDeTexto.text += letra;
-                yield return new WaitForSeconds(delayEntreLetras);
+                float espera = JogadorEstaSegurandoAcelerar() ? delayAoAcelerar : delayEntreLetras;
+                yield return new WaitForSeconds(espera);
             }
         }
 
-        // Aguarda 1 frame antes de liberar o input para evitar que o próprio clique/tecla que abriu o diálogo já o feche
+        // Aguarda que o jogador SOLTE o E antes de liberar o avanço, caso estivesse segurando para acelerar!
+        while (JogadorEstaSegurandoAcelerar())
+        {
+            yield return null;
+        }
+
+        // Aguarda 1 frame antes de liberar o input para evitar que o clique anterior avance acidentalmente
         yield return null;
 
         // 5. Frase concluída: exibe o triângulo e aguarda o jogador pressionar 'E' ou clicar
