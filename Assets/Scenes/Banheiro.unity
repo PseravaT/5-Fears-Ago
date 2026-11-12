@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.49528304, g: 0.58847606, b: 0.6603774, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.052
+  m_FogDensity: 0.022
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -1320,6 +1320,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648848327292034965, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_RendererIndex
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648848327292034965, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5383984365035264893, guid: 76718811bed164b41a319f830aba6444, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.698355
@@ -1469,6 +1493,10 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 1113484864}
+    - target: {fileID: 774075502562486669, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6392750498217780042, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1728,6 +1756,10 @@ PrefabInstance:
     - target: {fileID: 1035644805803247669, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
       propertyPath: m_Name
       value: Sistema Dots
+      objectReference: {fileID: 0}
+    - target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4120851808144394295, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
       propertyPath: m_LocalPosition.x

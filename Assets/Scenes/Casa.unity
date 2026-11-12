@@ -3857,6 +3857,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: cdd4c87042c561c4ea79a0fedda6c48e, type: 2}
+    - target: {fileID: -2328612369511311834, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9a3d4b29100045849a9d16ece668af6b, type: 2}
     - target: {fileID: -2268138116939433651, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -7505,6 +7509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 54498346}
+  rotacaoInicial: {x: 0, y: 0, z: 0}
   textoDetalhado: Uma foto antiga deles
   dialogoAntesDeInspecionar: "Isso definitivamente n\xE3o era assim !"
 --- !u!114 &1487174696 stripped
@@ -9230,6 +9235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 247374330}
+  rotacaoInicial: {x: 180, y: 0, z: 180}
   textoDetalhado: '"OLHAM-ME"
 
     - Lucy Four'
@@ -9819,6 +9825,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4297711333228524902, guid: bd4ddf25f9239af469617eb3cf792c85, type: 3}
+      propertyPath: stages.Array.data[0].musicClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297711333228524902, guid: bd4ddf25f9239af469617eb3cf792c85, type: 3}
+      propertyPath: stages.Array.data[1].musicClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 9080708295927009099, guid: bd4ddf25f9239af469617eb3cf792c85, type: 3}
       propertyPath: m_LocalPosition.x
       value: -46.03406
@@ -9957,6 +9971,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1487174698}
+    - target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
       propertyPath: uiContainer
       value: 
@@ -10119,6 +10137,10 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 1113633182}
+    - target: {fileID: 774075502562486669, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6392750498217780042, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
       propertyPath: m_Name
       value: Player

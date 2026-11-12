@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom_LiquidoCaldeirao
+  m_Shader: {fileID: 4800000, guid: ac69297d8bf8f7f4785c2e3a8e2f4c8f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _AmplitudeOnda: 0.017
+    - _Brilho: 0.86
+    - _Contraste: 1.66
+    - _EscalaRuido: 3
+    - _ForcaEspuma: 0.82
+    - _FrequenciaOnda: 6
+    - _LarguraEspuma: 0.5
+    - _Passos: 5
+    - _RaioDisco: 1
+    - _ReflexoOnda: 0.45
+    - _VelocidadeOnda: 1.5
+    m_Colors:
+    - _CorClara: {r: 0.85, g: 0.11999995, b: 0.14999998, a: 1}
+    - _CorEscura: {r: 0.29999998, g: 0.02, b: 0.04, a: 1}
+    - _CorEspuma: {r: 0.2830189, g: 0.060074773, b: 0.060074773, a: 1}
+    - _VelocidadeA: {r: 0.05, g: 0.03, b: 0, a: 0}
+    - _VelocidadeB: {r: -0.04, g: 0.02, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

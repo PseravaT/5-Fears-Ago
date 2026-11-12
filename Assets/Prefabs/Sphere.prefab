@@ -1,0 +1,295 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &47849410956960056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4519248421869757500}
+  - component: {fileID: 3051841766816833912}
+  - component: {fileID: 7469046071645983320}
+  - component: {fileID: 3445689517777220223}
+  - component: {fileID: 2094334656748715310}
+  - component: {fileID: 818290740890421769}
+  - component: {fileID: 8960182305927579261}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4519248421869757500
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47849410956960056}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.70710677, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -17.685501, y: 2.7747462, z: -66.33461}
+  m_LocalScale: {x: 0.36256, y: 0.36256, z: 0.36256}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3051841766816833912
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47849410956960056}
+  m_Mesh: {fileID: 4711208715938537054, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+--- !u!23 &7469046071645983320
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47849410956960056}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: db285908db3f79c46a81277ee43be12b, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &3445689517777220223
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47849410956960056}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4711208715938537054, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+--- !u!114 &2094334656748715310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47849410956960056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05eda8a6fd12fb41a789d241083667f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interagivel
+  displayName: interaja
+  isEnabled: 1
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 47849410956960056}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &818290740890421769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47849410956960056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc992a783870da1408e33807679842d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControleCameraInteracao
+  cameraDesteObjeto: {fileID: 0}
+  aoEntrarNaVisao:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6989682816459438102, guid: 4489f3d3f7ffc9f4a9d3c5ad96efc30e, type: 3}
+        m_TargetAssemblyTypeName: walking, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
+        m_TargetAssemblyTypeName: InteractionDotManager, Assembly-CSharp
+        m_MethodName: AlternarDots
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4208618356463960897, guid: 28b3793ef54a97b44a3f3eb98a108abb, type: 3}
+        m_TargetAssemblyTypeName: GerenciadorDeDialogo, Assembly-CSharp
+        m_MethodName: MostrarTexto
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Isso era para ser um... ponche? Tem alguns ingredientes
+            faltando.
+          m_BoolArgument: 0
+        m_CallState: 2
+  aoSairDaVisao:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
+        m_TargetAssemblyTypeName: InteractionDotManager, Assembly-CSharp
+        m_MethodName: AlternarDots
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 6989682816459438102, guid: 4489f3d3f7ffc9f4a9d3c5ad96efc30e, type: 3}
+        m_TargetAssemblyTypeName: walking, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!114 &8960182305927579261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47849410956960056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22439c7cc18b01649b029d5f70f1d0fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleIngredientes
+  painelPuzzle: {fileID: 0}
+  textoInstrucao: {fileID: 0}
+  colunasGrelha: 2
+  slots:
+  - nomeExibicao: 01
+    tipo: 0
+    fundoOuBorda: {fileID: 0}
+    texto: {fileID: 0}
+  - nomeExibicao: 02
+    tipo: 1
+    fundoOuBorda: {fileID: 0}
+    texto: {fileID: 0}
+  - nomeExibicao: 03
+    tipo: 2
+    fundoOuBorda: {fileID: 0}
+    texto: {fileID: 0}
+  - nomeExibicao: 04
+    tipo: 3
+    fundoOuBorda: {fileID: 0}
+    texto: {fileID: 0}
+  - nomeExibicao: 05
+    tipo: 4
+    fundoOuBorda: {fileID: 0}
+    texto: {fileID: 0}
+  - nomeExibicao: Sair
+    tipo: 5
+    fundoOuBorda: {fileID: 0}
+    texto: {fileID: 0}
+  corTextoNormal: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  corTextoSelecionado: {r: 1, g: 0.85, b: 0.2, a: 1}
+  corFundoNormal: {r: 0.1, g: 0.1, b: 0.1, a: 0.7}
+  corFundoSelecionado: {r: 0.35, g: 0.35, b: 0.1, a: 0.9}
+  sequenciaCorreta: 0000000001000000020000000300000004000000
+  mensagemInicial: Qual o primeiro ingrediente que devo colocar?
+  mensagensAcerto:
+  - "Certo, o primeiro j\xE1 foi! Qual devo colocar depois?"
+  - Muito bem, segundo ingrediente adicionado. O que vem a seguir?
+  - "Mais um! Estamos quase l\xE1... qual \xE9 o pr\xF3ximo?"
+  - "Quase pronto! Falta apenas o \xFAltimo ingrediente..."
+  mensagemErro: "Droga... ingrediente errado! Vamos voltar ao in\xEDcio... qual deve
+    ser a ordem?"
+  mensagemConclusao: "Perfeito! A mistura est\xE1 pronta!"
+  audioSource: {fileID: 0}
+  somNavegacao: {fileID: 0}
+  somAcerto: {fileID: 0}
+  somErro: {fileID: 0}
+  somConclusao: {fileID: 0}
+  aoIniciarPuzzle:
+    m_PersistentCalls:
+      m_Calls: []
+  aoCancelarPuzzle:
+    m_PersistentCalls:
+      m_Calls: []
+  aoConcluirPuzzle:
+    m_PersistentCalls:
+      m_Calls: []

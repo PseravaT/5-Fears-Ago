@@ -29,6 +29,10 @@ public class GerenciadorDeDialogo : MonoBehaviour
     [Tooltip("Opcional: Ação de interação do Novo Input System. A tecla 'E' já funciona automaticamente.")]
     [SerializeField] private InputActionReference acaoInteragir;
 
+    [Header("Debug")]
+    [Tooltip("Mostra logs no Console para descobrir quem abre/fecha o diálogo. Desmarque quando resolver.")]
+    [SerializeField] private bool logsDeDebug = true;
+
     [Header("Eventos")]
     public UnityEvent aoFecharDialogo;
 
@@ -41,6 +45,14 @@ public class GerenciadorDeDialogo : MonoBehaviour
     private Vector3 posicaoInicialIcone;
     private bool posicaoIconeSalva = false;
 
+    // Identifica cada diálogo iniciado. Quem agenda um "esconder depois" guarda o id
+    // e só esconde se o diálogo atual ainda for o dele.
+    private int idDialogoAtual = 0;
+    public int IdDialogoAtual => idDialogoAtual;
+
+    // Textos já exibidos por MostrarTextoUmaVez (para falas de "primeira interação")
+    private readonly HashSet<string> falasJaMostradas = new HashSet<string>();
+
     public bool DialogoEstaAtivo => dialogoAtivo;
     public bool FechouNesteFrame => Time.frameCount == ultimoFrameFechado;
 
@@ -49,14 +61,79 @@ public class GerenciadorDeDialogo : MonoBehaviour
         if (Instancia == null) Instancia = this;
 
         SalvarPosicaoInicialIcone();
+        ValidarPainel();
+    }
+
+    void OnDestroy()
+    {
+        if (Instancia == this) Instancia = null;
     }
 
     void Start()
     {
-        // Garante que tudo começa escondido sem disparar eventos de fim de diálogo no início da cena
+        // Se o objeto estava inativo e foi ativado por MostrarTexto, o diálogo já começou:
+        // não pode esconder o balão aqui, senão apaga a fala que acabou de iniciar.
+        if (dialogoAtivo) return;
+
         if (painelBalao != null) painelBalao.SetActive(false);
         if (componenteDeTexto != null) componenteDeTexto.text = "";
         DefinirIconeVisivel(false);
+    }
+
+    private void Log(string mensagem)
+    {
+        if (logsDeDebug)
+            Debug.Log($"[Dialogo] {mensagem} (frame {Time.frameCount})", this);
+    }
+
+    /// <summary>
+    /// Avisa se o painel é este mesmo objeto ou um pai dele: desativar o painel
+    /// desativaria o gerenciador e mataria as corrotinas.
+    /// </summary>
+    private void ValidarPainel()
+    {
+        if (painelBalao == null) return;
+
+        if (transform.IsChildOf(painelBalao.transform))
+        {
+            Debug.LogError(
+                "[GerenciadorDeDialogo] 'painelBalao' é este objeto ou um pai dele. " +
+                "Ao desativar o painel, o gerenciador também é desativado e as corrotinas param. " +
+                "Mova este script para um objeto que fique sempre ativo (ex: um GameObject vazio).",
+                this);
+        }
+    }
+
+    /// <summary>
+    /// Garante que este objeto e todos os pais estão ativos, para que StartCoroutine funcione.
+    /// </summary>
+    private bool GarantirObjetoAtivo()
+    {
+        if (gameObject.activeInHierarchy) return true;
+
+        Transform t = transform;
+        while (t != null)
+        {
+            if (!t.gameObject.activeSelf)
+                t.gameObject.SetActive(true);
+            t = t.parent;
+        }
+
+        return gameObject.activeInHierarchy;
+    }
+
+    /// <summary>
+    /// Monta o caminho do objeto na Hierarchy marcando pais desativados (usado só em logs).
+    /// </summary>
+    private static string ObterCaminho(Transform t)
+    {
+        string caminho = t.name;
+        while (t.parent != null)
+        {
+            t = t.parent;
+            caminho = t.name + (t.gameObject.activeSelf ? "" : "(INATIVO)") + "/" + caminho;
+        }
+        return caminho;
     }
 
     private void SalvarPosicaoInicialIcone()
@@ -95,15 +172,12 @@ public class GerenciadorDeDialogo : MonoBehaviour
 
     private bool JogadorPressionouAvancar()
     {
-        // Tecla 'E' via Novo Input System
         if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
             return true;
 
-        // Clique esquerdo do mouse também permite avançar/fechar o diálogo
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
             return true;
 
-        // Ação de interação opcional configurada do Novo Input System
         if (acaoInteragir != null && acaoInteragir.action != null && acaoInteragir.action.WasPressedThisFrame())
             return true;
 
@@ -112,15 +186,12 @@ public class GerenciadorDeDialogo : MonoBehaviour
 
     private bool JogadorEstaSegurandoAcelerar()
     {
-        // Segurando tecla E
         if (Keyboard.current != null && Keyboard.current.eKey.isPressed)
             return true;
 
-        // Segurando botão esquerdo do mouse
         if (Mouse.current != null && Mouse.current.leftButton.isPressed)
             return true;
 
-        // Ação opcional mantida pressionada
         if (acaoInteragir != null && acaoInteragir.action != null && acaoInteragir.action.IsPressed())
             return true;
 
@@ -162,11 +233,47 @@ public class GerenciadorDeDialogo : MonoBehaviour
         IniciarSequenciaDeFalas(partes);
     }
 
+    /// <summary>
+    /// Mostra o texto só na primeira vez. Nas chamadas seguintes com o mesmo texto não faz nada.
+    /// Pode ser chamado direto do UnityEvent no Inspector (no lugar de MostrarTexto).
+    /// </summary>
+    public void MostrarTextoUmaVez(string mensagem)
+    {
+        if (string.IsNullOrEmpty(mensagem)) return;
+        if (!falasJaMostradas.Add(mensagem))
+        {
+            // Já foi mostrada: pula a fala, mas avisa como se o diálogo tivesse fechado,
+            // para o que depende disso (ex: abrir o HUD) continuar funcionando.
+            Log("MostrarTextoUmaVez: fala já mostrada, pulando e disparando aoFecharDialogo.");
+            aoFecharDialogo?.Invoke();
+            return;
+        }
+
+        MostrarTexto(mensagem);
+    }
+
     private void IniciarSequenciaDeFalas(IEnumerable<string> mensagens)
     {
+        Log($"IniciarSequenciaDeFalas chamado. ativoNaHierarquia={gameObject.activeInHierarchy} " +
+            $"caminho={ObterCaminho(transform)}");
+
+        // Evita o erro "Coroutine couldn't be started because the game object is inactive"
+        if (!GarantirObjetoAtivo())
+        {
+            Debug.LogError(
+                "[GerenciadorDeDialogo] Não foi possível ativar o objeto para iniciar o diálogo. " +
+                $"cenaValida={gameObject.scene.IsValid()} " +
+                $"cena='{gameObject.scene.name}' " +
+                $"activeSelf={gameObject.activeSelf} " +
+                $"caminho={ObterCaminho(transform)}",
+                this);
+            return;
+        }
+
         if (corrotinaAtual != null)
         {
             StopCoroutine(corrotinaAtual);
+            corrotinaAtual = null;
         }
 
         filaDeFalas.Clear();
@@ -180,6 +287,7 @@ public class GerenciadorDeDialogo : MonoBehaviour
 
         indiceFalaAtual = 0;
         aguardandoInput = false;
+        idDialogoAtual++; // novo diálogo = novo id
         dialogoAtivo = true;
 
         // Inicia a primeira fala respeitando o tempoParaAparecer (ex: viagem da câmera Cinemachine)
@@ -193,7 +301,6 @@ public class GerenciadorDeDialogo : MonoBehaviour
 
         indiceFalaAtual++;
 
-        // Se ainda houver mais frases na lista, limpa a caixa e começa a digitar a próxima
         if (indiceFalaAtual < filaDeFalas.Count)
         {
             if (corrotinaAtual != null)
@@ -203,7 +310,6 @@ public class GerenciadorDeDialogo : MonoBehaviour
 
             corrotinaAtual = StartCoroutine(RotinaMostrarFala(filaDeFalas[indiceFalaAtual], usarDelayInicial: false));
         }
-        // Se era a última frase da lista, fecha a caixa de vez e dispara o aoFecharDialogo
         else
         {
             EsconderTexto();
@@ -230,10 +336,12 @@ public class GerenciadorDeDialogo : MonoBehaviour
         if (painelBalao != null) painelBalao.SetActive(true);
         if (componenteDeTexto != null) componenteDeTexto.text = "";
 
+        Log($"Painel ligado. painelAtivoNaHierarquia={(painelBalao != null && painelBalao.activeInHierarchy)}");
+
         // 4. Efeito de digitação letra a letra (máquina de escrever)
         if (componenteDeTexto != null)
         {
-            foreach (char letra in mensagem.ToCharArray())
+            foreach (char letra in mensagem)
             {
                 componenteDeTexto.text += letra;
                 float espera = JogadorEstaSegurandoAcelerar() ? delayAoAcelerar : delayEntreLetras;
@@ -241,13 +349,13 @@ public class GerenciadorDeDialogo : MonoBehaviour
             }
         }
 
-        // Aguarda que o jogador SOLTE o E antes de liberar o avanço, caso estivesse segurando para acelerar!
+        // Aguarda o jogador SOLTAR o E antes de liberar o avanço, caso estivesse segurando para acelerar
         while (JogadorEstaSegurandoAcelerar())
         {
             yield return null;
         }
 
-        // Aguarda 1 frame antes de liberar o input para evitar que o clique anterior avance acidentalmente
+        // Aguarda 1 frame para evitar que o clique anterior avance acidentalmente
         yield return null;
 
         // 5. Frase concluída: exibe o triângulo e aguarda o jogador pressionar 'E' ou clicar
@@ -256,9 +364,21 @@ public class GerenciadorDeDialogo : MonoBehaviour
         corrotinaAtual = null;
     }
 
+    /// <summary>
+    /// Esconde só se o diálogo ainda for o mesmo que quem chamou iniciou.
+    /// Use no lugar de EsconderTexto() em timers agendados (ex: TriggerDeFala).
+    /// </summary>
+    public void EsconderTextoSeForOId(int id)
+    {
+        if (!dialogoAtivo || id != idDialogoAtual) return;
+        EsconderTexto();
+    }
+
     public void EsconderTexto()
     {
-        // Para qualquer texto que esteja a ser escrito e esconde o balão e o ícone instantaneamente
+        // O stack trace mostra quem fechou o diálogo
+        Log("EsconderTexto chamado.\n" + System.Environment.StackTrace);
+
         if (corrotinaAtual != null)
         {
             StopCoroutine(corrotinaAtual);
@@ -277,4 +397,3 @@ public class GerenciadorDeDialogo : MonoBehaviour
         aoFecharDialogo?.Invoke();
     }
 }
-

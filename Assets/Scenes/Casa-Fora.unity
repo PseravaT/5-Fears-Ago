@@ -11383,76 +11383,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ControleDePorta
   estaTrancada: 0
   textoInteracao: Parece que deixaram a porta aberta...
+  textoQuandoDestrancada: A porta se destrancou!
   nomeDaProximaSala: Casa
   nomeDaCenaDeTransicao: Porta entrada
   nomeDoPontoDeSpawnNoDestino: 
+  somPortaTrancada: {fileID: 0}
+  volumeSomTrancada: 1
+  audioSource: {fileID: 0}
   gerenciadorDeDialogo: {fileID: 44144924}
 --- !u!1 &672337677 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 483134980076896073, guid: 10a21c3fac026c54d8038479f6b916cb, type: 3}
   m_PrefabInstance: {fileID: 3496940292523461014}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &689563294
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 7.18
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 54.009
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 12.19
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.080704786
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.9967381
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 189.258
-      objectReference: {fileID: 0}
-    - target: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6392750498217780042, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-      propertyPath: m_Name
-      value: Player Variant
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
---- !u!4 &689563295 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 381586034870610850, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
-  m_PrefabInstance: {fileID: 689563294}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &766901588
 GameObject:
@@ -13255,6 +13197,10 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 1706726733}
+    - target: {fileID: 774075502562486669, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6392750498217780042, guid: 62df8ffd7cd2a9b47b825568a27d71cb, type: 3}
       propertyPath: m_Name
       value: Player
@@ -23536,7 +23482,11 @@ PrefabInstance:
     - target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 689563295}
+      objectReference: {fileID: 0}
+    - target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
       propertyPath: uiContainer
       value: 
@@ -24184,7 +24134,6 @@ SceneRoots:
   - {fileID: 1195360839}
   - {fileID: 80303090}
   - {fileID: 1136472869}
-  - {fileID: 689563294}
   - {fileID: 1133356778}
   - {fileID: 1796941368}
   - {fileID: 381853915}

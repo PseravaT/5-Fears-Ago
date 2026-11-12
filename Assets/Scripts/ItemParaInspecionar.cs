@@ -8,6 +8,9 @@ public class ItemParaInspecionar : MonoBehaviour
     [FormerlySerializedAs("modelo3DParaInspecao")]
     public GameObject modeloDoObjeto;
 
+    [Tooltip("Rotação inicial relativa à câmera (ex: 90, 0, 0 para levantar uma folha deitada)")]
+    public Vector3 rotacaoInicial = Vector3.zero;
+
     [Header("História do Objeto (Tecla Q)")]
     [Tooltip("Texto customizado que aparece ao apertar Q durante a inspeção")]
     [TextArea(5, 10)]
@@ -21,7 +24,6 @@ public class ItemParaInspecionar : MonoBehaviour
     // Conecte esta função no seu "On Interact ()" do Interagivel
     public void MandarParaAInspecao()
     {
-        // Se houver um diálogo prévio configurado, exibe primeiro o diálogo e só abre o 3D ao fechar!
         if (!string.IsNullOrEmpty(dialogoAntesDeInspecionar) && GerenciadorDeDialogo.Instancia != null)
         {
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(AbrirInspecaoAposDialogo);
@@ -47,7 +49,11 @@ public class ItemParaInspecionar : MonoBehaviour
     {
         if (GerenciadorDeInspecao.Instancia != null && modeloDoObjeto != null)
         {
-            GerenciadorDeInspecao.Instancia.IniciarInspecao(modeloDoObjeto, textoDetalhado);
+            GerenciadorDeInspecao.Instancia.IniciarInspecao(
+                modeloDoObjeto,
+                Quaternion.Euler(rotacaoInicial),
+                textoDetalhado
+            );
         }
         else
         {
