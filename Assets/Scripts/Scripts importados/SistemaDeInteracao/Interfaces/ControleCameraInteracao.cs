@@ -19,6 +19,9 @@ public class ControleCameraInteracao : MonoBehaviour
     {
         if (estaInteragindo) return;
 
+        var puzzle = GetComponent<PuzzleIngredientes>();
+        if (puzzle != null && puzzle.JaConcluido) return;
+
         estaInteragindo = true;
 
         if (cameraDesteObjeto != null)

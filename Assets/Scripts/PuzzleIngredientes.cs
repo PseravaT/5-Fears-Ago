@@ -43,6 +43,9 @@ public class PuzzleIngredientes : MonoBehaviour
     [SerializeField] private Color corFundoNormal = new Color(0.1f, 0.1f, 0.1f, 0.7f);
     [SerializeField] private Color corFundoSelecionado = new Color(0.35f, 0.35f, 0.1f, 0.9f);
 
+    [Header("Persistência")]
+    [SerializeField] private string idUnico = "caldeirao"; // único para cada puzzle
+
     [Header("Sequência Correta dos 5 Ingredientes")]
     [SerializeField] private TipoOpcao[] sequenciaCorreta = new TipoOpcao[]
     {
@@ -87,6 +90,8 @@ public class PuzzleIngredientes : MonoBehaviour
     private bool puzzleAtivo = false;
     private int frameAtivacao = -1;
     private int ultimoFrameFechado = -1;
+    private bool puzzleConcluido = false;
+    public bool JaConcluido => puzzleConcluido;
 
     public static PuzzleIngredientes Instancia;
 
@@ -95,6 +100,12 @@ public class PuzzleIngredientes : MonoBehaviour
 
     void Awake()
     {
+        if (EstadoDoJogo.PuzzleConcluido(idUnico))
+        {
+            puzzleConcluido = true;
+            if (TryGetComponent<Interagivel>(out var interagivel))
+                interagivel.SetEnabled(false);
+        }
         Instancia = this;
 
         if (painelPuzzle != null)
@@ -108,6 +119,7 @@ public class PuzzleIngredientes : MonoBehaviour
     /// </summary>
     public void EsperarDialogoEIniciarPuzzle()
     {
+        if (puzzleConcluido) return;
         if (GerenciadorDeDialogo.Instancia != null)
         {
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(AoTerminarDialogoDoCaldeirao);
@@ -115,6 +127,7 @@ public class PuzzleIngredientes : MonoBehaviour
         }
         else
         {
+            if (puzzleConcluido) return;
             IniciarPuzzle();
         }
     }
@@ -309,6 +322,13 @@ public class PuzzleIngredientes : MonoBehaviour
     private IEnumerator RotinaConclusao()
     {
         yield return new WaitForSeconds(1.2f);
+
+        puzzleConcluido = true;
+        EstadoDoJogo.MarcarPuzzleConcluido(idUnico);
+
+        if (TryGetComponent<Interagivel>(out var interagivel))
+            interagivel.SetEnabled(false);
+
         FecharPuzzle(cancelado: false);
         aoConcluirPuzzle?.Invoke();
     }

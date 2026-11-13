@@ -16,14 +16,10 @@ public class Interagivel: MonoBehaviour, Iinteragivel
         onInteract?.Invoke();
     }
 
-    public void OnFocus()
-    {
-        throw new System.NotImplementedException();
-    }
+    public void OnFocus() { }
 
-    public void OnLoseFocus()
-    {
-        throw new System.NotImplementedException();
-    }
+    public void OnLoseFocus() { }
+
+    public void SetEnabled(bool value) => isEnabled = value;
 
 }

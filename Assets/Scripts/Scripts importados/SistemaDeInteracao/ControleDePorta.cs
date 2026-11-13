@@ -16,6 +16,13 @@ public class ControleDePorta : MonoBehaviour
     public string nomeDaCenaDeTransicao; 
     public string nomeDoPontoDeSpawnNoDestino;
 
+    [Header("Persistência")]
+    [Tooltip("ID do puzzle que destranca esta porta (o mesmo idUnico do PuzzleIngredientes). Deixe vazio se a porta não depende de puzzle.")]
+    [SerializeField] private string idPuzzleQueDestranca = "caldeirao";
+    [Tooltip("Texto mostrado quando a porta já está aberta (ao voltar para a cena depois do puzzle). Vazio = vai direto para a próxima cena.")]
+    [TextArea(2, 4)]
+    public string textoPortaAberta = "";
+
     [Header("Efeitos Sonoros (Opcional)")]
     [Tooltip("Som de tranca/maçaneta emperrada tocado ao interagir com a porta trancada")]
     public AudioClip somPortaTrancada;
@@ -29,22 +36,44 @@ public class ControleDePorta : MonoBehaviour
     private bool lendoMensagem = false;
     private bool emTransicao = false;
 
+    void Awake()
+    {
+        if (!string.IsNullOrEmpty(idPuzzleQueDestranca) && EstadoDoJogo.PuzzleConcluido(idPuzzleQueDestranca))
+        {
+            estaTrancada = false;
+            textoInteracao = textoPortaAberta;
+        }
+    }
+
     // Esta é a função que o seu 'Interagivel' vai chamar agora
     public void Interagir()
     {
-        if (emTransicao) return; // Impede que o jogador clique várias vezes e quebre o jogo durante o fade
+        if (emTransicao) return;
 
-        // PASSO 1: O jogador clicou a primeira vez -> Mostra o texto
+        if (estaTrancada && !lendoMensagem
+            && !string.IsNullOrEmpty(idPuzzleQueDestranca)
+            && EstadoDoJogo.PuzzleConcluido(idPuzzleQueDestranca))
+        {
+            estaTrancada = false;
+            textoInteracao = textoPortaAberta;
+        }
+
+        // PASSO 1: primeiro clique
         if (!lendoMensagem)
         {
+            // Porta aberta e sem texto: vai direto para a transição
+            if (!estaTrancada && string.IsNullOrEmpty(textoInteracao))
+            {
+                lendoMensagem = true;
+                FinalizarLeituraDaPorta();
+                return;
+            }
+
             lendoMensagem = true;
 
-            // Se estiver trancada, toca o som da maçaneta forçada / tranca
             if (estaTrancada && somPortaTrancada != null)
-            {
                 TocarSomTrancada();
-            }
-            
+
             if (gerenciadorDeDialogo != null)
             {
                 gerenciadorDeDialogo.aoFecharDialogo.RemoveListener(FinalizarLeituraDaPorta);
@@ -56,7 +85,7 @@ public class ControleDePorta : MonoBehaviour
                 Debug.LogWarning("Faltou arrastar o GerenciadorDeDialogo para a porta!");
             }
         }
-        // PASSO 2: O jogador fechou o texto -> Decide se entra ou não
+        // PASSO 2: segundo clique, com o texto aberto
         else
         {
             FinalizarLeituraDaPorta();
@@ -110,11 +139,18 @@ public class ControleDePorta : MonoBehaviour
     public void DestrancarPorta()
     {
         estaTrancada = false;
-        if (!string.IsNullOrEmpty(textoQuandoDestrancada))
-        {
-            textoInteracao = textoQuandoDestrancada;
-        }
-        Debug.Log("A porta foi destrancada com sucesso!");
+        textoInteracao = textoPortaAberta; // interações futuras: sem texto
+
+        if (!string.IsNullOrEmpty(textoQuandoDestrancada) && gerenciadorDeDialogo != null)
+            StartCoroutine(MostrarTextoDestrancada());
+
+        Debug.Log("A porta foi destrancada!");
+    }
+
+    private System.Collections.IEnumerator MostrarTextoDestrancada()
+    {
+        yield return new WaitForSeconds(0.3f);
+        gerenciadorDeDialogo.MostrarTexto(textoQuandoDestrancada);
     }
 
     public void TrancarPorta()
