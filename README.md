@@ -21,7 +21,11 @@ Então o telefone toca. É um advogado, e Márcio precisa voltar.
 
 Os pais não estão em lugar nenhum. A casa continua do mesmo jeito: o corredor estreito, o cheiro de madeira velha e as velas acesas, como se alguém ainda morasse ali. Cada porta trancada esconde uma resposta, e cada resposta mexe com o que Márcio preferia esquecer.
 
-**5 Fears Ago** é um jogo de puzzles em que a história é contada pelos próprios enigmas. Não há inimigos nem combate. A ameaça é a atmosfera, o silêncio e a própria memória.
+Aquela era uma família de hábitos estranhos, daqueles que ninguém comentava e que Márcio, de tanto conviver, aprendeu a achar normais. Agora, de volta, ele começa a perceber o quanto não eram. E a casa parece perceber que ele voltou.
+
+**5 Fears Ago** é um jogo de puzzles em que a história é contada pelos próprios enigmas, cômodo por cômodo, cada um guardando um pedaço de alguém. Não há inimigos nem combate. A ameaça é a atmosfera, o silêncio e a sensação incômoda de estar sendo observado.
+
+Se você cresceu com os clássicos de survival horror do PlayStation 1, vai se sentir em casa. Ou melhor, nem tanto.
 
 ---
 
@@ -33,6 +37,7 @@ Os pais não estão em lugar nenhum. A casa continua do mesmo jeito: o corredor 
 | 🕰️ **Atmosfera retrô** | Visual low-poly inspirado no PlayStation 1, com texturas pixeladas, luz de vela e sombras duras. |
 | 🧠 **Memórias apagadas** | O que aconteceu há 5 anos é o motor do mistério, e você vai montá-lo aos poucos. |
 | 🚪 **Escape room** | Salas trancadas que se abrem conforme os puzzles caem. |
+| 👁️ **Alguém está olhando** | Não há barra de vida. Erre demais e é a própria casa que vai te avisar, e não de um jeito agradável. |
 
 ---
 
@@ -75,17 +80,15 @@ Aqui o segredo é **ligar pontos que ninguém te mostrou como ligar**: o que se 
 
 *Nem todo livro está na estante só para enfeitar.*
 
-### 🍲 A Cozinha: o puzzle do caldeirão
+### 🍲 A Cozinha: *o puzzle do caldeirão*
 
-Existe um caldeirão no meio da cozinha, e ele não aceita qualquer coisa. Em vez de uma receita, a casa deixou um poema, e cada verso tem algo a dizer sobre o que entra ali e em que momento.
+Existe um caldeirão no meio da cozinha, e ele não aceita qualquer coisa. Em vez de uma receita, a casa deixou um **poema**, e cada verso tem algo a dizer sobre o que entra ali e em que momento.
 
-Aqui o desafio é ler nas entrelinhas: entender o que o texto pede, separar o que é metáfora do que é instrução e acertar a ordem. Um ingrediente fora do lugar estraga a receita, e a casa percebe.
+Aqui o desafio é **ler nas entrelinhas**: entender o que o texto pede, separar o que é metáfora do que é instrução e acertar a ordem. Um ingrediente fora do lugar estraga a receita, e a casa percebe.
 
 Vale um aviso: nesta sala, o jeito como você enxerga o ambiente não é o mesmo do resto da casa. Fique atento, porque você não está sozinho.
 
-Você sabe quando está sendo observado?
-
-Um último desafio completa a demo. Não vamos contar nada além de que ele existe, e de que a casa guardou o pior para o fim.
+*Você sabe quando está sendo observado?*
 
 ---
 
@@ -149,12 +152,6 @@ git clone https://github.com/PseravaT/5-Fears-Ago.git
 1. Crie uma branch a partir da `main` (`feature/nome-da-feature`)
 2. Faça commits pequenos, com mensagens claras
 3. Abra um Pull Request descrevendo o que mudou
-
----
-
-## 👥 Equipe
-
-Desenvolvido pelo grupo **Quer Que Desenhe Games**, na matéria de **Sistemas Multimídia** do **CESMAC Centro Universitário**.
 
 ---
 
