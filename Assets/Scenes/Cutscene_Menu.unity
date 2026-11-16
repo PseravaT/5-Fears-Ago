@@ -1631,7 +1631,7 @@ MonoBehaviour:
   fadeSomEntrada: 0.4
   atrasoParaMover: 2
   fade: {fileID: 79977295}
-  proximaCena: atual
+  proximaCena: Casa-Fora
   permitirPular: 1
 --- !u!4 &1387820215
 Transform:

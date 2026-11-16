@@ -336,6 +336,8 @@ MonoBehaviour:
   nomeDaProximaSala: Casa
   nomeDaCenaDeTransicao: Porta
   nomeDoPontoDeSpawnNoDestino: 
+  idPuzzleQueDestranca: caldeirao
+  textoPortaAberta: 
   somPortaTrancada: {fileID: 0}
   volumeSomTrancada: 1
   audioSource: {fileID: 0}
@@ -497,8 +499,8 @@ Transform:
   m_GameObject: {fileID: 43421971}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.02, z: 0}
-  m_LocalScale: {x: 1.4, y: 1.4, z: 1}
+  m_LocalPosition: {x: 0, y: 0.107, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1113484865}
@@ -1151,7 +1153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ab39c851e0233dc459a27e9cb13cf86c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.372
+      value: -1.46
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ab39c851e0233dc459a27e9cb13cf86c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1204,7 +1206,7 @@ PrefabInstance:
     - target: {fileID: -1526964690268444965, guid: ab39c851e0233dc459a27e9cb13cf86c, type: 3}
       propertyPath: 'm_Materials.Array.data[5]'
       value: 
-      objectReference: {fileID: 2100000, guid: cfcc8ac70fcf6824b85f46bc95b96af9, type: 2}
+      objectReference: {fileID: 2100000, guid: d96187d830fd5c84595fe469c36099fe, type: 2}
     - target: {fileID: -1526964690268444965, guid: ab39c851e0233dc459a27e9cb13cf86c, type: 3}
       propertyPath: 'm_Materials.Array.data[6]'
       value: 
