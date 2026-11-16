@@ -13,6 +13,12 @@ public class PuzzleRelogioHumano : MonoBehaviour
     public float duracaoGiro = 1.4f;
     public bool inverterDirecao = false;
 
+    [Header("Volta às 12 horas (após acertar)")]
+    [Tooltip("Tempo, em segundos, entre o click e a estátua começar a voltar")]
+    public float atrasoAntesDeVoltar = 0.5f;
+    [Tooltip("Duração, em segundos, do giro de volta às 12 horas")]
+    public float duracaoVolta = 2f;
+
     [Header("Resistência (atrito)")]
     [Tooltip("1 = velocidade constante; 2 = acelera suave; 3 = começa bem lento e ganha velocidade até o fim")]
     [Range(1f, 5f)] public float aceleracao = 2.5f;
@@ -43,9 +49,10 @@ public class PuzzleRelogioHumano : MonoBehaviour
     private int progresso;   // quantos horários corretos já foram confirmados
     private bool girando;
     private bool concluido;
+    private bool voltando;
     private Quaternion rotacaoInicial;
 
-    public bool Ocupado => girando || concluido;
+    public bool Ocupado => girando || voltando || concluido;
     public int Progresso => progresso;
 
     public int HoraAtual => (((horaInicial - 1 + passo) % 12) + 12) % 12 + 1;
@@ -68,7 +75,7 @@ public class PuzzleRelogioHumano : MonoBehaviour
         if (inverterDirecao) direcao = -direcao;
 
         passo += direcao;
-        StartCoroutine(GirarEstatua());
+        StartCoroutine(GirarEstatua(duracaoGiro));
         return true;
     }
 
@@ -82,11 +89,11 @@ public class PuzzleRelogioHumano : MonoBehaviour
             aoAcertar?.Invoke(progresso);
             progresso++;
 
-            if (progresso >= sequencia.Length)
-            {
-                concluido = true;
-                aoConcluir?.Invoke();
-            }
+            bool ultimo = progresso >= sequencia.Length;
+            if (ultimo) concluido = true;
+
+            // Depois do click, a estátua volta às 12 horas para o próximo horário
+            StartCoroutine(VoltarAoDoze(ultimo));
         }
         else
         {
@@ -103,7 +110,29 @@ public class PuzzleRelogioHumano : MonoBehaviour
         Confirmar();
     }
 
-    private IEnumerator GirarEstatua()
+    private IEnumerator VoltarAoDoze(bool ultimo)
+    {
+        voltando = true;
+
+        if (atrasoAntesDeVoltar > 0f)
+            yield return new WaitForSeconds(atrasoAntesDeVoltar);
+
+        // Passos (de 30°) entre a posição atual e as 12 horas, pelo caminho mais curto
+        int alvo = 12 - horaInicial;
+        int delta = (((alvo - passo) % 12) + 12) % 12;
+        if (delta > 6) delta -= 12;
+
+        if (delta != 0 && estatua != null)
+        {
+            passo += delta;
+            yield return GirarEstatua(duracaoVolta);
+        }
+
+        voltando = false;
+        if (ultimo) aoConcluir?.Invoke();
+    }
+
+    private IEnumerator GirarEstatua(float duracao)
     {
         girando = true;
         Tocar(somGiro);
@@ -112,10 +141,10 @@ public class PuzzleRelogioHumano : MonoBehaviour
         Quaternion destino = rotacaoInicial * Quaternion.AngleAxis(passo * 30f, eixoGiro);
 
         float t = 0f;
-        while (t < duracaoGiro)
+        while (t < duracao)
         {
             t += Time.deltaTime;
-            float tn = Mathf.Clamp01(t / duracaoGiro);
+            float tn = Mathf.Clamp01(t / duracao);
 
             // Velocidade proporcional a tn^(aceleracao-1): parte quase parada e só aumenta até o fim
             float k = Mathf.Pow(tn, aceleracao);
