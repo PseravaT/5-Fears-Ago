@@ -92,8 +92,15 @@ public class PlayerInteractor : MonoBehaviour
         {
             if (objetosNaCaixa.Contains(interagivel)) return true;
 
-            // Fallback geométrico caso o objeto interagível não tenha colisor filho ou esteja em hierarchy profunda
-            Vector3 posLocal = caixaDeInteracao.transform.InverseTransformPoint(interagivel.transform.position) - caixaDeInteracao.center;
+            // Suporte total a Empty Objects ou objetos com pivô descentralizado:
+            // Checa a posição do objeto (e a de seus filhos/colisores caso existam)
+            Vector3 posAvaliar = interagivel.transform.position;
+            if (interagivel.TryGetComponent<Collider>(out var col))
+            {
+                posAvaliar = col.bounds.center;
+            }
+
+            Vector3 posLocal = caixaDeInteracao.transform.InverseTransformPoint(posAvaliar) - caixaDeInteracao.center;
             Vector3 metade = caixaDeInteracao.size * 0.5f;
             return Mathf.Abs(posLocal.x) <= metade.x &&
                    Mathf.Abs(posLocal.y) <= metade.y &&
@@ -119,9 +126,7 @@ public class PlayerInteractor : MonoBehaviour
         {
             if (!EstaDentroDaCaixa(interagivel)) continue;
 
-            Vector3 posAlvo = interagivel.TryGetComponent<Collider>(out var col)
-                ? col.ClosestPoint(pontoReferencia)
-                : interagivel.transform.position;
+            Vector3 posAlvo = ObterPontoMaisProximo(interagivel, pontoReferencia);
 
             float distancia = Vector3.Distance(pontoReferencia, posAlvo);
             
@@ -137,6 +142,22 @@ public class PlayerInteractor : MonoBehaviour
         {
             maisProximo.Interact();
         }
+    }
+
+    private Vector3 ObterPontoMaisProximo(Interagivel interagivel, Vector3 pontoOrigem)
+    {
+        if (interagivel.TryGetComponent<Collider>(out var col))
+        {
+            // MeshCollider não-convexo não suporta ClosestPoint na Unity
+            if (col is MeshCollider meshCol && !meshCol.convex)
+            {
+                return col.bounds.ClosestPoint(pontoOrigem);
+            }
+
+            return col.ClosestPoint(pontoOrigem);
+        }
+
+        return interagivel.transform.position;
     }
 }
 

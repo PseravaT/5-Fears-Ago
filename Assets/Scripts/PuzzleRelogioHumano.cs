@@ -13,10 +13,12 @@ public class PuzzleRelogioHumano : MonoBehaviour
     public float duracaoGiro = 1.4f;
     public bool inverterDirecao = false;
 
-    [Header("Volta às 12 horas (após acertar)")]
-    [Tooltip("Tempo, em segundos, entre o click e a estátua começar a voltar")]
-    public float atrasoAntesDeVoltar = 0.5f;
-    [Tooltip("Duração, em segundos, do giro de volta às 12 horas")]
+    [Header("Retorno ao Errar / Acertar")]
+    [Tooltip("Tempo em segundos de atraso antes de começar a voltar")]
+    public float atrasoAntesDeVoltar = 0.3f;
+    [Tooltip("Duração, em segundos, da volta rápida após errar")]
+    public float duracaoVoltaErro = 0.6f;
+    [Tooltip("Duração, em segundos, do giro de volta após acertar")]
     public float duracaoVolta = 2f;
 
     [Header("Resistência (atrito)")]
@@ -93,18 +95,56 @@ public class PuzzleRelogioHumano : MonoBehaviour
             progresso++;
 
             bool ultimo = progresso >= sequencia.Length;
-            if (ultimo) concluido = true;
-
-            // Depois do click, a estátua volta às 12 horas para o próximo horário
-            StartCoroutine(VoltarAoDoze(ultimo));
+            if (ultimo)
+            {
+                concluido = true;
+                aoConcluir?.Invoke();
+            }
         }
         else
         {
             Tocar(somErro);
-            aoErrar?.Invoke();
             if (reiniciarAoErrar) progresso = 0;
+
+            // Aplica 1 de dano no sistema global de vida / DamageSystem
+            if (SistemaDeVida.Instancia != null)
+            {
+                SistemaDeVida.Instancia.RegistrarErroPuzzle();
+            }
+            else
+            {
+                SistemaDeVida.RegistrarErroGlobal(1);
+            }
+
+            aoErrar?.Invoke();
+
+            // Volta rapidamente para a posição inicial (horaInicial)
+            StartCoroutine(VoltarParaHoraInicialRapido());
         }
         return true;
+    }
+
+    private IEnumerator VoltarParaHoraInicialRapido()
+    {
+        voltando = true;
+
+        if (atrasoAntesDeVoltar > 0f)
+            yield return new WaitForSeconds(atrasoAntesDeVoltar);
+
+        // Calcula a menor rotação para voltar exatamente ao passo 0 (horaInicial)
+        int delta = ((-passo % 12) + 12) % 12;
+        if (delta > 6) delta -= 12;
+
+        if (delta != 0 && estatua != null)
+        {
+            passo += delta;
+            aoMudarHora?.Invoke(HoraAtual);
+            yield return GirarEstatua(duracaoVoltaErro);
+        }
+
+        // Garante que o passo zerou na posição inicial exata
+        passo = 0;
+        voltando = false;
     }
 
     // Versão void para aparecer na lista de funções do UnityEvent (o Inspector não lista métodos com retorno)
