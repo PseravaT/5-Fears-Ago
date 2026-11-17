@@ -1,15 +1,36 @@
 using UnityEngine;
 using UnityEngine.InputSystem; // 1. Adicione o namespace do novo sistema
+using System.Collections.Generic;
 
 public class PlayerInteractor : MonoBehaviour
 {
     [Header("Configurações de Interação")]
     // 2. Troque KeyCode por Key
     [SerializeField] private Key botaoDeInteracao = Key.E; 
+    [Tooltip("Arraste aqui o objeto filho 'área interação' (BoxCollider) que fica na frente do Player.")]
+    [SerializeField] private BoxCollider caixaDeInteracao;
     [SerializeField] private float distanciaDeInteracao = 1.5f;
+
+    private readonly HashSet<Interagivel> objetosNaCaixa = new HashSet<Interagivel>();
+
+    void Awake()
+    {
+        if (caixaDeInteracao == null)
+        {
+            caixaDeInteracao = GetComponentInChildren<BoxCollider>();
+        }
+
+        if (caixaDeInteracao != null)
+        {
+            // Garante que a caixa nunca colida fisicamente com paredes ou portas
+            caixaDeInteracao.isTrigger = true;
+        }
+    }
 
     void Update()
     {
+        AtualizarObjetosNaCaixa();
+
         // Se um diálogo já estiver aberto (ou acabou de fechar neste exato frame com a tecla E),
         // não dispara uma nova interação por cima para não reiniciar o diálogo.
         if (GerenciadorDeDialogo.Instancia != null &&
@@ -41,22 +62,69 @@ public class PlayerInteractor : MonoBehaviour
         }
     }
 
+    private void AtualizarObjetosNaCaixa()
+    {
+        objetosNaCaixa.Clear();
+        if (caixaDeInteracao == null) return;
+
+        Transform t = caixaDeInteracao.transform;
+        Vector3 centroMundo = t.TransformPoint(caixaDeInteracao.center);
+        Vector3 metadeTamanho = Vector3.Scale(caixaDeInteracao.size * 0.5f, t.lossyScale);
+        metadeTamanho = new Vector3(Mathf.Abs(metadeTamanho.x), Mathf.Abs(metadeTamanho.y), Mathf.Abs(metadeTamanho.z));
+
+        // Detecta qualquer colisor interagível que esteja tocando ou dentro da caixa
+        Collider[] colisores = Physics.OverlapBox(centroMundo, metadeTamanho, t.rotation, ~0, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < colisores.Length; i++)
+        {
+            Interagivel inter = colisores[i].GetComponentInParent<Interagivel>();
+            if (inter != null && inter.CanInteract())
+            {
+                objetosNaCaixa.Add(inter);
+            }
+        }
+    }
+
+    public bool EstaDentroDaCaixa(Interagivel interagivel)
+    {
+        if (interagivel == null || !interagivel.CanInteract()) return false;
+
+        if (caixaDeInteracao != null)
+        {
+            if (objetosNaCaixa.Contains(interagivel)) return true;
+
+            // Fallback geométrico caso o objeto interagível não tenha colisor filho ou esteja em hierarchy profunda
+            Vector3 posLocal = caixaDeInteracao.transform.InverseTransformPoint(interagivel.transform.position) - caixaDeInteracao.center;
+            Vector3 metade = caixaDeInteracao.size * 0.5f;
+            return Mathf.Abs(posLocal.x) <= metade.x &&
+                   Mathf.Abs(posLocal.y) <= metade.y &&
+                   Mathf.Abs(posLocal.z) <= metade.z;
+        }
+
+        return Vector3.Distance(transform.position, interagivel.transform.position) <= distanciaDeInteracao;
+    }
+
     void TentarInteragir()
     {
         // Pega todos os objetos interagíveis da cena
         Interagivel[] todosInteragiveis = Object.FindObjectsByType<Interagivel>(FindObjectsSortMode.None);
         
         Interagivel maisProximo = null;
-        float menorDistancia = distanciaDeInteracao;
+        float menorDistancia = caixaDeInteracao != null ? float.MaxValue : distanciaDeInteracao;
+        Vector3 pontoReferencia = caixaDeInteracao != null
+            ? caixaDeInteracao.transform.TransformPoint(caixaDeInteracao.center)
+            : transform.position;
 
-        // Vasculha para encontrar qual está perto o suficiente do jogador
+        // Vasculha para encontrar qual está dentro da caixa (e mais perto do centro dela)
         foreach (var interagivel in todosInteragiveis)
         {
-            if (!interagivel.CanInteract()) continue;
+            if (!EstaDentroDaCaixa(interagivel)) continue;
 
-            float distancia = Vector3.Distance(transform.position, interagivel.transform.position);
+            Vector3 posAlvo = interagivel.TryGetComponent<Collider>(out var col)
+                ? col.ClosestPoint(pontoReferencia)
+                : interagivel.transform.position;
+
+            float distancia = Vector3.Distance(pontoReferencia, posAlvo);
             
-            // Se estiver dentro da distância e for o mais perto até agora, salva a referência
             if (distancia <= menorDistancia)
             {
                 maisProximo = interagivel;
@@ -64,10 +132,11 @@ public class PlayerInteractor : MonoBehaviour
             }
         }
 
-        // Se encontrou algo perto o suficiente, aperta o "gatilho"
+        // Se encontrou algo perto o suficiente dentro da caixa, aperta o "gatilho"
         if (maisProximo != null)
         {
             maisProximo.Interact();
         }
     }
 }
+

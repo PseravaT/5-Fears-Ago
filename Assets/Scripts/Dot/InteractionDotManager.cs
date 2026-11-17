@@ -22,9 +22,13 @@ public class InteractionDotManager : MonoBehaviour
 
     private List<Interagivel> allInteractables = new List<Interagivel>();
     private Dictionary<Interagivel, RectTransform> dotInstances = new Dictionary<Interagivel, RectTransform>();
+    private PlayerInteractor playerInteractor;
 
     void Start()
     {
+        if (player != null)
+            playerInteractor = player.GetComponent<PlayerInteractor>();
+
         // Busca todos os objetos interagíveis na cena
         allInteractables.AddRange(Object.FindObjectsByType<Interagivel>(FindObjectsSortMode.None));
 
@@ -91,7 +95,11 @@ public class InteractionDotManager : MonoBehaviour
 
             // 5. Lógica de animação de tamanho (escala)
             float targetSize = normalSize;
-            if (distanceToPlayer <= expandDotRadius)
+            bool estaDentro = playerInteractor != null
+                ? playerInteractor.EstaDentroDaCaixa(interactable)
+                : (distanceToPlayer <= expandDotRadius);
+
+            if (estaDentro)
             {
                 targetSize = expandedSize;
             }

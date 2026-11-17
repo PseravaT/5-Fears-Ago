@@ -39,6 +39,8 @@ public class PuzzleRelogioHumano : MonoBehaviour
     public AudioSource audioSource;
 
     [Header("Eventos")]
+    [Tooltip("Chamado sempre que a estátua muda a hora apontada (1 a 12)")]
+    public UnityEvent<int> aoMudarHora;
     [Tooltip("Chamado a cada horário correto; o parâmetro é o índice do horário (0 a 4)")]
     public UnityEvent<int> aoAcertar;
     [Tooltip("Ligue aqui a mecânica de sanidade/tensão")]
@@ -75,6 +77,7 @@ public class PuzzleRelogioHumano : MonoBehaviour
         if (inverterDirecao) direcao = -direcao;
 
         passo += direcao;
+        aoMudarHora?.Invoke(HoraAtual);
         StartCoroutine(GirarEstatua(duracaoGiro));
         return true;
     }
@@ -125,6 +128,7 @@ public class PuzzleRelogioHumano : MonoBehaviour
         if (delta != 0 && estatua != null)
         {
             passo += delta;
+            aoMudarHora?.Invoke(HoraAtual);
             yield return GirarEstatua(duracaoVolta);
         }
 
