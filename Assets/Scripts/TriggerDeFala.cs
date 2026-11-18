@@ -3,9 +3,18 @@ using System.Collections; // Obrigatório para usar temporizadores (IEnumerator)
 
 public class TriggerDeFala : MonoBehaviour
 {
-    [Header("Configurações do Texto")]
+    [Header("Configurações do Texto (Muda conforme o Dano)")]
+    [Tooltip("Fala quando está sem dano (Verde / 3 Vidas)")]
     [TextArea(3, 5)] 
     public string mensagemDoGatilho;
+
+    [Tooltip("Opcional: Fala quando está no 1º nível de dano (Laranja / 2 Vidas)")]
+    [TextArea(3, 5)]
+    public string mensagemDano1Laranja;
+
+    [Tooltip("Opcional: Fala quando está no 2º nível de dano (Vermelho / 1 Vida)")]
+    [TextArea(3, 5)]
+    public string mensagemDano2Vermelho;
     
     [Tooltip("Quantos segundos o texto vai ficar na tela antes de sumir?")]
     public float tempoNaTela = 4f; 
@@ -23,7 +32,13 @@ public class TriggerDeFala : MonoBehaviour
 
             if (gerenciadorDeDialogo != null)
             {
-                gerenciadorDeDialogo.MostrarTexto(mensagemDoGatilho);
+                string falaEscolhida = GerenciadorDeDialogo.EscolherTextoPorDano(
+                    mensagemDoGatilho,
+                    mensagemDano1Laranja,
+                    mensagemDano2Vermelho
+                );
+
+                gerenciadorDeDialogo.MostrarTexto(falaEscolhida);
                 
                 // Inicia o cronômetro para esconder o texto
                 StartCoroutine(EsconderDepoisDeTempo());

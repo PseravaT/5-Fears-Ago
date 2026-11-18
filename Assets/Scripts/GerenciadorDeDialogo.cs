@@ -220,17 +220,61 @@ public class GerenciadorDeDialogo : MonoBehaviour
 
     /// <summary>
     /// Sobrecarga para uma única string (mantém compatibilidade com o Inspector / scripts existentes).
-    /// Dica: se usar '|' no texto do Inspector, ele divide automaticamente em várias falas!
+    /// - Use '#' para separar variações por nível de dano: "Fala Verde # Fala Laranja # Fala Vermelha"
+    /// - Use '|' para dividir em várias falas seguidas na mesma interação!
     /// </summary>
     public void MostrarTexto(string mensagem)
     {
         if (string.IsNullOrEmpty(mensagem)) return;
+
+        // Se o texto tiver '#', escolhe automaticamente a variação correspondente ao nível de dano atual (0, 1 ou 2)
+        if (mensagem.Contains("#"))
+        {
+            string[] porDano = mensagem.Split('#');
+            int estagio = ObterEstagioDeDanoAtual();
+            int indiceEscolhido = Mathf.Clamp(estagio, 0, porDano.Length - 1);
+            mensagem = porDano[indiceEscolhido].Trim();
+        }
 
         string[] partes = mensagem.Contains("|")
             ? mensagem.Split('|')
             : new string[] { mensagem };
 
         IniciarSequenciaDeFalas(partes);
+    }
+
+    /// <summary>
+    /// Retorna a fala correspondente ao nível de dano atual (0 = Verde/Normal, 1 = Laranja, 2+ = Vermelho).
+    /// Se a fala daquele estágio estiver vazia, usa a anterior como fallback.
+    /// </summary>
+    public static string EscolherTextoPorDano(string textoVerdeNormal, string textoLaranjaDano1, string textoVermelhoDano2)
+    {
+        int estagio = ObterEstagioDeDanoAtual();
+
+        if (estagio >= 2)
+        {
+            if (!string.IsNullOrWhiteSpace(textoVermelhoDano2)) return textoVermelhoDano2;
+            if (!string.IsNullOrWhiteSpace(textoLaranjaDano1)) return textoLaranjaDano1;
+            return textoVerdeNormal;
+        }
+
+        if (estagio == 1)
+        {
+            if (!string.IsNullOrWhiteSpace(textoLaranjaDano1)) return textoLaranjaDano1;
+            return textoVerdeNormal;
+        }
+
+        return textoVerdeNormal;
+    }
+
+    public static int ObterEstagioDeDanoAtual()
+    {
+        int estagio = SistemaDeVida.EstagioGlobalAtual;
+        if (DamageSystem.Instancia != null)
+        {
+            estagio = Mathf.Max(estagio, DamageSystem.Instancia.Hits);
+        }
+        return estagio;
     }
 
     /// <summary>

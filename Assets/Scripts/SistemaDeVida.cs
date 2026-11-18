@@ -54,6 +54,10 @@ public class SistemaDeVida : MonoBehaviour
     public UnityEvent aoResetarVida;
 
     // Propriedades públicas para consulta via código
+    public static int EstagioGlobalAtual => s_estagioAtual;
+    public static int VidaGlobalAtual => Mathf.Max(0, s_vidaMaxima - s_estagioAtual);
+    public static event System.Action<int> AoMudarEstagioGlobal;
+
     public int VidaMaxima => s_vidaMaxima;
     public int VidaAtual => Mathf.Max(0, s_vidaMaxima - s_estagioAtual);
     public int EstagioAtual => s_estagioAtual;
@@ -67,6 +71,7 @@ public class SistemaDeVida : MonoBehaviour
         s_estagioAtual = 0;
         s_inicializado = false;
         Instancia = null;
+        AoMudarEstagioGlobal = null;
     }
 
     void Awake()
@@ -192,6 +197,7 @@ public class SistemaDeVida : MonoBehaviour
         }
 
         DispararEventosDeEstagio(estagioAnterior, s_estagioAtual);
+        AoMudarEstagioGlobal?.Invoke(s_estagioAtual);
     }
 
     /// <summary>
@@ -216,6 +222,8 @@ public class SistemaDeVida : MonoBehaviour
             aoResetarVida?.Invoke();
         else if (novoEstagio > estagioAnterior)
             DispararEventosDeEstagio(estagioAnterior, novoEstagio);
+
+        AoMudarEstagioGlobal?.Invoke(s_estagioAtual);
     }
 
     /// <summary>
@@ -236,6 +244,8 @@ public class SistemaDeVida : MonoBehaviour
 
         if (s_estagioAtual == 0)
             aoResetarVida?.Invoke();
+
+        AoMudarEstagioGlobal?.Invoke(s_estagioAtual);
     }
 
     /// <summary>
@@ -253,6 +263,7 @@ public class SistemaDeVida : MonoBehaviour
         }
 
         aoResetarVida?.Invoke();
+        AoMudarEstagioGlobal?.Invoke(s_estagioAtual);
     }
 
     // =========================================================================
@@ -307,6 +318,11 @@ public class SistemaDeVida : MonoBehaviour
                 Instancia.DispararEventosDeEstagio(anterior, s_estagioAtual);
             else if (s_estagioAtual == 0 && anterior > 0)
                 Instancia.aoResetarVida?.Invoke();
+        }
+
+        if (s_estagioAtual != anterior)
+        {
+            AoMudarEstagioGlobal?.Invoke(s_estagioAtual);
         }
     }
 

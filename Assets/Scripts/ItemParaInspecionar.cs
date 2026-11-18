@@ -12,23 +12,45 @@ public class ItemParaInspecionar : MonoBehaviour
     public Vector3 rotacaoInicial = Vector3.zero;
 
     [Header("História do Objeto (Tecla Q)")]
-    [Tooltip("Texto customizado que aparece ao apertar Q durante a inspeção")]
+    [Tooltip("Texto customizado que aparece ao apertar Q durante a inspeção (Estágio 0 / Normal)")]
     [TextArea(5, 10)]
     public string textoDetalhado;
 
+    [Tooltip("Opcional: Texto da tecla Q quando estiver no 1º nível de dano (Laranja)")]
+    [TextArea(3, 6)]
+    public string textoDetalhadoDano1Laranja;
+
+    [Tooltip("Opcional: Texto da tecla Q quando estiver no 2º nível de dano (Vermelho)")]
+    [TextArea(3, 6)]
+    public string textoDetalhadoDano2Vermelho;
+
     [Header("Diálogo Prévio (Opcional)")]
-    [Tooltip("Se preenchido, exibe este monólogo/diálogo antes de abrir o 3D. O 3D só abre quando o jogador apertar E na última frase!")]
+    [Tooltip("Se preenchido, exibe este monólogo/diálogo antes de abrir o 3D (Estágio 0 / Normal)")]
     [TextArea(2, 4)]
     public string dialogoAntesDeInspecionar;
+
+    [Tooltip("Opcional: Diálogo antes de inspecionar no 1º nível de dano (Laranja)")]
+    [TextArea(2, 4)]
+    public string dialogoDano1Laranja;
+
+    [Tooltip("Opcional: Diálogo antes de inspecionar no 2º nível de dano (Vermelho)")]
+    [TextArea(2, 4)]
+    public string dialogoDano2Vermelho;
 
     // Conecte esta função no seu "On Interact ()" do Interagivel
     public void MandarParaAInspecao()
     {
-        if (!string.IsNullOrEmpty(dialogoAntesDeInspecionar) && GerenciadorDeDialogo.Instancia != null)
+        string dialogoEscolhido = GerenciadorDeDialogo.EscolherTextoPorDano(
+            dialogoAntesDeInspecionar,
+            dialogoDano1Laranja,
+            dialogoDano2Vermelho
+        );
+
+        if (!string.IsNullOrEmpty(dialogoEscolhido) && GerenciadorDeDialogo.Instancia != null)
         {
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(AbrirInspecaoAposDialogo);
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.AddListener(AbrirInspecaoAposDialogo);
-            GerenciadorDeDialogo.Instancia.MostrarTexto(dialogoAntesDeInspecionar);
+            GerenciadorDeDialogo.Instancia.MostrarTexto(dialogoEscolhido);
             return;
         }
 
@@ -49,10 +71,16 @@ public class ItemParaInspecionar : MonoBehaviour
     {
         if (GerenciadorDeInspecao.Instancia != null && modeloDoObjeto != null)
         {
+            string historiaEscolhida = GerenciadorDeDialogo.EscolherTextoPorDano(
+                textoDetalhado,
+                textoDetalhadoDano1Laranja,
+                textoDetalhadoDano2Vermelho
+            );
+
             GerenciadorDeInspecao.Instancia.IniciarInspecao(
                 modeloDoObjeto,
                 Quaternion.Euler(rotacaoInicial),
-                textoDetalhado
+                historiaEscolhida
             );
         }
         else

@@ -3,14 +3,31 @@ using UnityEngine.Events;
 
 public class DialogoEInspecao : MonoBehaviour
 {
-    [Header("1. Fala Inicial")]
+    [Header("1. Fala Inicial (Muda conforme o Dano)")]
+    [Tooltip("Fala quando está sem dano (Verde / 3 Vidas)")]
     [TextArea(2, 4)]
     public string falaDoPersonagem = "Acho que a Mãe lia para mim";
+
+    [Tooltip("Opcional: Fala quando está no 1º nível de dano (Laranja / 2 Vidas)")]
+    [TextArea(2, 4)]
+    public string falaDano1Laranja;
+
+    [Tooltip("Opcional: Fala quando está no 2º nível de dano (Vermelho / 1 Vida)")]
+    [TextArea(2, 4)]
+    public string falaDano2Vermelho;
 
     [Header("2. Modelo 3D e História (Tecla Q)")]
     public GameObject modelo3DParaInspecao;
     [TextArea(5, 10)]
     public string textoDetalhado;
+
+    [Tooltip("Opcional: Texto da tecla Q no 1º nível de dano (Laranja)")]
+    [TextArea(3, 6)]
+    public string textoDetalhadoDano1Laranja;
+
+    [Tooltip("Opcional: Texto da tecla Q no 2º nível de dano (Vermelho)")]
+    [TextArea(3, 6)]
+    public string textoDetalhadoDano2Vermelho;
 
     // Chamado pelo On Interact() do objeto
     public void IniciarInteracao()
@@ -21,8 +38,14 @@ public class DialogoEInspecao : MonoBehaviour
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(AoFinalizarFala);
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.AddListener(AoFinalizarFala);
 
-            // Inicia o diálogo com a frase configurada
-            GerenciadorDeDialogo.Instancia.MostrarTexto(falaDoPersonagem);
+            string falaEscolhida = GerenciadorDeDialogo.EscolherTextoPorDano(
+                falaDoPersonagem,
+                falaDano1Laranja,
+                falaDano2Vermelho
+            );
+
+            // Inicia o diálogo com a frase correspondente ao nível de dano
+            GerenciadorDeDialogo.Instancia.MostrarTexto(falaEscolhida);
         }
         else
         {
@@ -46,12 +69,13 @@ public class DialogoEInspecao : MonoBehaviour
     {
         if (GerenciadorDeInspecao.Instancia != null)
         {
-            if (GerenciadorDeInspecao.Instancia.componenteTextoHistoria != null)
-            {
-                GerenciadorDeInspecao.Instancia.componenteTextoHistoria.text = textoDetalhado;
-            }
+            string historiaEscolhida = GerenciadorDeDialogo.EscolherTextoPorDano(
+                textoDetalhado,
+                textoDetalhadoDano1Laranja,
+                textoDetalhadoDano2Vermelho
+            );
 
-            GerenciadorDeInspecao.Instancia.IniciarInspecao(modelo3DParaInspecao);
+            GerenciadorDeInspecao.Instancia.IniciarInspecao(modelo3DParaInspecao, historiaEscolhida);
         }
     }
 }
