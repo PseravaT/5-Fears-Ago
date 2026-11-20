@@ -38,7 +38,7 @@ Material:
     - _Desaturation: 0.1
     - _EdgeRough: 0.164
     - _EdgeSize: 0.15
-    - _FlickerAmount: 0.015
+    - _FlickerAmount: 0
     - _FlickerSpeed: 8
     - _HighlightEnd: 0.7
     - _HighlightStart: 0.25

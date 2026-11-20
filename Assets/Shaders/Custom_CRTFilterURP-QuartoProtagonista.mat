@@ -38,12 +38,12 @@ Material:
     - _Desaturation: 0.167
     - _EdgeRough: 0.164
     - _EdgeSize: 0.15
-    - _FlickerAmount: 0.015
+    - _FlickerAmount: 0
     - _FlickerSpeed: 8
     - _HighlightEnd: 0.7
     - _HighlightStart: 0.25
     - _HitFlash: 0
-    - _MaskIntensity: 0.34
+    - _MaskIntensity: 0.128
     - _NoiseAmount: 0.004
     - _PulseAmount: 0
     - _PulsePhase: 0
@@ -51,7 +51,7 @@ Material:
     - _RollAmount: 0
     - _RollSpeed: 0.15
     - _ScanlineCount: 300
-    - _ScanlineIntensity: 0.21
+    - _ScanlineIntensity: 0.283
     - _VeinBoil: 0.8
     - _VeinDensity: 12
     - _VeinFps: 10

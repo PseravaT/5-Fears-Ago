@@ -34,18 +34,18 @@ Material:
     - _Curvature: 0.116
     - _DamageDarkness: 0
     - _DamageLevel: 0
-    - _DamageTint: 1
+    - _DamageTint: 0.75
     - _Desaturation: 1
-    - _EdgeRough: 1
-    - _EdgeSize: 1.5
-    - _FlickerAmount: 0.001
+    - _EdgeRough: 0.164
+    - _EdgeSize: 0.15
+    - _FlickerAmount: 0
     - _FlickerSpeed: 8
     - _HighlightEnd: 0.01
     - _HighlightStart: 0
     - _HitFlash: 0
     - _MaskIntensity: 0
-    - _NoiseAmount: 0.043
-    - _PulseAmount: 0.6
+    - _NoiseAmount: 0.004
+    - _PulseAmount: 0
     - _PulsePhase: 0
     - _RGBShift: 0
     - _RollAmount: 0

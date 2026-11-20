@@ -38,7 +38,7 @@ Material:
     - _Desaturation: 0.167
     - _EdgeRough: 0.164
     - _EdgeSize: 0.15
-    - _FlickerAmount: 0.015
+    - _FlickerAmount: 0
     - _FlickerSpeed: 8
     - _HighlightEnd: 0.7
     - _HighlightStart: 0.25
@@ -48,7 +48,7 @@ Material:
     - _PulseAmount: 0
     - _PulsePhase: 0
     - _RGBShift: 0.0007
-    - _RollAmount: 0.035
+    - _RollAmount: 0
     - _RollSpeed: 0.15
     - _ScanlineCount: 300
     - _ScanlineIntensity: 0.14

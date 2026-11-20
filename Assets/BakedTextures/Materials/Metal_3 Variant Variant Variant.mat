@@ -48,8 +48,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metallic: 0.58
-    - _Smoothness: 0.675
+    - _Metallic: 0
+    - _Smoothness: 0.572
     m_Colors:
     - _BaseColor: {r: 0.509434, g: 0.44157022, b: 0.35804558, a: 1}
     - _Color: {r: 0.509434, g: 0.4415702, b: 0.35804555, a: 1}

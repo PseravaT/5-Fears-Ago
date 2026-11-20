@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
   m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
+  m_AdditionalLightsShadowResolutionTier: -1
   m_CustomShadowLayers: 0
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
@@ -363,8 +363,8 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 2
-    m_Resolution: -1
+    m_Type: 0
+    m_Resolution: 128
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
@@ -739,7 +739,11 @@ MonoBehaviour:
   modeloDoObjeto: {fileID: 6588905482967169688}
   rotacaoInicial: {x: 0, y: 0, z: 0}
   textoDetalhado: 
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
 --- !u!114 &226309531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1378,6 +1382,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
       propertyPath: field of view
       value: 77.31962
       objectReference: {fileID: 0}
@@ -1405,9 +1413,29 @@ PrefabInstance:
       propertyPath: orthographic size
       value: 0.6000001
       objectReference: {fileID: 0}
+    - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5351460289728673, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1670513145879894561, guid: 76718811bed164b41a319f830aba6444, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648848327292034965, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_RendererIndex
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648848327292034965, guid: 76718811bed164b41a319f830aba6444, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5383984365035264893, guid: 76718811bed164b41a319f830aba6444, type: 3}
       propertyPath: m_LocalPosition.x

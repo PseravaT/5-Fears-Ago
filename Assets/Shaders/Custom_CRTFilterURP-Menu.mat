@@ -38,13 +38,13 @@ Material:
     - _Desaturation: 0.04
     - _EdgeRough: 0.6
     - _EdgeSize: 0.5
-    - _FlickerAmount: 0.015
+    - _FlickerAmount: 0
     - _FlickerSpeed: 8
     - _HighlightEnd: 0.63
     - _HighlightStart: 0.62
     - _HitFlash: 0
     - _MaskIntensity: 0.35
-    - _NoiseAmount: 0.003
+    - _NoiseAmount: 0.004
     - _PulseAmount: 0.25
     - _PulsePhase: 0
     - _RGBShift: 0.0006
