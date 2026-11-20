@@ -102,14 +102,31 @@ public class QuadroReativoAoDano : MonoBehaviour
             if (meshRendererDoQuadro != null)
             {
                 Material[] mats = meshRendererDoQuadro.sharedMaterials;
-                int slot = Mathf.Clamp(indiceDoMaterialNoMesh, 0, Mathf.Max(0, mats.Length - 1));
-                if (mats.Length > 0 && mats[slot] != matEscolhido)
+                int slot = EncontrarIndiceDoMaterial(mats);
+                if (mats.Length > 0 && slot >= 0 && slot < mats.Length && mats[slot] != matEscolhido)
                 {
                     mats[slot] = matEscolhido;
                     meshRendererDoQuadro.sharedMaterials = mats;
                 }
             }
         }
+    }
+
+    private int EncontrarIndiceDoMaterial(Material[] mats)
+    {
+        if (mats == null || mats.Length == 0) return -1;
+
+        // Procura automaticamente o slot que contém qualquer um dos materiais configurados (Verde, Laranja ou Vermelho)
+        for (int i = 0; i < mats.Length; i++)
+        {
+            if (mats[i] != null && (mats[i] == materialVerde || mats[i] == materialLaranja || mats[i] == materialVermelho))
+            {
+                return i;
+            }
+        }
+
+        // Fallback: usa o índice configurado no Inspector
+        return Mathf.Clamp(indiceDoMaterialNoMesh, 0, mats.Length - 1);
     }
 
     private void AplicarTexturaNoMaterial(Material mat, Texture2D tex)
