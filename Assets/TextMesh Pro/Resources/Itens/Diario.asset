@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2a5e941053fe44a9d41e747327437e, type: 3}
+  m_Name: Diario
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  id: 02
+  nomeDoItem: Diario
+  icone: {fileID: 21300000, guid: 60ff06d110eba624297a3aba39a3dacc, type: 3}
+  descricaoCurta: 
+  posicaoInicialInspecao: {x: 0, y: 0, z: 0}
+  modelo3D: {fileID: 2173939101591531462, guid: 0213dd1a6642ec244ae376617b526e1b, type: 3}
+  rotacaoInicialGraus: {x: 180, y: 0, z: 180}
+  usarRotacaoPropriaNaInspecao: 1
+  rotacaoNaInspecaoGraus: {x: 180, y: 0, z: 180}
+  textoDetalhado: 

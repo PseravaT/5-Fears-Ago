@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ValvulaCofre : MonoBehaviour
 {
@@ -43,6 +44,10 @@ public class ValvulaCofre : MonoBehaviour
     [SerializeField] private AudioClip somAbrindo;
     [SerializeField, Range(0f, 1f)] private float volume = 1f;
 
+    [Header("Salvar estado")]
+    [Tooltip("ID para lembrar que este cofre já foi aberto. Se vazio, usa 'NomeDaCena_NomeDoObjeto'")]
+    [SerializeField] private string idParaSalvar = "";
+
     public bool Ocupada { get; private set; }
     public bool Aberto { get; private set; }
 
@@ -52,6 +57,19 @@ public class ValvulaCofre : MonoBehaviour
     private Quaternion rotPortaInicial = Quaternion.identity;
     private Quaternion rotPorta2Inicial = Quaternion.identity;
     private AudioSource fonte;
+
+    /// <summary>Chave do EstadoDoJogo. Tira o "(Clone)" para a cópia da inspeção usar o mesmo ID do original.</summary>
+    private string ChaveDeEstado
+    {
+        get
+        {
+            string id = string.IsNullOrWhiteSpace(idParaSalvar)
+                ? SceneManager.GetActiveScene().name + "_" + name.Replace("(Clone)", "").Trim()
+                : idParaSalvar.Trim();
+
+            return "cofre_aberto_" + id.Replace(",", "_");
+        }
+    }
 
     private void Awake()
     {
@@ -63,6 +81,13 @@ public class ValvulaCofre : MonoBehaviour
         if (fonte == null) fonte = gameObject.AddComponent<AudioSource>();
         fonte.playOnAwake = false;
         fonte.spatialBlend = 0f;
+    }
+
+    private void Start()
+    {
+        // Se o cofre já foi aberto antes (ex.: o jogador saiu da cena e voltou), ele já nasce aberto
+        if (EstadoDoJogo.PuzzleConcluido(ChaveDeEstado))
+            DefinirAberto();
     }
 
     /// <summary>correta = false faz o vai e volta; true faz o giro completo e abre as portas.</summary>
@@ -108,6 +133,10 @@ public class ValvulaCofre : MonoBehaviour
 
         Aberto = true;
         Ocupada = false;
+
+        // Guarda que o cofre foi aberto, para continuar aberto se a cena for recarregada
+        EstadoDoJogo.MarcarPuzzleConcluido(ChaveDeEstado);
+
         AoTerminarAnimacao?.Invoke();
     }
 

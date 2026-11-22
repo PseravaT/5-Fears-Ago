@@ -53,6 +53,13 @@ public class InteractionDotManager : MonoBehaviour
             Interagivel interactable = pair.Key;
             RectTransform dotTransform = pair.Value;
 
+            // Objeto destruído ou desativado (ex: item coletado): esconde só a bolinha DELE
+            if (interactable == null || !interactable.gameObject.activeInHierarchy)
+            {
+                if (dotTransform != null) dotTransform.gameObject.SetActive(false);
+                continue;
+            }
+
             // Se o objeto não puder mais ser interagido (ex: já pegou a chave), esconde
             if (!interactable.CanInteract())
             {
@@ -128,6 +135,7 @@ public class InteractionDotManager : MonoBehaviour
     }
 
     // Função para ligar/desligar todo o sistema via UnityEvents
+    // (afeta TODAS as bolinhas do cenário: não use para esconder só um item)
     public void AlternarDots(bool mostrar)
     {
         this.enabled = mostrar; 

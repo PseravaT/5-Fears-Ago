@@ -44,14 +44,14 @@ Material:
     - _HighlightStart: 0.62
     - _HitFlash: 0
     - _MaskIntensity: 0.35
-    - _NoiseAmount: 0.004
+    - _NoiseAmount: 0.001
     - _PulseAmount: 0.25
     - _PulsePhase: 0
     - _RGBShift: 0.0006
     - _RollAmount: 0
     - _RollSpeed: 0.15
     - _ScanlineCount: 240
-    - _ScanlineIntensity: 0.73
+    - _ScanlineIntensity: 0.2
     - _VeinBoil: 0.8
     - _VeinDensity: 12
     - _VeinFps: 10
@@ -62,7 +62,7 @@ Material:
     - _VeinReach: 0
     - _VeinRough: 0.5
     - _VeinWidth: 0.06
-    - _Vignette: 0.32
+    - _Vignette: 0.19
     m_Colors:
     - _BrushColor: {r: 0.02, g: 0.02, b: 0.02, a: 1}
     - _DamageColor: {r: 0, g: 0, b: 0, a: 0}

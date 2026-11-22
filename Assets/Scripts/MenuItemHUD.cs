@@ -63,6 +63,9 @@ public class MenuItemHUD : MonoBehaviour,
     // O mouse passando por cima também seleciona, igual ao teclado
     public void OnPointerEnter(PointerEventData eventData)
     {
+        var alvo = GetComponent<Selectable>();
+        if (alvo != null && !alvo.IsInteractable()) return;
+
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(gameObject);
     }

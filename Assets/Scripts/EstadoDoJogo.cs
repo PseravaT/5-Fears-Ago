@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -10,6 +11,10 @@ public static class EstadoDoJogo
     private const string Prefixo = "puzzle_";
     private const string ChaveLista = "puzzles_ids"; // guarda os IDs salvos, para poder limpar só os nossos
     private const string ChaveItens = "inventario_ids"; // IDs dos itens, na ordem em que foram coletados
+    private const string ChaveCena = "ultima_cena"; // última cena de jogo visitada (usada pelo "Continuar")
+
+    /// <summary>Cenas que NÃO contam como "progresso": o Continuar nunca volta para elas. Ajuste os nomes se precisar.</summary>
+    private static readonly string[] CenasQueNaoSalvam = { "Menu", "Cutscene_Menu" };
 
     private static readonly HashSet<string> puzzlesConcluidos = new HashSet<string>();
 
@@ -98,9 +103,51 @@ public static class EstadoDoJogo
         PlayerPrefs.Save();
     }
 
+    // ---------- CONTINUAR (última cena) ----------
+
+    /// <summary>Nome da última cena de jogo visitada. Vazio se não há jogo salvo.</summary>
+    public static string UltimaCena => PlayerPrefs.GetString(ChaveCena, "");
+
+    public static bool TemJogoSalvo => !string.IsNullOrEmpty(UltimaCena);
+
+    public static void SalvarCena(string nomeDaCena)
+    {
+        if (string.IsNullOrEmpty(nomeDaCena)) return;
+
+        PlayerPrefs.SetString(ChaveCena, nomeDaCena);
+        PlayerPrefs.Save();
+    }
+
+    // Salva a cena automaticamente toda vez que uma cena de jogo é carregada
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void RegistrarSalvamentoDeCena()
+    {
+        SceneManager.sceneLoaded -= AoCarregarCena;
+        SceneManager.sceneLoaded += AoCarregarCena;
+
+        // a primeira cena já carregou antes de nos registrarmos
+        SalvarCenaSeForDeJogo(SceneManager.GetActiveScene().name);
+    }
+
+    private static void AoCarregarCena(Scene cena, LoadSceneMode modo)
+    {
+        if (modo == LoadSceneMode.Single)
+            SalvarCenaSeForDeJogo(cena.name);
+    }
+
+    private static void SalvarCenaSeForDeJogo(string nomeDaCena)
+    {
+        foreach (string excluida in CenasQueNaoSalvam)
+        {
+            if (string.Equals(nomeDaCena, excluida, StringComparison.OrdinalIgnoreCase)) return;
+        }
+
+        SalvarCena(nomeDaCena);
+    }
+
     // ---------- LIMPEZA ----------
 
-    /// <summary>Apaga todo o progresso (puzzles e inventário). Não mexe em outros PlayerPrefs.</summary>
+    /// <summary>Apaga todo o progresso (puzzles, inventário e última cena). Não mexe em outros PlayerPrefs (ex.: opções).</summary>
     public static void LimparTudo()
     {
         puzzlesConcluidos.Clear();
@@ -114,9 +161,11 @@ public static class EstadoDoJogo
         itensCarregados = true;
         PlayerPrefs.DeleteKey(ChaveItens);
 
+        PlayerPrefs.DeleteKey(ChaveCena);
+
         PlayerPrefs.Save();
         AoMudarInventario?.Invoke();
-        Debug.Log("[EstadoDoJogo] Progresso dos puzzles e inventário apagados.");
+        Debug.Log("[EstadoDoJogo] Progresso apagado (puzzles, inventário e última cena).");
     }
 
 #if UNITY_EDITOR

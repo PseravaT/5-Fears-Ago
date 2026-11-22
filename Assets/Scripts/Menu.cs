@@ -1,6 +1,8 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -12,6 +14,21 @@ public class Menu : MonoBehaviour
     public CanvasGroup painelDialogo;
     public CanvasGroup fade;
     public TMP_Text legenda;
+
+    [Header("Outros botões do menu")]
+    public Button botaoContinuar;
+    public Button botaoOpcoes;
+    public Button botaoSair;
+
+    [Header("Painel de Opções")]
+    [Tooltip("CanvasGroup do painel de opções (começa escondido)")]
+    public CanvasGroup painelOpcoes;
+    public Button botaoVoltarOpcoes;
+    [Tooltip("Primeiro item a ser selecionado ao abrir as opções (o slider de volume)")]
+    public Selectable primeiroItemOpcoes;
+
+    [Header("Saída")]
+    public float duracaoFadeSaida = 0.6f;
 
     [Header("Telefone")]
     public VisorTelefone visor;
@@ -60,19 +77,140 @@ public class Menu : MonoBehaviour
         fade.blocksRaycasts = false;
         if (painelDialogo) { painelDialogo.alpha = 0; painelDialogo.blocksRaycasts = false; }
         if (legenda) legenda.text = "";
+
         botaoJogar.onClick.AddListener(Jogar);
+
+        if (botaoContinuar)
+        {
+            botaoContinuar.onClick.AddListener(Continuar);
+            // Só dá para continuar se existe um jogo salvo e a cena ainda existe no Build
+            botaoContinuar.interactable = PodeContinuar();
+        }
+
+        if (botaoOpcoes) botaoOpcoes.onClick.AddListener(AbrirOpcoes);
+        if (botaoVoltarOpcoes) botaoVoltarOpcoes.onClick.AddListener(FecharOpcoes);
+        if (botaoSair) botaoSair.onClick.AddListener(Sair);
+
+        MostrarGrupo(painelOpcoes, false);
     }
+
+    void Update()
+    {
+        // Esc fecha o painel de opções
+        if (!iniciou && painelOpcoes != null && painelOpcoes.interactable
+            && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            FecharOpcoes();
+        }
+    }
+
+    // ---------- NOVO JOGO ----------
 
     void Jogar()
     {
         if (iniciou) return;
         iniciou = true;
+
+        // Novo jogo começa do zero: apaga puzzles, itens e a última cena salva
+        EstadoDoJogo.LimparTudo();
+
         StartCoroutine(Sequencia());
     }
 
+    // ---------- CONTINUAR ----------
+
+    bool PodeContinuar()
+    {
+        return EstadoDoJogo.TemJogoSalvo && Application.CanStreamedLevelBeLoaded(EstadoDoJogo.UltimaCena);
+    }
+
+    void Continuar()
+    {
+        if (iniciou || !PodeContinuar()) return;
+        iniciou = true;
+        StartCoroutine(ContinuarRoutine());
+    }
+
+    IEnumerator ContinuarRoutine()
+    {
+        TravarBotoes();
+        yield return Fade(fade, 0, 1, duracaoFade);
+        SceneManager.LoadScene(EstadoDoJogo.UltimaCena);
+    }
+
+    // ---------- OPÇÕES ----------
+
+    void AbrirOpcoes()
+    {
+        if (iniciou || painelOpcoes == null) return;
+
+        MostrarGrupo(grupoMenu, false);
+        MostrarGrupo(painelOpcoes, true);
+        Selectable primeiro = primeiroItemOpcoes != null
+            ? primeiroItemOpcoes
+            : painelOpcoes.GetComponentInChildren<Selectable>();
+        Selecionar(primeiro);
+    }
+
+    void FecharOpcoes()
+    {
+        if (painelOpcoes == null) return;
+
+        MostrarGrupo(painelOpcoes, false);
+        MostrarGrupo(grupoMenu, true);
+        Selecionar(botaoOpcoes);
+    }
+
+    // ---------- SAIR ----------
+
+    void Sair()
+    {
+        if (iniciou) return;
+        iniciou = true;
+        StartCoroutine(SairRoutine());
+    }
+
+    IEnumerator SairRoutine()
+    {
+        TravarBotoes();
+        yield return Fade(fade, 0, 1, duracaoFadeSaida);
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    // ---------- AUXILIARES ----------
+
+    void TravarBotoes()
+    {
+        if (botaoJogar) botaoJogar.interactable = false;
+        if (botaoContinuar) botaoContinuar.interactable = false;
+        if (botaoOpcoes) botaoOpcoes.interactable = false;
+        if (botaoSair) botaoSair.interactable = false;
+    }
+
+    static void MostrarGrupo(CanvasGroup g, bool mostrar)
+    {
+        if (g == null) return;
+        g.alpha = mostrar ? 1f : 0f;
+        g.interactable = mostrar;
+        g.blocksRaycasts = mostrar;
+    }
+
+    static void Selecionar(Selectable s)
+    {
+        if (s != null && EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(s.gameObject);
+    }
+
+    // ---------- SEQUÊNCIA DO NOVO JOGO (telefone) ----------
+
     IEnumerator Sequencia()
     {
-        botaoJogar.interactable = false;
+        TravarBotoes();
         yield return Fade(grupoMenu, 1, 0, fadeBotao);
         grupoMenu.blocksRaycasts = false;
 
