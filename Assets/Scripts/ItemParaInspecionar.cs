@@ -11,6 +11,9 @@ public class ItemParaInspecionar : MonoBehaviour
     [Tooltip("Rotação inicial relativa à câmera (ex: 90, 0, 0 para levantar uma folha deitada)")]
     public Vector3 rotacaoInicial = Vector3.zero;
 
+    [Tooltip("Deslocamento inicial em relação ao ponto padrão, relativo à câmera: X = direita, Y = cima, Z = mais longe (positivo) ou mais perto (negativo)")]
+    public Vector3 posicaoInicial = Vector3.zero;
+
     [Header("História do Objeto (Tecla Q)")]
     [Tooltip("Texto customizado que aparece ao apertar Q durante a inspeção (Estágio 0 / Normal)")]
     [TextArea(5, 10)]
@@ -80,7 +83,8 @@ public class ItemParaInspecionar : MonoBehaviour
             GerenciadorDeInspecao.Instancia.IniciarInspecao(
                 modeloDoObjeto,
                 Quaternion.Euler(rotacaoInicial),
-                historiaEscolhida
+                historiaEscolhida,
+                posicaoInicial
             );
         }
         else

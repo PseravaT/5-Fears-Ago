@@ -38,7 +38,7 @@ Material:
   - MOTIONVECTORS
   - DepthOnly
   - SHADOWCASTER
-  m_LockedProperties: _BumpMap
+  m_LockedProperties: _BaseColor _BaseMap _BumpMap
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -118,7 +118,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Metallic: 0.359
+    - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0

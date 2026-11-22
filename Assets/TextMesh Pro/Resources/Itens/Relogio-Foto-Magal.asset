@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2a5e941053fe44a9d41e747327437e, type: 3}
+  m_Name: Relogio-Foto-Magal
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  id: 01
+  nomeDoItem: Relogio-Foto-Magal
+  icone: {fileID: 21300000, guid: dee745610072e144b9c610c14cba0583, type: 3}
+  descricaoCurta: 
+  posicaoInicialInspecao: {x: 0, y: -0.2, z: -30}
+  modelo3D: {fileID: 7793884578262230403, guid: 40106288f3516a449ad1370fc3ff1dd0, type: 3}
+  rotacaoInicialGraus: {x: -90, y: 0, z: 0}
+  usarRotacaoPropriaNaInspecao: 1
+  rotacaoNaInspecaoGraus: {x: -90, y: -90, z: 0}
+  textoDetalhado: 

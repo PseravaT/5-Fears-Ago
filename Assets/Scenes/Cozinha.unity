@@ -963,8 +963,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 0}
   rotacaoInicial: {x: -90, y: 0, z: 180}
+  posicaoInicial: {x: 0, y: 0, z: 0}
   textoDetalhado: 
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
 --- !u!1 &292806262
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150,8 +1155,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 0}
   rotacaoInicial: {x: -90, y: 0, z: 180}
+  posicaoInicial: {x: 0, y: 0, z: 0}
   textoDetalhado: 
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
 --- !u!1001 &372949212
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1581,6 +1591,97 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 407354404}
   m_CullTransparentMesh: 1
+--- !u!1 &432541331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 432541334}
+  - component: {fileID: 432541333}
+  - component: {fileID: 432541332}
+  m_Layer: 0
+  m_Name: Cube.008
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &432541332
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432541331}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: e65004e8832d0ec44b902092a9b69dd7, type: 2}
+  - {fileID: 2100000, guid: 7491e0985eb8f9741aa25e46b80da9dd, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &432541333
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432541331}
+  m_Mesh: {fileID: 8552134717624371188, guid: 8ca8596c08393544dbd631ef92803111, type: 3}
+--- !u!4 &432541334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432541331}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -17.283, y: 2.65, z: -60.01}
+  m_LocalScale: {x: 0.3787041, y: 0.3787041, z: 0.3787041}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &447373698
 GameObject:
   m_ObjectHideFlags: 0
@@ -2522,6 +2623,171 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 678044577}
   m_Mesh: {fileID: -8714461619422327061, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+--- !u!1 &682710798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 682710804}
+  - component: {fileID: 682710803}
+  - component: {fileID: 682710802}
+  - component: {fileID: 682710801}
+  - component: {fileID: 682710800}
+  - component: {fileID: 682710799}
+  m_Layer: 0
+  m_Name: Cube.075
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &682710799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682710798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be7a8a77b15b1e740923acf2efcc222b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
+  modeloDoObjeto: {fileID: 432541331}
+  rotacaoInicial: {x: -180, y: 0, z: 180}
+  posicaoInicial: {x: 0, y: 0, z: 0}
+  textoDetalhado: 
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
+  dialogoAntesDeInspecionar: 
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
+--- !u!114 &682710800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682710798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05eda8a6fd12fb41a789d241083667f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interagivel
+  displayName: interaja
+  isEnabled: 1
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 682710799}
+        m_TargetAssemblyTypeName: ItemParaInspecionar, Assembly-CSharp
+        m_MethodName: MandarParaAInspecao
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!64 &682710801
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682710798}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5192293760262708679, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
+--- !u!23 &682710802
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682710798}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 32bd7006feeda364993f85baed3403c6, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &682710803
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682710798}
+  m_Mesh: {fileID: 5192293760262708679, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
+--- !u!4 &682710804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682710798}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5277308, y: -0.47063825, z: 0.47063828, w: 0.52773046}
+  m_LocalPosition: {x: -15.624469, y: 3.337, z: -63.90759}
+  m_LocalScale: {x: 0.21836999, y: 0.21836999, z: 0.21836999}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 83.454}
 --- !u!1 &732857749
 GameObject:
   m_ObjectHideFlags: 0
@@ -2850,6 +3116,7 @@ GameObject:
   - component: {fileID: 839095545}
   - component: {fileID: 839095547}
   - component: {fileID: 839095546}
+  - component: {fileID: 839095548}
   m_Layer: 0
   m_Name: LuzDeInspecao
   m_TagString: Untagged
@@ -2913,7 +3180,7 @@ Light:
   m_Type: 2
   m_Color: {r: 0.9154064, g: 0.93962264, b: 0.62227833, a: 1}
   m_Intensity: 1
-  m_Range: 10
+  m_Range: 3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -2966,6 +3233,23 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &839095548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839095544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50d78dd994bfc9d4b95307469b542fac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LuzInspecaoRecuo
+  distanciaDaLuzAoObjeto: 1.5
+  soRecua: 1
+  recuoMaximo: 0
+  ajustarRange: 1
+  folgaDoRange: 1.5
 --- !u!1 &879818464
 GameObject:
   m_ObjectHideFlags: 0
@@ -3301,6 +3585,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TriggerDeFala
   mensagemDoGatilho: 
+  mensagemDano1Laranja: 
+  mensagemDano2Vermelho: 
   tempoNaTela: 4
   gerenciadorDeDialogo: {fileID: 0}
 --- !u!65 &969508871
@@ -3420,10 +3706,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 1451793957}
   rotacaoInicial: {x: -90, y: 0, z: 180}
+  posicaoInicial: {x: 0, y: 0, z: 0}
   textoDetalhado: "Familia e fihos, tudo entreguei no final,\nMinha velhice sugada,
     temperada com sal.\nN\xE3o vejo a hora do fim, pois a dor n\xE3o cedia,\nSem
     pena do meu tormento, olham-me enquanto sofria."
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
 --- !u!114 &996680945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5833,6 +6124,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a2456c692e4d7924284a87a852dea6e2, type: 2}
+    - target: {fileID: 6947464325843983966, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 28a49c50644dbeb4ea455ba4484352bf, type: 2}
     - target: {fileID: 6979220930480056898, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -5857,6 +6152,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: d80abf558b040be4d967bae566ccb69f, type: 2}
+    - target: {fileID: 7152520436077478166, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1c6622b9e2f8ae8448caf25ed2b24996, type: 2}
     - target: {fileID: 7222786286095620960, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -7127,11 +7426,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 1532676448}
   rotacaoInicial: {x: -90, y: 0, z: 180}
+  posicaoInicial: {x: 0, y: 0, z: 0}
   textoDetalhado: "Um fragmento de hist\xF3ria:\nMe foi entregue desde o princ\xEDpio,
     a fria presen\xE7a,\nAcompanhando cada passo, feito dura senten\xE7a.\nComo l\xE2minas
     que cortam a paz que eu sentia,\nNa escurid\xE3o do meu quarto, olham-me enquanto
     eu dormia."
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
 --- !u!114 &1708620113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7465,8 +7769,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 0}
   rotacaoInicial: {x: -90, y: 0, z: 180}
+  posicaoInicial: {x: 0, y: 0, z: 0}
   textoDetalhado: 
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
 --- !u!114 &1827420123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7989,6 +8298,10 @@ PrefabInstance:
       value: "Sistema de Inspe\xE7\xE3o Global"
       objectReference: {fileID: 0}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: passoDoZoom
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: textoBotaoQ
       value: 
       objectReference: {fileID: 526056356}
@@ -7997,12 +8310,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2135013929}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: distanciaMaxima
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: distanciaMinima
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: telaGuiasDeTecla
       value: 
       objectReference: {fileID: 2102833318}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: distanciaDaCamera
       value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: velocidadeDeRotacao
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: painelTextoDetalhado
@@ -9487,8 +9812,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 447373698}
   rotacaoInicial: {x: -90, y: 0, z: 270}
+  posicaoInicial: {x: 0, y: 0, z: 0}
   textoDetalhado: 
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
 --- !u!114 &7774039909846026903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10121,3 +10451,5 @@ SceneRoots:
   - {fileID: 1847520362575830276}
   - {fileID: 447373701}
   - {fileID: 975881613731164690}
+  - {fileID: 432541334}
+  - {fileID: 682710804}
