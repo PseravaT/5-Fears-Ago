@@ -133,7 +133,7 @@ public class SistemaDeVida : MonoBehaviour
             return damageSystem;
         }
 
-        damageSystem = Object.FindFirstObjectByType<DamageSystem>();
+        damageSystem = Object.FindAnyObjectByType<DamageSystem>();
 
         // Se a cena atual (ex: testando a Cozinha direto pelo Play) não tiver o DamageManager na Hierarchy,
         // adiciona o DamageSystem automaticamente neste objeto para que o efeito visual CRT funcione sempre!
@@ -280,7 +280,7 @@ public class SistemaDeVida : MonoBehaviour
         {
             DamageSystem dsExistente = DamageSystem.Instancia != null
                 ? DamageSystem.Instancia
-                : Object.FindFirstObjectByType<DamageSystem>();
+                : Object.FindAnyObjectByType<DamageSystem>();
 
             if (dsExistente != null)
             {

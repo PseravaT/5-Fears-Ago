@@ -42,7 +42,6 @@ public class Menu : MonoBehaviour
     public float segundosPorLetra = 0.06f;  // velocidade (menor = mais rápido)
     public float pausaPontuacao = 0.18f;    // segundos extras depois de , . ! ? : ;
     public float pausaAposFrase = 0.6f;  // segundos de espera depois de terminar de digitar
-    bool legendasTerminadas = true;
     public AudioClip somDigitar;            // opcional: um "tique" curto
     [Range(0f, 1f)] public float volumeDigitar = 0.3f;
 
@@ -273,7 +272,6 @@ public class Menu : MonoBehaviour
 
     IEnumerator Legendas()
     {
-        legendasTerminadas = false;
         float t0 = Time.time;
 
         foreach (var l in legendas)
@@ -284,8 +282,6 @@ public class Menu : MonoBehaviour
             yield return StartCoroutine(Digitar(l.texto));   // espera terminar de digitar
             yield return new WaitForSeconds(pausaAposFrase); // segura a frase na tela
         }
-
-        legendasTerminadas = true;
     }
 
     IEnumerator Digitar(string texto)

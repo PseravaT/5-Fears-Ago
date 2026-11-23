@@ -113,7 +113,7 @@ public class PlayerInteractor : MonoBehaviour
     void TentarInteragir()
     {
         // Pega todos os objetos interagíveis da cena
-        Interagivel[] todosInteragiveis = Object.FindObjectsByType<Interagivel>(FindObjectsSortMode.None);
+        Interagivel[] todosInteragiveis = Object.FindObjectsByType<Interagivel>();
         
         Interagivel maisProximo = null;
         float menorDistancia = caixaDeInteracao != null ? float.MaxValue : distanciaDeInteracao;

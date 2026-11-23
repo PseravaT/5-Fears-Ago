@@ -1549,6 +1549,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 437027202}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &408697810 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4811171726696857748, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
+  m_PrefabInstance: {fileID: 953329061}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &408697812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408697810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6a9312e41f5a44bba04904211ce328, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuadroReativoAoDano
+  materialDaFoto: {fileID: 0}
+  fotoVerde: {fileID: 2800000, guid: 99b00b4fc53c13c419db2a97c7b527cf, type: 3}
+  fotoLaranja: {fileID: 2800000, guid: a999e720215eb884d977533e088d6917, type: 3}
+  fotoVermelha: {fileID: 2800000, guid: e8cb6402cdb7c884bb4cc0e6118ef69c, type: 3}
+  meshRendererDoQuadro: {fileID: 0}
+  indiceDoMaterialNoMesh: 1
+  materialVerde: {fileID: 2100000, guid: b67382a154d89d44f9a6541f312f95fd, type: 2}
+  materialLaranja: {fileID: 2100000, guid: 60a17e4f0503f9d49b0bd5949ee89c02, type: 2}
+  materialVermelho: {fileID: 2100000, guid: 27dbb3b31f45e8e47a0049a9031aeccf, type: 2}
 --- !u!1 &437027201
 GameObject:
   m_ObjectHideFlags: 0
@@ -1631,6 +1657,8 @@ MonoBehaviour:
   painelTextoDetalhado: {fileID: 1403910823}
   componenteTextoHistoria: {fileID: 676484135}
   textoBotaoQ: {fileID: 376556145}
+  textoContadorPaginas: {fileID: 0}
+  ocultarContadorSePaginaUnica: 0
   distanciaDaCamera: 2.5
   velocidadeDeRotacao: 10
   distanciaMinima: 2
@@ -6919,6 +6947,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -7308213284921252466, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 631299475}
+    - targetCorrespondingSourceObject: {fileID: 4811171726696857748, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 408697812}
+    - targetCorrespondingSourceObject: {fileID: -6115676600064748632, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 953329064}
     - targetCorrespondingSourceObject: {fileID: -1088555781106546731, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1195890510}
@@ -6955,6 +6989,32 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
   m_PrefabInstance: {fileID: 953329061}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &953329063 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -6115676600064748632, guid: 2ec290e6247013541aa33c9faf62f7c9, type: 3}
+  m_PrefabInstance: {fileID: 953329061}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &953329064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953329063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6a9312e41f5a44bba04904211ce328, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuadroReativoAoDano
+  materialDaFoto: {fileID: 0}
+  fotoVerde: {fileID: 0}
+  fotoLaranja: {fileID: 0}
+  fotoVermelha: {fileID: 0}
+  meshRendererDoQuadro: {fileID: 0}
+  indiceDoMaterialNoMesh: 1
+  materialVerde: {fileID: 2100000, guid: 971b3c30acfb14242a6e3411a579c16a, type: 2}
+  materialLaranja: {fileID: 2100000, guid: 3a2c1ed60de0f884bbcd7d813b3e1a8a, type: 2}
+  materialVermelho: {fileID: 2100000, guid: 566e0b1b5d138d447bba98edd4077a3b, type: 2}
 --- !u!1 &1012932193
 GameObject:
   m_ObjectHideFlags: 0
@@ -7664,8 +7724,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3420d9a3bae97174caa10235d4153f41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControleDePorta
-  estaTrancada: 0
-  textoInteracao: 
+  estaTrancada: 1
+  textoInteracao: "Como sempre o Quarto deles est\xE1 trancado."
   textoQuandoDestrancada: 
   nomeDaProximaSala: 
   nomeDaCenaDeTransicao: Porta
@@ -9753,6 +9813,81 @@ Transform:
   - {fileID: 1336095339}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1465907125
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1465907127}
+  - component: {fileID: 1465907126}
+  m_Layer: 0
+  m_Name: CameraQuadroCima
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1465907126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465907125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
+  Priority:
+    Enabled: 0
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 69.6557
+    OrthographicSize: 10
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
+--- !u!4 &1465907127
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465907125}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.10799476, y: -0.016328491, z: -0.0008968359, w: -0.994017}
+  m_LocalPosition: {x: -30.793505, y: 6.5889707, z: -69.3189}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1474240481
 GameObject:
   m_ObjectHideFlags: 0
@@ -11724,6 +11859,166 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -21.848, y: 2.3094, z: -65.295}
   m_LocalScale: {x: 0.18107, y: 0.18107, z: 0.18107}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1761315870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1761315873}
+  - component: {fileID: 1761315872}
+  - component: {fileID: 1761315871}
+  m_Layer: 0
+  m_Name: InspecQuadro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1761315871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761315870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc992a783870da1408e33807679842d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControleCameraInteracao
+  cameraDesteObjeto: {fileID: 1465907125}
+  aoEntrarNaVisao:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1710190336}
+        m_TargetAssemblyTypeName: InteractionDotManager, Assembly-CSharp
+        m_MethodName: AlternarDots
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1487174696}
+        m_TargetAssemblyTypeName: walking, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1312844082}
+        m_TargetAssemblyTypeName: GerenciadorDeDialogo, Assembly-CSharp
+        m_MethodName: MostrarTexto
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: "Momento de calmaria brincando com meu melhor amigo com
+            todos reunidos.#N\xE3o entendo como um dia do nada meu pai contou que
+            nosso cachorro morreu, foi do absoluto nada ! Todos ficaram calados!#Eu
+            tenho certeza que deram o fim do meu cachorro se livraram do meu \xFAnico
+            e melhor amigo ! Todos eles n\xE3o suportavam me v\xEA feliz! n\xE3o
+            aguentavam me v\xEA passar por tudo e ainda sim conseguir sorrir em algum
+            momento!"
+          m_BoolArgument: 0
+        m_CallState: 2
+  aoSairDaVisao:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1710190336}
+        m_TargetAssemblyTypeName: InteractionDotManager, Assembly-CSharp
+        m_MethodName: AlternarDots
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1487174696}
+        m_TargetAssemblyTypeName: walking, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1312844082}
+        m_TargetAssemblyTypeName: GerenciadorDeDialogo, Assembly-CSharp
+        m_MethodName: EsconderTexto
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: "Tenho que me apressar, as coisas ja n\xE3o s\xE3o mais
+            as mesmas !"
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1761315872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761315870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05eda8a6fd12fb41a789d241083667f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interagivel
+  displayName: interaja
+  isEnabled: 1
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1761315871}
+        m_TargetAssemblyTypeName: ControleCameraInteracao, Assembly-CSharp
+        m_MethodName: EntrarNaVisao
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &1761315873
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761315870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -29.51, y: 6.043, z: -67.896}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -15859,3 +16154,5 @@ SceneRoots:
   - {fileID: 558759776}
   - {fileID: 774559134}
   - {fileID: 888636914835113681}
+  - {fileID: 1465907127}
+  - {fileID: 1761315873}

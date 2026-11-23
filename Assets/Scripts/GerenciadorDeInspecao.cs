@@ -13,8 +13,14 @@ public class GerenciadorDeInspecao : MonoBehaviour
     public GameObject painelTextoDetalhado;
     public TMPro.TextMeshProUGUI componenteTextoHistoria;
     public TMPro.TextMeshProUGUI textoBotaoQ;
+    [Tooltip("Texto onde aparece 'Página 1 de X'. Crie um TextMeshPro dentro do painelTextoDetalhado e arraste aqui.")]
+    public TMPro.TextMeshProUGUI textoContadorPaginas;
+    [Tooltip("Se marcado, esconde o contador quando o texto tiver apenas 1 página.")]
+    [SerializeField] private bool ocultarContadorSePaginaUnica = false;
 
     private bool lendoTelaPreta = false;
+    private string[] paginasAtuais = new string[0];
+    private int paginaAtual = 0;
 
     [Header("Configurações na Tela")]
     [Tooltip("Distância inicial que o objeto vai flutuar na frente da câmera")]
@@ -126,10 +132,21 @@ public class GerenciadorDeInspecao : MonoBehaviour
         {
             componenteTextoHistoria = painelTextoDetalhado.GetComponentInChildren<TMPro.TextMeshProUGUI>(true);
         }
-        if (componenteTextoHistoria != null)
+        if (textoContadorPaginas == null && painelTextoDetalhado != null)
         {
-            componenteTextoHistoria.text = textoItem;
+            foreach (var tmp in painelTextoDetalhado.GetComponentsInChildren<TMPro.TextMeshProUGUI>(true))
+            {
+                if (tmp != componenteTextoHistoria &&
+                    (tmp.name.IndexOf("Pagina", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     tmp.name.IndexOf("Contador", System.StringComparison.OrdinalIgnoreCase) >= 0))
+                {
+                    textoContadorPaginas = tmp;
+                    break;
+                }
+            }
         }
+
+        ConfigurarPaginasTexto(textoItem);
 
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(true);
         lendoTelaPreta = false;
@@ -288,11 +305,35 @@ public class GerenciadorDeInspecao : MonoBehaviour
             if (painelTextoDetalhado != null)
                 painelTextoDetalhado.SetActive(lendoTelaPreta);
 
+            if (lendoTelaPreta)
+            {
+                AtualizarExibicaoPagina();
+            }
+
             if (textoBotaoQ != null)
             {
                 textoBotaoQ.text = lendoTelaPreta
                     ? "pressione Q para voltar a inspeção"
                     : "pressione Q para ler detalhes";
+            }
+        }
+
+        // --- NAVEGAÇÃO ENTRE PÁGINAS (W / A = Voltar | S / D = Avançar) ---
+        if (lendoTelaPreta && paginasAtuais.Length > 1 && Keyboard.current != null)
+        {
+            if (Keyboard.current.wKey.wasPressedThisFrame ||
+                Keyboard.current.aKey.wasPressedThisFrame ||
+                Keyboard.current.upArrowKey.wasPressedThisFrame ||
+                Keyboard.current.leftArrowKey.wasPressedThisFrame)
+            {
+                MudarPagina(-1);
+            }
+            else if (Keyboard.current.sKey.wasPressedThisFrame ||
+                     Keyboard.current.dKey.wasPressedThisFrame ||
+                     Keyboard.current.downArrowKey.wasPressedThisFrame ||
+                     Keyboard.current.rightArrowKey.wasPressedThisFrame)
+            {
+                MudarPagina(+1);
             }
         }
 
@@ -341,10 +382,69 @@ public class GerenciadorDeInspecao : MonoBehaviour
         if (volumeDeBlur != null) volumeDeBlur.weight = 0f;
 
         lendoTelaPreta = false;
+        paginasAtuais = new string[0];
+        paginaAtual = 0;
         if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(false);
 
         aoTerminarInspecao?.Invoke();
+    }
+
+    private void ConfigurarPaginasTexto(string textoCompleto)
+    {
+        if (string.IsNullOrEmpty(textoCompleto))
+        {
+            paginasAtuais = new string[] { "" };
+        }
+        else
+        {
+            // Separa páginas usando '|' ou '---'
+            string[] bruto = textoCompleto.Contains("|")
+                ? textoCompleto.Split('|')
+                : textoCompleto.Split(new[] { "---" }, System.StringSplitOptions.None);
+
+            for (int i = 0; i < bruto.Length; i++)
+            {
+                bruto[i] = bruto[i].Trim();
+            }
+
+            paginasAtuais = bruto.Length > 0 ? bruto : new string[] { "" };
+        }
+
+        paginaAtual = 0;
+        AtualizarExibicaoPagina();
+    }
+
+    private void MudarPagina(int delta)
+    {
+        if (paginasAtuais == null || paginasAtuais.Length <= 1) return;
+
+        int novaPagina = Mathf.Clamp(paginaAtual + delta, 0, paginasAtuais.Length - 1);
+        if (novaPagina != paginaAtual)
+        {
+            paginaAtual = novaPagina;
+            AtualizarExibicaoPagina();
+        }
+    }
+
+    private void AtualizarExibicaoPagina()
+    {
+        if (paginasAtuais == null || paginasAtuais.Length == 0) return;
+
+        if (componenteTextoHistoria != null)
+        {
+            componenteTextoHistoria.text = paginasAtuais[paginaAtual];
+        }
+
+        if (textoContadorPaginas != null)
+        {
+            bool esconder = ocultarContadorSePaginaUnica && paginasAtuais.Length <= 1;
+            textoContadorPaginas.gameObject.SetActive(!esconder);
+            if (!esconder)
+            {
+                textoContadorPaginas.text = $"Página {paginaAtual + 1} de {paginasAtuais.Length}";
+            }
+        }
     }
 
     void OnDisable()

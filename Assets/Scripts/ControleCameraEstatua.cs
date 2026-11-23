@@ -23,7 +23,7 @@ public class ControleCameraEstatua : MonoBehaviour
     void Start()
     {
         if (puzzleEstatua == null)
-            puzzleEstatua = FindFirstObjectByType<PuzzleRelogioHumano>();
+            puzzleEstatua = FindAnyObjectByType<PuzzleRelogioHumano>();
 
         // Começa com a câmera central das 6h como ativa
         cameraAtivaAtual = camera6hCentral;

@@ -30,7 +30,7 @@ public class InteractionDotManager : MonoBehaviour
             playerInteractor = player.GetComponent<PlayerInteractor>();
 
         // Busca todos os objetos interagíveis na cena
-        allInteractables.AddRange(Object.FindObjectsByType<Interagivel>(FindObjectsSortMode.None));
+        allInteractables.AddRange(Object.FindObjectsByType<Interagivel>());
 
         foreach (var interactable in allInteractables)
         {

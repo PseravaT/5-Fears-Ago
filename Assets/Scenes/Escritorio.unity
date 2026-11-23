@@ -460,9 +460,9 @@ MonoBehaviour:
   modeloDoObjeto: {fileID: 1732122143089760514}
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
-  textoDetalhado: 
-  textoDetalhadoDano1Laranja: 
-  textoDetalhadoDano2Vermelho: 
+  textoDetalhado: "\"O Barco B\xEAbado\" por Gabriel Totormud."
+  textoDetalhadoDano1Laranja: "\"O Barco B\xEAbado\" por Gabriel Totormud."
+  textoDetalhadoDano2Vermelho: "\"O Barco B\xEAbado\" por Gabriel Totormud."
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
@@ -802,6 +802,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 744461874}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: ocultarContadorSePaginaUnica
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: aoIniciarInspecao.m_PersistentCalls.m_Calls.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -958,9 +962,9 @@ MonoBehaviour:
   modeloDoObjeto: {fileID: 8733158336053692549}
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
-  textoDetalhado: 
-  textoDetalhadoDano1Laranja: 
-  textoDetalhadoDano2Vermelho: 
+  textoDetalhado: "\"Vidas S\xEAcas\" por Grabriel Totoramos."
+  textoDetalhadoDano1Laranja: "\"Vidas S\xEAcas\" por Grabriel Totoramos."
+  textoDetalhadoDano2Vermelho: "\"Vidas S\xEAcas\" por Grabriel Totoramos."
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
@@ -3617,9 +3621,9 @@ MonoBehaviour:
   modeloDoObjeto: {fileID: 1531895196546661251}
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
-  textoDetalhado: 
-  textoDetalhadoDano1Laranja: 
-  textoDetalhadoDano2Vermelho: 
+  textoDetalhado: '"Ecus" por Totonuez.'
+  textoDetalhadoDano1Laranja: '"Ecus" por Totonuez.'
+  textoDetalhadoDano2Vermelho: '"Ecus" por Totonuez.'
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
@@ -3700,9 +3704,9 @@ MonoBehaviour:
   modeloDoObjeto: {fileID: 362934538880922648}
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
-  textoDetalhado: 
-  textoDetalhadoDano1Laranja: 
-  textoDetalhadoDano2Vermelho: 
+  textoDetalhado: "\"M\xFAsica para Mico-Le\xF5es\" por G. Couto."
+  textoDetalhadoDano1Laranja: "\"M\xFAsica para Mico-Le\xF5es\" por G. Couto."
+  textoDetalhadoDano2Vermelho: "\"M\xFAsica para Mico-Le\xF5es\" por G. Couto."
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
@@ -5183,9 +5187,9 @@ MonoBehaviour:
   modeloDoObjeto: {fileID: 8077018468086412438}
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
-  textoDetalhado: 
-  textoDetalhadoDano1Laranja: 
-  textoDetalhadoDano2Vermelho: 
+  textoDetalhado: '"Fanrrapo Humano" por Gabi Bonelli.'
+  textoDetalhadoDano1Laranja: '"Fanrrapo Humano" por Gabi Bonelli.'
+  textoDetalhadoDano2Vermelho: '"Fanrrapo Humano" por Gabi Bonelli.'
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
