@@ -10553,7 +10553,7 @@ MonoBehaviour:
   textoInteracao: 
   textoQuandoDestrancada: 
   nomeDaProximaSala: Casa
-  nomeDaCenaDeTransicao: Porta
+  nomeDaCenaDeTransicao: Escada
   nomeDoPontoDeSpawnNoDestino: SpawnSubindo
   idPuzzleQueDestranca: 
   textoPortaAberta: 
