@@ -36,7 +36,10 @@ EditorBuildSettings:
     path: Assets/Scenes/Quarto-Protagonista.unity
     guid: 3f4ace0948f5ba040a7fac20a68721ee
   - enabled: 1
-    path: Assets/Scenes/Escada.unity
+    path: Assets/Scenes/EscadaUp.unity
     guid: 0db14a7cc6e4d4340bf9205c602c49e5
+  - enabled: 1
+    path: Assets/Scenes/EscadaDown.unity
+    guid: 6f9106c7364330f4cad99d471339976f
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}

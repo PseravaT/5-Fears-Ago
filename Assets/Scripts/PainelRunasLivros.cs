@@ -34,6 +34,10 @@ public class PainelRunasLivros : MonoBehaviour
 
     [SerializeField] private bool ativo = true;
 
+    [Header("Persistência")]
+    [Tooltip("ID salvo no EstadoDoJogo ao resolver este puzzle (use o mesmo ID no campo 'Id Puzzle Que Destranca' da porta).")]
+    [SerializeField] private string idParaSalvar = "escritorio";
+
     [Tooltip("Disparado quando o cofre é destrancado com a combinação certa")]
     public UnityEvent aoResolver;
 
@@ -100,6 +104,12 @@ public class PainelRunasLivros : MonoBehaviour
 
         resolvido = true;
         travado = false;
+
+        if (!string.IsNullOrWhiteSpace(idParaSalvar))
+        {
+            EstadoDoJogo.MarcarPuzzleConcluido(idParaSalvar.Trim());
+        }
+
         AtualizarMarcador();
         aoResolver.Invoke();
     }
