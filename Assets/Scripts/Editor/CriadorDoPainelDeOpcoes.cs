@@ -13,7 +13,7 @@ using UnityEngine.UI;
 /// e o controle à direita:  Resolução ‹ ›  /  Tela ‹ ›  /  Volume [slider] 100%  /  [ Voltar ].
 /// Cada linha usa o visual de um botão do menu, então o estilo (fundo, borda, seta) é o mesmo.
 /// </summary>
-public static class CriadorDoPainelDeOpcoes
+public static partial class CriadorDoPainelDeOpcoes
 {
     private const string NomeDoDesfazer = "Criar Painel de Opções";
 
@@ -91,7 +91,12 @@ public static class CriadorDoPainelDeOpcoes
             if (t.GetComponentInParent<Button>(true) != null) continue;
             if (titulo == null || t.fontSize > titulo.fontSize) titulo = t;
         }
-        if (titulo != null) titulo.text = "OPÇÕES";
+        if (titulo != null)
+        {
+            // O título pode ter camadas sobrepostas (relevo): troca o texto de todas
+            foreach (TMP_Text camada in titulo.GetComponentsInChildren<TMP_Text>(true))
+                camada.text = "OPÇÕES";
+        }
 
         // A moldura é o quadro com borda onde o menu aparece (menor Image que contém o título e os botões).
         // Todas as frações do layout valem em relação a ela, e não ao CanvasGroup inteiro.

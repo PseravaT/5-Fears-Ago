@@ -20,6 +20,8 @@ public class ItemData : ScriptableObject
     [Tooltip("Se preenchido, aparece o botão Inspecionar no inventário")]
     public GameObject modelo3D;
     public Vector3 rotacaoInicialGraus;
+    [Tooltip("Escala do modelo na inspeção (1,1,1 = tamanho original do prefab)")]
+    public Vector3 escalaInspecao = Vector3.one;
     [Header("Inspeção")]
     [Tooltip("Se ligado, a inspeção (tecla E) usa a rotação abaixo em vez da rotação inicial do preview")]
     public bool usarRotacaoPropriaNaInspecao;

@@ -136,7 +136,7 @@ public class GerenciadorDeInventario : MonoBehaviour
             // Ignora o input no frame em que abriu (ex.: voltando da inspeção com E ou Esc)
             if (Time.frameCount <= frameDeAbertura) return;
 
-            if (apertouTecla || Keyboard.current.escapeKey.wasPressedThisFrame)
+            if (apertouTecla)
             {
                 Fechar();
                 return;
@@ -242,7 +242,13 @@ public class GerenciadorDeInventario : MonoBehaviour
             ? item.rotacaoNaInspecaoGraus
             : item.rotacaoInicialGraus;
 
-        inspecao.IniciarInspecao(item.modelo3D, Quaternion.Euler(rotacaoDaInspecao), texto, item.posicaoInicialInspecao);
+        inspecao.IniciarInspecao(
+            item.modelo3D,
+            Quaternion.Euler(rotacaoDaInspecao),
+            texto,
+            item.posicaoInicialInspecao,
+            item.escalaInspecao
+        );
 
         // Se a inspeção não começou, não deixa o "voltar" pendurado
         if (!inspecao.EstaInspecionando)

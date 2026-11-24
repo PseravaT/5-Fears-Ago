@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -25,6 +26,8 @@ public class OpcoesDoJogo : MonoBehaviour
     [SerializeField] private Slider sliderVolume;
     [Tooltip("Texto opcional que mostra o valor, ex.: 80%")]
     [SerializeField] private TMP_Text textoVolume;
+    [Tooltip("Ligue só se a barra do slider não aparece (altura negativa). Recalcula o tamanho do fundo, da barra e da bolinha ao abrir.")]
+    [SerializeField] private bool corrigirGeometriaDoSlider = false;
 
     [Header("Tela")]
     [SerializeField] private SeletorDeOpcao seletorResolucao;
@@ -38,6 +41,10 @@ public class OpcoesDoJogo : MonoBehaviour
     {
         AudioListener.volume = PlayerPrefs.GetFloat(ChaveVolume, 1f);
 
+        // A cada cena nova, reaplica o volume salvo (caso outro script tenha mexido)
+        SceneManager.sceneLoaded -= AoCarregarCena;
+        SceneManager.sceneLoaded += AoCarregarCena;
+
         bool temModo = PlayerPrefs.HasKey(ChaveTelaCheia);
         bool temResolucao = PlayerPrefs.HasKey(ChaveResLargura) && PlayerPrefs.HasKey(ChaveResAltura);
         if (!temModo && !temResolucao) return;
@@ -47,6 +54,22 @@ public class OpcoesDoJogo : MonoBehaviour
         int altura = temResolucao ? PlayerPrefs.GetInt(ChaveResAltura) : Screen.height;
 
         Screen.SetResolution(largura, altura, cheia ? ModoTelaCheia : FullScreenMode.Windowed);
+    }
+
+    private static void AoCarregarCena(Scene cena, LoadSceneMode modo)
+    {
+        AudioListener.volume = PlayerPrefs.GetFloat(ChaveVolume, 1f);
+        ObedecerVolumeGeral();
+    }
+
+    /// <summary>Faz todos os AudioSources da cena respeitarem o volume geral.</summary>
+    private static void ObedecerVolumeGeral()
+    {
+        foreach (AudioSource fonte in FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (fonte.ignoreListenerVolume)
+                fonte.ignoreListenerVolume = false;
+        }
     }
 
     void Awake()
@@ -65,10 +88,15 @@ public class OpcoesDoJogo : MonoBehaviour
 
     void OnEnable()
     {
+        if (corrigirGeometriaDoSlider || GeometriaDoSliderQuebrada()) ArrumarGeometriaDoSlider();
+
         // Mostra os valores atuais sem disparar os eventos (que salvariam de novo à toa)
         float volume = PlayerPrefs.GetFloat(ChaveVolume, 1f);
         if (sliderVolume != null) sliderVolume.SetValueWithoutNotify(volume);
         AtualizarTexto(volume);
+
+        // Garante que os sons da cena obedecem o volume geral
+        ObedecerVolumeGeral();
 
         AtualizarSeletores();
     }
@@ -91,6 +119,74 @@ public class OpcoesDoJogo : MonoBehaviour
     private void AtualizarTexto(float valor)
     {
         if (textoVolume != null) textoVolume.text = Mathf.RoundToInt(valor * 100f) + "%";
+    }
+
+    // ---------- GEOMETRIA DO SLIDER ----------
+
+    private static void Definir(RectTransform rt, float minX, float minY, float maxX, float maxY, Vector2 offsetMin, Vector2 offsetMax)
+    {
+        if (rt == null) return;
+        rt.anchorMin = new Vector2(minX, minY);
+        rt.anchorMax = new Vector2(maxX, maxY);
+        rt.offsetMin = offsetMin;
+        rt.offsetMax = offsetMax;
+    }
+
+    /// <summary>True se alguma parte do slider tem altura ou largura zero/negativa (fica invisível).</summary>
+    private bool GeometriaDoSliderQuebrada()
+    {
+        if (sliderVolume == null) return false;
+
+        RectTransform[] partes =
+        {
+            sliderVolume.transform.Find("Background") as RectTransform,
+            sliderVolume.fillRect,
+            sliderVolume.handleRect
+        };
+
+        foreach (RectTransform parte in partes)
+        {
+            if (parte == null) continue;
+            if (parte.rect.height <= 0f || parte.rect.width < 0f) return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Refaz o tamanho de cada parte do slider com valores fixos e seguros, para a barra não ficar
+    /// com altura negativa (invisível). Ocupa a altura toda da linha; a barra fica no meio.
+    /// </summary>
+    private void ArrumarGeometriaDoSlider()
+    {
+        if (sliderVolume == null) return;
+
+        // O slider ocupa a faixa entre o nome "Volume" e a porcentagem, na altura toda da linha
+        Definir((RectTransform)sliderVolume.transform, 0.5124f, 0f, 0.8333f, 1f, Vector2.zero, Vector2.zero);
+
+        // Fundo da barra
+        Definir(sliderVolume.transform.Find("Background") as RectTransform, 0f, 0.35f, 1f, 0.65f, Vector2.zero, Vector2.zero);
+
+        // Parte vermelha (que enche conforme o volume)
+        RectTransform fill = sliderVolume.fillRect;
+        if (fill != null)
+        {
+            Definir(fill.parent as RectTransform, 0f, 0.35f, 1f, 0.65f, new Vector2(5f, 0f), new Vector2(-15f, 0f));
+            fill.anchorMin = new Vector2(0f, 0f);
+            fill.anchorMax = new Vector2(1f, 1f);   // o próprio Slider ajusta o X conforme o valor
+            fill.anchoredPosition = Vector2.zero;
+            fill.sizeDelta = new Vector2(10f, 0f);
+        }
+
+        // Bolinha
+        RectTransform handle = sliderVolume.handleRect;
+        if (handle != null)
+        {
+            Definir(handle.parent as RectTransform, 0f, 0f, 1f, 1f, new Vector2(10f, 0f), new Vector2(-10f, 0f));
+            handle.anchorMin = new Vector2(0f, 0.15f);
+            handle.anchorMax = new Vector2(0f, 0.85f);
+            handle.anchoredPosition = Vector2.zero;
+            handle.sizeDelta = new Vector2(14f, 0f);
+        }
     }
 
     // ---------- TELA ----------

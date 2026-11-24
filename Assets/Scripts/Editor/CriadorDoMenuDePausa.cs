@@ -1,61 +1,45 @@
 using TMPro;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 /// <summary>
 /// COLOQUE ESTE ARQUIVO NA PASTA "Editor" (ex.: Assets/Scripts/Editor).
-/// Abra uma cena de jogo e use Tools > Menu > Criar Menu de Pausa (Esc).
+/// ABRA A CENA DO MENU e use Tools > Menu > Criar Menu de Pausa (Esc).
 ///
-/// Monta o Canvas da pausa do zero (não depende do menu principal) e liga tudo no MenuDePausa e no OpcoesDoJogo.
-/// Na primeira vez também salva um prefab em Assets/Prefabs/MenuDePausa.prefab para você arrastar nas outras cenas.
-///
-/// DICA (opcional): antes de rodar, selecione no Project o asset de fonte TMP do seu jogo
-/// (ou um texto TMP da cena) para o menu usar a mesma fonte.
+/// O menu de pausa copia o estilo do menu principal: fonte, cores e comportamento do MenuItemHUD,
+/// imagem da moldura, fundo/borda/seta dos botões e resolução do Canvas.
+/// O resultado é salvo como prefab em Assets/Prefabs/MenuDePausa.prefab (a cópia temporária na cena do Menu é apagada).
+/// Depois é só arrastar o prefab nas cenas de jogo.
 /// </summary>
 public static class CriadorDoMenuDePausa
 {
-    private const string NomeDoDesfazer = "Criar Menu de Pausa";
     private const string PastaPrefab = "Assets/Prefabs";
     private const string CaminhoPrefab = "Assets/Prefabs/MenuDePausa.prefab";
 
-    // ---- Tamanhos (em pixels da resolução de referência 1920x1080) ----
-    private const float LarguraCaixa = 760f;
-    private const float AlturaLinha = 56f;
-    private const float Espaco = 12f;
-    private const int TamanhoTexto = 26;
-    private const int TamanhoTitulo = 48;
-
-    // ---- Dentro das linhas de configuração (frações da largura da linha) ----
+    // Dentro das linhas de configuração (frações da largura da linha)
     private const float FimDoRotulo = 0.46f;
     private const float InicioControle = 0.50f;
     private const float FimControle = 0.96f;
     private const float FimSlider = 0.78f;
     private const float InicioPorcentagem = 0.82f;
 
-    // ---- Cores (edite aqui para combinar com o seu menu) ----
-    private static readonly Color CorFundoTela      = new Color(0f, 0f, 0f, 0.70f);
-    private static readonly Color CorCaixa          = new Color(0.04f, 0.05f, 0.05f, 0.97f);
-    private static readonly Color CorMoldura        = new Color(0.35f, 0.38f, 0.37f, 1f);
-    private static readonly Color CorFundoLinha     = new Color(0.12f, 0.13f, 0.13f, 1f);
-    private static readonly Color CorTitulo         = new Color(0.85f, 0.20f, 0.15f, 1f);
-    private static readonly Color CorTextoNormal    = new Color(0.66f, 0.66f, 0.62f, 1f);
-    private static readonly Color CorBordaNormal    = new Color(0.28f, 0.30f, 0.30f, 1f);
-    private static readonly Color CorSetaNormal     = new Color(0.28f, 0.30f, 0.30f, 1f);
-    private static readonly Color CorTextoSelecao   = new Color(0.90f, 0.30f, 0.20f, 1f);
-    private static readonly Color CorBordaSelecao   = new Color(0.80f, 0.15f, 0.12f, 1f);
-    private static readonly Color CorSetaSelecao    = new Color(0.35f, 0.95f, 1.00f, 1f);
-    private static readonly Color CorValor          = new Color(0.88f, 0.88f, 0.82f, 1f);
-    private static readonly Color CorTrilho         = new Color(0.30f, 0.12f, 0.10f, 1f);
-    private static readonly Color CorPreenchimento  = new Color(0.80f, 0.15f, 0.12f, 1f);
-    private static readonly Color CorPuxador        = new Color(0.95f, 0.45f, 0.10f, 1f);
-    private static readonly Color CorStatus         = new Color(0.66f, 0.66f, 0.62f, 1f);
-
-    private static TMP_FontAsset fonte;
-    private static Material materialDaFonte;
+    /// <summary>Tudo o que é copiado do menu principal.</summary>
+    private class Estilo
+    {
+        public MenuItemHUD hud;          // cores e comportamento dos itens
+        public Image fundo;              // fundo do botão do menu
+        public Graphic borda;            // borda do botão do menu
+        public Graphic seta;             // seta do botão do menu
+        public TMP_Text rotulo;          // texto do botão do menu
+        public TMP_Text titulo;          // título do menu
+        public Image moldura;            // imagem do quadro do menu
+        public float altura;             // altura de um botão
+        public float larguraMoldura;     // largura do quadro
+        public Vector2 referencia = new Vector2(1920f, 1080f);
+        public CanvasScaler.ScreenMatchMode modoMatch = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        public float match = 0.5f;
+    }
 
     private class Linha
     {
@@ -63,36 +47,66 @@ public static class CriadorDoMenuDePausa
         public Image borda;
         public Image fundo;
         public TMP_Text rotulo;
-        public TMP_Text seta;
+        public Graphic seta;
     }
+
+    private static Estilo e;
 
     [MenuItem("Tools/Menu/Criar Menu de Pausa (Esc)")]
     private static void Criar()
     {
-        var existente = Object.FindFirstObjectByType<MenuDePausa>(FindObjectsInactive.Include);
-        if (existente != null)
+        // "global::" porque o Editor também tem uma classe UnityEditor.Menu
+        var menu = Object.FindFirstObjectByType<global::Menu>(FindObjectsInactive.Include);
+        if (menu == null)
+        {
+            Aviso("Abra a cena do Menu e rode de novo: o menu de pausa copia o estilo (fonte, cores, moldura e botões) do menu principal.");
+            return;
+        }
+
+        if (menu.grupoMenu == null)
+        {
+            Aviso("O campo 'Grupo Menu' do componente Menu está vazio. Arraste para ele o painel do menu (o que tem o CanvasGroup).");
+            return;
+        }
+
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(CaminhoPrefab) != null)
         {
             bool substituir = EditorUtility.DisplayDialog(
-                NomeDoDesfazer,
-                "Esta cena já tem um Menu de Pausa. Substituir por um novo?",
+                "Criar Menu de Pausa",
+                "Já existe " + CaminhoPrefab + ". Substituir pelo novo (com o estilo do menu)? As cenas que usam o prefab são atualizadas junto.",
                 "Substituir", "Cancelar");
             if (!substituir) return;
-
-            Undo.DestroyObjectImmediate(existente.gameObject);
         }
 
-        EscolherFonte();
-
-        // ---------- EVENT SYSTEM (precisa existir para a UI responder) ----------
-        if (Object.FindFirstObjectByType<EventSystem>(FindObjectsInactive.Include) == null)
+        string erro;
+        e = LerEstilo(menu, out erro);
+        if (e == null)
         {
-            var es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
-            Undo.RegisterCreatedObjectUndo(es, NomeDoDesfazer);
+            Aviso(erro);
+            return;
         }
 
-        // ---------- CANVAS ----------
+        // ---------- MEDIDAS ----------
+        float altura = e.altura;
+        float espaco = altura * 0.22f;
+        float margemV = altura * 0.8f;
+        float margemH = altura * 0.9f;
+        float alturaTitulo = e.titulo != null ? e.titulo.fontSize * 1.5f : altura * 1.4f;
+        float alturaStatus = altura * 0.55f;
+        const int linhasDeControle = 8;
+
+        float estimativa = margemV * 2f + alturaTitulo + 2f + linhasDeControle * altura + alturaStatus + (linhasDeControle + 2) * espaco;
+
+        // Se não couber na tela, diminui tudo por igual aumentando a resolução de referência
+        Vector2 referencia = e.referencia;
+        if (estimativa > referencia.y * 0.9f)
+            referencia /= (referencia.y * 0.9f) / estimativa;
+
+        float larguraCaixa = Mathf.Max(e.larguraMoldura * 1.5f, altura * 13f);
+        larguraCaixa = Mathf.Min(larguraCaixa, referencia.x * 0.75f);
+
+        // ---------- CANVAS (cópia temporária na cena; vira prefab no final) ----------
         var raiz = new GameObject("MenuDePausa", typeof(RectTransform));
-        Undo.RegisterCreatedObjectUndo(raiz, NomeDoDesfazer);
 
         var canvas = raiz.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -100,33 +114,39 @@ public static class CriadorDoMenuDePausa
 
         var scaler = raiz.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scaler.matchWidthOrHeight = 0.5f;
+        scaler.referenceResolution = referencia;
+        scaler.screenMatchMode = e.modoMatch;
+        scaler.matchWidthOrHeight = e.match;
 
         raiz.AddComponent<GraphicRaycaster>();
         var pausa = raiz.AddComponent<MenuDePausa>();
 
-        // ---------- PAINEL (tela inteira escurecida; é o que liga/desliga) ----------
+        // ---------- PAINEL (tela escurecida; é o que liga/desliga) ----------
         RectTransform painel = NovoUI("Painel", raiz.transform);
         Esticar(painel);
-        painel.gameObject.AddComponent<Image>().color = CorFundoTela;
+        painel.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.7f);
         var opcoes = painel.gameObject.AddComponent<OpcoesDoJogo>();
 
-        // ---------- CAIXA CENTRAL ----------
+        // ---------- CAIXA CENTRAL (com a imagem da moldura do menu) ----------
         RectTransform caixa = NovoUI("Caixa", painel);
         caixa.anchorMin = caixa.anchorMax = new Vector2(0.5f, 0.5f);
         caixa.pivot = new Vector2(0.5f, 0.5f);
-        caixa.sizeDelta = new Vector2(LarguraCaixa, 0f);
+        caixa.sizeDelta = new Vector2(larguraCaixa, 0f);
 
-        caixa.gameObject.AddComponent<Image>().color = CorCaixa;
-        var moldura = caixa.gameObject.AddComponent<Outline>();
-        moldura.effectColor = CorMoldura;
-        moldura.effectDistance = new Vector2(3f, -3f);
+        Image imagemCaixa = caixa.gameObject.AddComponent<Image>();
+        if (e.moldura != null)
+        {
+            EditorUtility.CopySerialized(e.moldura, imagemCaixa);
+            imagemCaixa.raycastTarget = true;
+        }
+        else
+        {
+            imagemCaixa.color = new Color(0.05f, 0.07f, 0.06f, 0.95f);
+        }
 
         var layout = caixa.gameObject.AddComponent<VerticalLayoutGroup>();
-        layout.padding = new RectOffset(40, 40, 32, 32);
-        layout.spacing = Espaco;
+        layout.padding = new RectOffset(Mathf.RoundToInt(margemH), Mathf.RoundToInt(margemH), Mathf.RoundToInt(margemV), Mathf.RoundToInt(margemV));
+        layout.spacing = espaco;
         layout.childAlignment = TextAnchor.UpperCenter;
         layout.childControlWidth = true;
         layout.childControlHeight = true;
@@ -137,11 +157,13 @@ public static class CriadorDoMenuDePausa
         ajuste.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
         // Título e divisória
-        TMP_Text titulo = CriarTexto(caixa, "Titulo", "PAUSA", TamanhoTitulo, CorTitulo, TextAlignmentOptions.Center);
-        DefinirAltura(titulo.gameObject, 70f);
+        TMP_Text titulo = NovoTexto(caixa, "Titulo", "PAUSA", e.titulo, 1f);
+        titulo.alignment = TextAlignmentOptions.Center;
+        DefinirAltura(titulo.gameObject, alturaTitulo);
+        ReplicarCamadasDoTitulo(titulo, "PAUSA");
 
         RectTransform divisoria = NovoUI("Divisoria", caixa);
-        divisoria.gameObject.AddComponent<Image>().color = CorBordaNormal;
+        divisoria.gameObject.AddComponent<Image>().color = Cor("corBordaNormal", new Color(0.44f, 0.66f, 0.54f, 0.55f));
         DefinirAltura(divisoria.gameObject, 2f);
 
         // ---------- LINHAS ----------
@@ -159,8 +181,10 @@ public static class CriadorDoMenuDePausa
         Button botaoSair = CriarLinhaDeBotao(caixa, "BotaoSair", "Sair do jogo");
 
         // Texto de aviso (ex.: "Jogo salvo.")
-        TMP_Text status = CriarTexto(caixa, "TextoStatus", "", TamanhoTexto - 4, CorStatus, TextAlignmentOptions.Center);
-        DefinirAltura(status.gameObject, 30f);
+        TMP_Text status = NovoTexto(caixa, "TextoStatus", "", e.rotulo, 0.75f);
+        status.alignment = TextAlignmentOptions.Center;
+        status.color = Cor("corTextoNormal", new Color(0.66f, 0.90f, 0.77f, 1f));
+        DefinirAltura(status.gameObject, alturaStatus);
 
         // Navegação com teclado/controle: de cima para baixo
         LigarNavegacao(botaoContinuar, seletorResolucao, seletorTela, slider,
@@ -185,25 +209,144 @@ public static class CriadorDoMenuDePausa
         Atribuir(soPausa, "primeiroItem", botaoContinuar);
         soPausa.ApplyModifiedProperties();
 
-        // ---------- PREFAB (só na primeira vez) ----------
-        if (AssetDatabase.LoadAssetAtPath<GameObject>(CaminhoPrefab) == null)
+        // ---------- SALVA O PREFAB E LIMPA A CENA DO MENU ----------
+        if (!AssetDatabase.IsValidFolder(PastaPrefab))
+            AssetDatabase.CreateFolder("Assets", "Prefabs");
+
+        PrefabUtility.SaveAsPrefabAsset(raiz, CaminhoPrefab);
+        Object.DestroyImmediate(raiz);
+
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CaminhoPrefab);
+        Selection.activeObject = prefab;
+        EditorGUIUtility.PingObject(prefab);
+
+        Debug.Log($"[Pausa] Prefab salvo em {CaminhoPrefab} com o estilo do menu principal. Arraste ele nas cenas de jogo (a cena do Menu não foi alterada).", prefab);
+    }
+
+    // ------------------------------------------------------------------
+    // LEITURA DO ESTILO DO MENU PRINCIPAL
+    // ------------------------------------------------------------------
+
+    private static Estilo LerEstilo(global::Menu menu, out string erro)
+    {
+        erro = null;
+        var estilo = new Estilo();
+
+        Button modelo = EscolherBotaoModelo(menu);
+        if (modelo == null)
         {
-            if (!AssetDatabase.IsValidFolder(PastaPrefab))
-                AssetDatabase.CreateFolder("Assets", "Prefabs");
-
-            PrefabUtility.SaveAsPrefabAssetAndConnect(raiz, CaminhoPrefab, InteractionMode.UserAction);
-            Debug.Log($"[Pausa] Prefab salvo em {CaminhoPrefab}. Arraste ele nas outras cenas de jogo.");
+            erro = "Não achei nenhum botão no painel do menu para copiar o estilo.";
+            return null;
         }
-        else
+
+        estilo.hud = modelo.GetComponent<MenuItemHUD>();
+        estilo.fundo = LerReferencia<Image>(estilo.hud, "fundo");
+        estilo.borda = LerReferencia<Graphic>(estilo.hud, "borda");
+        estilo.seta = LerReferencia<Graphic>(estilo.hud, "seta");
+        estilo.rotulo = LerReferencia<TMP_Text>(estilo.hud, "texto");
+        if (estilo.rotulo == null) estilo.rotulo = modelo.GetComponentInChildren<TMP_Text>(true);
+        if (estilo.hud == null && estilo.fundo == null) estilo.fundo = modelo.GetComponent<Image>();
+
+        estilo.altura = AlturaDaLinha(modelo.GetComponent<RectTransform>());
+
+        // Título: o maior texto do painel que não está dentro de um botão
+        foreach (TMP_Text t in menu.grupoMenu.GetComponentsInChildren<TMP_Text>(true))
         {
-            Debug.Log($"[Pausa] O prefab {CaminhoPrefab} já existe e não foi alterado.");
+            if (t.GetComponentInParent<Button>(true) != null) continue;
+            if (estilo.titulo == null || t.fontSize > estilo.titulo.fontSize) estilo.titulo = t;
         }
 
-        Selection.activeGameObject = raiz;
-        EditorGUIUtility.PingObject(raiz);
-        EditorSceneManager.MarkSceneDirty(raiz.scene);
+        // Moldura: o quadro com borda do menu
+        RectTransform moldura = AcharMoldura(menu.grupoMenu.gameObject, modelo, estilo.titulo);
+        estilo.moldura = moldura.GetComponent<Image>();
+        estilo.larguraMoldura = moldura.rect.width;
 
-        Debug.Log("[Pausa] Menu de pausa criado. No Editor ele aparece aberto para você editar; no Play começa escondido e abre com Esc. Salve a cena (Ctrl+S).", raiz);
+        // Resolução de referência do Canvas do menu
+        Canvas canvas = menu.grupoMenu.GetComponentInParent<Canvas>();
+        if (canvas != null)
+        {
+            canvas = canvas.rootCanvas;
+            var scaler = canvas.GetComponent<CanvasScaler>();
+            if (scaler != null && scaler.uiScaleMode == CanvasScaler.ScaleMode.ScaleWithScreenSize)
+            {
+                estilo.referencia = scaler.referenceResolution;
+                estilo.modoMatch = scaler.screenMatchMode;
+                estilo.match = scaler.matchWidthOrHeight;
+            }
+            else
+            {
+                Vector2 tamanho = ((RectTransform)canvas.transform).rect.size;
+                if (tamanho.x > 100f && tamanho.y > 100f) estilo.referencia = tamanho;
+            }
+        }
+
+        Debug.Log($"[Pausa] Estilo copiado do botão '{modelo.name}' (altura {estilo.altura:0}); moldura: '{moldura.name}'.", modelo);
+        return estilo;
+    }
+
+    /// <summary>Prefere um botão que tenha MenuItemHUD (Opções, Continuar, Jogar, Sair, ou qualquer outro do painel).</summary>
+    private static Button EscolherBotaoModelo(global::Menu menu)
+    {
+        Button[] preferidos = { menu.botaoOpcoes, menu.botaoContinuar, menu.botaoJogar, menu.botaoSair };
+
+        foreach (Button b in preferidos)
+            if (b != null && b.GetComponent<MenuItemHUD>() != null) return b;
+
+        foreach (Button b in menu.grupoMenu.GetComponentsInChildren<Button>(true))
+            if (b.GetComponent<MenuItemHUD>() != null) return b;
+
+        foreach (Button b in preferidos)
+            if (b != null) return b;
+
+        Button[] todos = menu.grupoMenu.GetComponentsInChildren<Button>(true);
+        return todos.Length > 0 ? todos[0] : null;
+    }
+
+    /// <summary>
+    /// Acha o quadro com borda do menu: a MENOR imagem (fora dos botões) que contém, ao mesmo tempo,
+    /// o centro do botão modelo e o centro do título. Se não achar, usa o painel inteiro.
+    /// </summary>
+    private static RectTransform AcharMoldura(GameObject painel, Button modelo, TMP_Text titulo)
+    {
+        Canvas.ForceUpdateCanvases();
+
+        RectTransform rModelo = modelo.GetComponent<RectTransform>();
+        Vector3 pontoBotao = rModelo.TransformPoint(rModelo.rect.center);
+        Vector3 pontoTitulo = titulo != null
+            ? titulo.rectTransform.TransformPoint(titulo.rectTransform.rect.center)
+            : pontoBotao;
+
+        RectTransform melhor = null;
+        float menorArea = float.MaxValue;
+
+        foreach (Graphic g in painel.GetComponentsInChildren<Graphic>(true))
+        {
+            if (g is TMP_Text) continue;
+            if (g.GetComponentInParent<Button>(true) != null) continue;
+
+            RectTransform r = g.rectTransform;
+            if (!r.rect.Contains(r.InverseTransformPoint(pontoBotao))) continue;
+            if (!r.rect.Contains(r.InverseTransformPoint(pontoTitulo))) continue;
+
+            float area = r.rect.width * r.rect.height;
+            if (area > 0f && area < menorArea)
+            {
+                menorArea = area;
+                melhor = r;
+            }
+        }
+
+        return melhor != null ? melhor : (RectTransform)painel.transform;
+    }
+
+    private static float AlturaDaLinha(RectTransform linha)
+    {
+        Canvas.ForceUpdateCanvases();
+        if (linha.parent is RectTransform pai)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(pai);
+
+        float altura = linha.rect.height;
+        return altura > 1f ? altura : 50f;
     }
 
     // ------------------------------------------------------------------
@@ -237,14 +380,23 @@ public static class CriadorDoMenuDePausa
         seletor.transition = Selectable.Transition.None;
         seletor.targetGraphic = imagem;
 
-        TMP_Text setaEsquerda = CriarTexto(area, "SetaEsquerda", "<", TamanhoTexto, CorSetaSelecao, TextAlignmentOptions.Center);
+        Color corSeta = Cor("corSetaSelecionada", new Color(0.91f, 0.97f, 0.93f, 1f));
+        Color corValor = Cor("corTextoSelecionado", new Color(0.80f, 1f, 0.90f, 1f));
+
+        TMP_Text setaEsquerda = NovoTexto(area, "SetaEsquerda", "<", e.rotulo, 0.9f);
         Ancorar(setaEsquerda.rectTransform, 0f, 0f, 0.14f, 1f);
+        setaEsquerda.alignment = TextAlignmentOptions.Center;
+        setaEsquerda.color = corSeta;
 
-        TMP_Text setaDireita = CriarTexto(area, "SetaDireita", ">", TamanhoTexto, CorSetaSelecao, TextAlignmentOptions.Center);
+        TMP_Text setaDireita = NovoTexto(area, "SetaDireita", ">", e.rotulo, 0.9f);
         Ancorar(setaDireita.rectTransform, 0.86f, 0f, 1f, 1f);
+        setaDireita.alignment = TextAlignmentOptions.Center;
+        setaDireita.color = corSeta;
 
-        TMP_Text valor = CriarTexto(area, "Valor", "-", TamanhoTexto, CorValor, TextAlignmentOptions.Center);
+        TMP_Text valor = NovoTexto(area, "Valor", "-", e.rotulo, 0.9f);
         Ancorar(valor.rectTransform, 0.14f, 0f, 0.86f, 1f);
+        valor.alignment = TextAlignmentOptions.Center;
+        valor.color = corValor;
 
         var so = new SerializedObject(seletor);
         Atribuir(so, "textoValor", valor);
@@ -259,6 +411,10 @@ public static class CriadorDoMenuDePausa
     {
         Linha l = NovaLinha(pai, "LinhaVolume", "Volume", true);
 
+        Color corTrilho = Cor("corBordaNormal", new Color(0.44f, 0.66f, 0.54f, 0.55f));
+        Color corPreenchimento = Cor("corBordaSelecionada", new Color(0.66f, 0.90f, 0.77f, 1f));
+        Color corPuxador = Cor("corTextoSelecionado", new Color(0.80f, 1f, 0.90f, 1f));
+
         // Slider padrão da Unity, só com cores lisas (sem sprites)
         GameObject goSlider = DefaultControls.CreateSlider(new DefaultControls.Resources());
         goSlider.name = "SliderVolume";
@@ -271,78 +427,125 @@ public static class CriadorDoMenuDePausa
         slider.maxValue = 1f;
         slider.value = 1f;
 
-        PintarImagem(goSlider.transform.Find("Background"), CorTrilho);
-        PintarImagem(goSlider.transform.Find("Fill Area/Fill"), CorPreenchimento);
+        PintarImagem(goSlider.transform.Find("Background"), new Color(corTrilho.r, corTrilho.g, corTrilho.b, 0.8f));
+        PintarImagem(goSlider.transform.Find("Fill Area/Fill"), corPreenchimento);
         Transform puxador = goSlider.transform.Find("Handle Slide Area/Handle");
-        PintarImagem(puxador, CorPuxador);
+        PintarImagem(puxador, corPuxador);
         if (puxador != null)
-            puxador.GetComponent<RectTransform>().sizeDelta = new Vector2(AlturaLinha * 0.25f, 0f);
+            puxador.GetComponent<RectTransform>().sizeDelta = new Vector2(e.altura * 0.25f, 0f);
 
-        textoPorcentagem = CriarTexto(l.go.transform, "TextoPorcentagem", "100%", TamanhoTexto - 2, CorValor, TextAlignmentOptions.Left);
+        textoPorcentagem = NovoTexto(l.go.transform, "TextoPorcentagem", "100%", e.rotulo, 0.9f);
         Ancorar(textoPorcentagem.rectTransform, InicioPorcentagem, 0f, FimControle, 1f);
+        textoPorcentagem.alignment = TextAlignmentOptions.Left;
+        textoPorcentagem.color = corPuxador;
 
         LigarHud(goSlider, l);
         ConfigurarLinha(l.go, slider);
     }
 
-    /// <summary>Linha base: borda (a própria linha), fundo escuro, rótulo e seta. Os controles entram por cima.</summary>
+    /// <summary>Linha base com o visual do botão do menu: borda (a própria linha), fundo, rótulo e seta.</summary>
     private static Linha NovaLinha(Transform pai, string nome, string texto, bool rotuloAEsquerda)
     {
         var l = new Linha();
 
-        l.go = new GameObject(nome, typeof(RectTransform), typeof(Image));
+        l.go = new GameObject(nome, typeof(RectTransform));
         l.go.transform.SetParent(pai, false);
-        DefinirAltura(l.go, AlturaLinha);
+        DefinirAltura(l.go, e.altura);
 
-        l.borda = l.go.GetComponent<Image>();
-        l.borda.color = CorBordaNormal;
+        // Borda: mesma imagem e cor do menu (ou uma cor lisa se o menu não tiver)
+        l.borda = l.go.AddComponent<Image>();
+        if (e.borda is Image imagemBorda)
+            EditorUtility.CopySerialized(imagemBorda, l.borda);
+        else
+            l.borda.color = Cor("corBordaNormal", new Color(0.44f, 0.66f, 0.54f, 0.55f));
+        l.borda.enabled = true;
+        l.borda.raycastTarget = true;
 
+        // Fundo
         RectTransform rf = NovoUI("Fundo", l.go.transform);
-        Esticar(rf, 2f);
         l.fundo = rf.gameObject.AddComponent<Image>();
-        l.fundo.color = CorFundoLinha;
+        if (e.fundo != null)
+        {
+            CopiarMargens(e.fundo.rectTransform, rf);
+            EditorUtility.CopySerialized(e.fundo, l.fundo);
+        }
+        else
+        {
+            Esticar(rf, 2f);
+            l.fundo.color = new Color(0.07f, 0.09f, 0.08f, 0.95f);
+        }
+        l.fundo.enabled = true;
         l.fundo.raycastTarget = false;
 
-        TextAlignmentOptions alinhamento = rotuloAEsquerda ? TextAlignmentOptions.MidlineLeft : TextAlignmentOptions.Center;
-        l.rotulo = CriarTexto(l.go.transform, "Texto", texto, TamanhoTexto, CorTextoNormal, alinhamento);
+        // Rótulo
+        l.rotulo = NovoTexto(l.go.transform, "Texto", texto, e.rotulo, 1f);
         if (rotuloAEsquerda)
         {
             Ancorar(l.rotulo.rectTransform, 0f, 0f, FimDoRotulo, 1f);
-            l.rotulo.rectTransform.offsetMin = new Vector2(56f, 0f); // espaço para a seta
+            l.rotulo.rectTransform.offsetMin = new Vector2(e.altura * 1.0f, 0f); // espaço para a seta
+            l.rotulo.alignment = TextAlignmentOptions.MidlineLeft;
         }
         else
         {
             Esticar(l.rotulo.rectTransform);
+            l.rotulo.alignment = TextAlignmentOptions.Center;
         }
 
-        l.seta = CriarTexto(l.go.transform, "Seta", ">", TamanhoTexto, CorSetaNormal, TextAlignmentOptions.Center);
+        // Seta (mesmo tipo e aparência da seta do menu)
+        l.seta = CriarSeta(l.go.transform);
         RectTransform rs = l.seta.rectTransform;
+        Vector2 tamanhoSeta = e.seta != null ? e.seta.rectTransform.rect.size : Vector2.zero;
+        if (tamanhoSeta.x < 1f || tamanhoSeta.y < 1f) tamanhoSeta = new Vector2(e.altura * 0.6f, e.altura * 0.6f);
         rs.anchorMin = rs.anchorMax = new Vector2(0f, 0.5f);
         rs.pivot = new Vector2(0.5f, 0.5f);
-        rs.anchoredPosition = new Vector2(30f, 0f);
-        rs.sizeDelta = new Vector2(36f, 36f);
+        rs.sizeDelta = tamanhoSeta;
+        rs.anchoredPosition = new Vector2(e.altura * 0.25f + tamanhoSeta.x * 0.5f, 0f);
 
         return l;
     }
 
-    /// <summary>Põe o MenuItemHUD no controle (já precisa ter um Selectable) e liga fundo, borda, seta, texto e cores.</summary>
+    private static Graphic CriarSeta(Transform pai)
+    {
+        if (e.seta is TMP_Text textoSeta)
+        {
+            TMP_Text t = NovoTexto(pai, "Seta", textoSeta.text, textoSeta, 1f);
+            t.alignment = TextAlignmentOptions.Center;
+            return t;
+        }
+
+        RectTransform r = NovoUI("Seta", pai);
+        Image img = r.gameObject.AddComponent<Image>();
+
+        if (e.seta is Image imagemSeta)
+        {
+            EditorUtility.CopySerialized(imagemSeta, img);
+            img.raycastTarget = false;
+            return img;
+        }
+
+        // O menu não tem seta: cria um ">" simples
+        Object.DestroyImmediate(img);
+        TMP_Text padrao = r.gameObject.AddComponent<TextMeshProUGUI>();
+        if (e.rotulo != null) EditorUtility.CopySerialized(e.rotulo, padrao);
+        padrao.text = ">";
+        padrao.alignment = TextAlignmentOptions.Center;
+        padrao.enableWordWrapping = false;
+        padrao.raycastTarget = false;
+        return padrao;
+    }
+
+    /// <summary>Põe o MenuItemHUD no controle (que já precisa ter um Selectable) copiando as cores e o comportamento do menu.</summary>
     private static void LigarHud(GameObject controle, Linha l)
     {
         var hud = controle.AddComponent<MenuItemHUD>();
-        var so = new SerializedObject(hud);
+        if (e.hud != null) EditorUtility.CopySerialized(e.hud, hud);
 
+        var so = new SerializedObject(hud);
         Atribuir(so, "fundo", l.fundo);
         Atribuir(so, "borda", l.borda);
         Atribuir(so, "seta", l.seta);
         Atribuir(so, "texto", l.rotulo);
-
-        DefinirCor(so, "corTextoNormal", CorTextoNormal);
-        DefinirCor(so, "corBordaNormal", CorBordaNormal);
-        DefinirCor(so, "corSetaNormal", CorSetaNormal);
-        DefinirCor(so, "corTextoSelecionado", CorTextoSelecao);
-        DefinirCor(so, "corBordaSelecionada", CorBordaSelecao);
-        DefinirCor(so, "corSetaSelecionada", CorSetaSelecao);
-
+        Atribuir(so, "fonteDeSom", null); // referência da cena do Menu não vale no prefab
         so.ApplyModifiedProperties();
     }
 
@@ -372,46 +575,6 @@ public static class CriadorDoMenuDePausa
     // AUXILIARES
     // ------------------------------------------------------------------
 
-    /// <summary>Usa a fonte selecionada no Project (ou de um texto TMP selecionado); senão tenta achar uma fonte do projeto.</summary>
-    private static void EscolherFonte()
-    {
-        fonte = null;
-        materialDaFonte = null;
-
-        if (Selection.activeObject is TMP_FontAsset selecionada)
-        {
-            fonte = selecionada;
-        }
-        else if (Selection.activeGameObject != null)
-        {
-            TMP_Text t = Selection.activeGameObject.GetComponentInChildren<TMP_Text>(true);
-            if (t != null)
-            {
-                fonte = t.font;
-                materialDaFonte = t.fontSharedMaterial;
-            }
-        }
-
-        if (fonte == null)
-        {
-            foreach (string guid in AssetDatabase.FindAssets("t:TMP_FontAsset"))
-            {
-                string caminho = AssetDatabase.GUIDToAssetPath(guid);
-                if (caminho.Contains("TextMesh Pro") || caminho.Contains("LiberationSans")) continue;
-
-                var candidata = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(caminho);
-                if (candidata == null) continue;
-
-                fonte = candidata;
-                break;
-            }
-        }
-
-        Debug.Log(fonte != null
-            ? $"[Pausa] Fonte usada: {fonte.name}. Para usar outra, selecione o asset de fonte TMP no Project e rode de novo."
-            : "[Pausa] Usando a fonte padrão do TextMeshPro. Para usar a do seu jogo, selecione o asset de fonte TMP no Project e rode de novo.");
-    }
-
     private static RectTransform NovoUI(string nome, Transform pai)
     {
         var go = new GameObject(nome, typeof(RectTransform));
@@ -419,24 +582,79 @@ public static class CriadorDoMenuDePausa
         return go.GetComponent<RectTransform>();
     }
 
-    private static TMP_Text CriarTexto(Transform pai, string nome, string conteudo, int tamanho, Color cor, TextAlignmentOptions alinhamento)
+    /// <summary>Cria um texto com a mesma fonte, material, tamanho e cor de um texto do menu (escala = fração do tamanho).</summary>
+    private static TMP_Text NovoTexto(Transform pai, string nome, string conteudo, TMP_Text modelo, float escala)
     {
         RectTransform rect = NovoUI(nome, pai);
         var texto = rect.gameObject.AddComponent<TextMeshProUGUI>();
 
-        if (fonte != null)
+        float tamanho;
+        if (modelo != null)
         {
-            texto.font = fonte;
-            if (materialDaFonte != null) texto.fontSharedMaterial = materialDaFonte;
+            EditorUtility.CopySerialized(modelo, texto);
+            tamanho = modelo.fontSize * escala;
+        }
+        else
+        {
+            tamanho = e.altura * 0.5f * escala;
         }
 
+        texto.enableAutoSizing = false;
         texto.fontSize = tamanho;
-        texto.color = cor;
-        texto.alignment = alinhamento;
         texto.text = conteudo;
         texto.enableWordWrapping = false;
         texto.raycastTarget = false;
         return texto;
+    }
+
+    /// <summary>
+    /// O título do menu pode ter camadas filhas (o mesmo texto repetido para dar relevo, como o objeto "Fundo"
+    /// dentro de "Titulo"). Copia essas camadas para o título da pausa, com o mesmo texto.
+    /// </summary>
+    private static void ReplicarCamadasDoTitulo(TMP_Text destino, string conteudo)
+    {
+        if (e.titulo == null) return;
+
+        foreach (TMP_Text camada in e.titulo.GetComponentsInChildren<TMP_Text>(true))
+        {
+            if (camada == e.titulo) continue;
+
+            RectTransform r = NovoUI(camada.name, destino.transform);
+            var novo = r.gameObject.AddComponent<TextMeshProUGUI>();
+            EditorUtility.CopySerialized(camada, novo);
+
+            novo.enableAutoSizing = false;
+            novo.fontSize = camada.fontSize;
+            novo.text = conteudo;
+            novo.alignment = TextAlignmentOptions.Center;
+            novo.enableWordWrapping = false;
+            novo.raycastTarget = false;
+
+            // Mesma posição e tamanho da camada original, em relação ao título
+            RectTransform original = camada.rectTransform;
+            r.anchorMin = original.anchorMin;
+            r.anchorMax = original.anchorMax;
+            r.pivot = original.pivot;
+            r.anchoredPosition = original.anchoredPosition;
+            r.sizeDelta = original.sizeDelta;
+            r.SetSiblingIndex(original.GetSiblingIndex());
+        }
+    }
+
+    /// <summary>Se o fundo original ocupa o botão todo (com margens), repete as margens; senão, usa 2 de margem.</summary>
+    private static void CopiarMargens(RectTransform origem, RectTransform destino)
+    {
+        bool preencheTudo = origem.anchorMin == Vector2.zero && origem.anchorMax == Vector2.one;
+        if (preencheTudo)
+        {
+            Esticar(destino);
+            destino.offsetMin = origem.offsetMin;
+            destino.offsetMax = origem.offsetMax;
+        }
+        else
+        {
+            Esticar(destino, 2f);
+        }
     }
 
     private static void DefinirAltura(GameObject go, float altura)
@@ -483,9 +701,25 @@ public static class CriadorDoMenuDePausa
         p.objectReferenceValue = valor;
     }
 
-    private static void DefinirCor(SerializedObject so, string campo, Color cor)
+    private static T LerReferencia<T>(MenuItemHUD hud, string campo) where T : Object
     {
-        SerializedProperty p = so.FindProperty(campo);
-        if (p != null) p.colorValue = cor;
+        if (hud == null) return null;
+
+        SerializedProperty p = new SerializedObject(hud).FindProperty(campo);
+        return p != null ? p.objectReferenceValue as T : null;
+    }
+
+    /// <summary>Cor guardada no MenuItemHUD do menu principal (ou um padrão, se não houver HUD).</summary>
+    private static Color Cor(string campo, Color padrao)
+    {
+        if (e == null || e.hud == null) return padrao;
+
+        SerializedProperty p = new SerializedObject(e.hud).FindProperty(campo);
+        return p != null ? p.colorValue : padrao;
+    }
+
+    private static void Aviso(string mensagem)
+    {
+        EditorUtility.DisplayDialog("Menu de Pausa", mensagem, "OK");
     }
 }

@@ -1,9 +1,9 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -12,8 +12,7 @@ using UnityEngine.UI;
 /// Use Tools > Menu > Criar Menu de Pausa (Esc) para montar tudo na cena.
 ///
 /// Pausa o jogo (Time.timeScale = 0), mostra o cursor e oferece: continuar, resolução, tela, volume,
-/// salvar, reiniciar a cena, voltar ao menu principal e sair. Reiniciar, Menu e Sair pedem
-/// uma segunda confirmação (clicar de novo em até 3 segundos).
+/// salvar, reiniciar a cena, voltar ao menu principal e sair.
 /// </summary>
 public class MenuDePausa : MonoBehaviour
 {
@@ -44,7 +43,6 @@ public class MenuDePausa : MonoBehaviour
     [SerializeField] private bool pausarAudio = true;
     [Tooltip("Mostra e destrava o cursor enquanto pausado, e devolve ao estado anterior ao continuar")]
     [SerializeField] private bool controlarCursor = true;
-    [SerializeField] private float segundosParaConfirmar = 3f;
 
     [Header("Eventos (opcional)")]
     [Tooltip("Ex.: desligar o script de olhar com o mouse")]
@@ -56,9 +54,6 @@ public class MenuDePausa : MonoBehaviour
     private bool cursorVisivelAntes;
     private CursorLockMode travaAntes;
 
-    private Button botaoConfirmando;
-    private string textoOriginal;
-    private Coroutine rotinaConfirmacao;
     private Coroutine rotinaAviso;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -71,18 +66,22 @@ public class MenuDePausa : MonoBehaviour
     void Awake()
     {
         Pausado = false;
+        GarantirEventSystem();
         if (painel != null) painel.SetActive(false);
         if (textoStatus != null) textoStatus.text = "";
 
         if (botaoContinuar) botaoContinuar.onClick.AddListener(Retomar);
         if (botaoSalvar) botaoSalvar.onClick.AddListener(Salvar);
-        if (botaoReiniciar) botaoReiniciar.onClick.AddListener(() => Confirmar(botaoReiniciar, Reiniciar));
-        if (botaoMenu) botaoMenu.onClick.AddListener(() => Confirmar(botaoMenu, IrParaOMenu));
-        if (botaoSair) botaoSair.onClick.AddListener(() => Confirmar(botaoSair, SairDoJogo));
+        if (botaoReiniciar) botaoReiniciar.onClick.AddListener(Reiniciar);
+        if (botaoMenu) botaoMenu.onClick.AddListener(IrParaOMenu);
+        if (botaoSair) botaoSair.onClick.AddListener(SairDoJogo);
     }
 
     void Update()
     {
+        // E confirma o item selecionado (igual ao Enter) enquanto a pausa está aberta
+        if (Pausado) ConfirmarComTecla.Verificar();
+
         bool esc = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
         bool start = Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame;
         if (!esc && !start) return;
@@ -101,11 +100,33 @@ public class MenuDePausa : MonoBehaviour
         AudioListener.pause = false;
     }
 
+    /// <summary>A UI só responde se a cena tiver um EventSystem. Se faltar, cria um com o módulo do Input System.</summary>
+    private static void GarantirEventSystem()
+    {
+        if (FindFirstObjectByType<EventSystem>(FindObjectsInactive.Include) != null) return;
+
+        var go = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
+        Debug.Log("[MenuDePausa] A cena não tinha EventSystem; criei um automaticamente.", go);
+    }
+
+    /// <summary>
+    /// A inspeção usa Esc para sair. Enquanto ela está aberta, ou acabou de fechar neste mesmo frame,
+    /// a pausa não abre (isso também vale para o botão Start do controle).
+    /// </summary>
+    private static bool InspecaoTemPrioridade()
+    {
+        GerenciadorDeInspecao inspecao = GerenciadorDeInspecao.Instancia;
+        if (inspecao != null && (inspecao.EstaInspecionando || inspecao.FechouNesteFrame)) return true;
+
+        // Inventário aberto: o Esc não faz nada, só o I fecha
+        return GerenciadorDeInventario.InventarioAberto;
+    }
+
     // ---------- PAUSAR / RETOMAR ----------
 
     public void Pausar()
     {
-        if (Pausado || Bloqueado) return;
+        if (Pausado || Bloqueado || InspecaoTemPrioridade()) return;
         Pausado = true;
 
         escalaAntes = Time.timeScale > 0f ? Time.timeScale : 1f;
@@ -148,7 +169,6 @@ public class MenuDePausa : MonoBehaviour
             Cursor.lockState = travaAntes;
         }
 
-        CancelarConfirmacao();
         if (painel != null) painel.SetActive(false);
     }
 
@@ -167,7 +187,7 @@ public class MenuDePausa : MonoBehaviour
         // Puzzles e inventário já são salvos na hora; aqui gravamos também a cena atual para o "Continuar"
         EstadoDoJogo.SalvarCena(SceneManager.GetActiveScene().name);
         PlayerPrefs.Save();
-        MostrarAviso("Jogo salvo.");
+        MostrarAviso("Jogo salvo (slot " + EstadoDoJogo.SlotAtual + ").");
     }
 
     private void Reiniciar()
@@ -206,60 +226,6 @@ public class MenuDePausa : MonoBehaviour
 #endif
     }
 
-    // ---------- CONFIRMAÇÃO (clicar duas vezes) ----------
-
-    private void Confirmar(Button botao, System.Action acao)
-    {
-        if (botaoConfirmando == botao)
-        {
-            CancelarConfirmacao();
-            acao();
-            return;
-        }
-
-        CancelarConfirmacao();
-
-        TMP_Text texto = TextoDe(botao);
-        if (texto == null)
-        {
-            acao(); // sem rótulo não dá para pedir confirmação
-            return;
-        }
-
-        botaoConfirmando = botao;
-        textoOriginal = texto.text;
-        texto.text = "Confirmar?";
-        rotinaConfirmacao = StartCoroutine(ExpirarConfirmacao());
-    }
-
-    private IEnumerator ExpirarConfirmacao()
-    {
-        yield return new WaitForSecondsRealtime(segundosParaConfirmar);
-        rotinaConfirmacao = null;
-        CancelarConfirmacao();
-    }
-
-    private void CancelarConfirmacao()
-    {
-        if (rotinaConfirmacao != null)
-        {
-            StopCoroutine(rotinaConfirmacao);
-            rotinaConfirmacao = null;
-        }
-
-        if (botaoConfirmando == null) return;
-
-        TMP_Text texto = TextoDe(botaoConfirmando);
-        if (texto != null) texto.text = textoOriginal;
-        botaoConfirmando = null;
-    }
-
-    private static TMP_Text TextoDe(Button botao)
-    {
-        Transform t = botao.transform.Find("Texto");
-        return t != null ? t.GetComponent<TMP_Text>() : botao.GetComponentInChildren<TMP_Text>(true);
-    }
-
     // ---------- AVISO ----------
 
     private void MostrarAviso(string mensagem)
@@ -270,7 +236,7 @@ public class MenuDePausa : MonoBehaviour
         rotinaAviso = StartCoroutine(AvisoRotina(mensagem));
     }
 
-    private IEnumerator AvisoRotina(string mensagem)
+    private System.Collections.IEnumerator AvisoRotina(string mensagem)
     {
         textoStatus.text = mensagem;
         yield return new WaitForSecondsRealtime(2f);

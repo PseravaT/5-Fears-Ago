@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// Teclado/controle: esquerda e direita trocam o valor. Mouse: clicar no lado esquerdo volta,
 /// no lado direito (ou no meio) avança. Dá a volta ao chegar no fim da lista.
 /// </summary>
-public class SeletorDeOpcao : Selectable, IPointerClickHandler
+public class SeletorDeOpcao : Selectable, IPointerClickHandler, ISubmitHandler
 {
     [SerializeField] private TMP_Text textoValor;
 
@@ -61,6 +61,12 @@ public class SeletorDeOpcao : Selectable, IPointerClickHandler
         }
 
         base.OnMove(eventData);
+    }
+
+    /// <summary>Confirmar (E ou Enter) avança para a próxima opção.</summary>
+    public void OnSubmit(BaseEventData eventData)
+    {
+        if (IsActive() && IsInteractable()) Mudar(1);
     }
 
     public void OnPointerClick(PointerEventData eventData)

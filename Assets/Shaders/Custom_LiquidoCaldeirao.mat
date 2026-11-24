@@ -25,22 +25,22 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _AmplitudeOnda: 0.017
-    - _Brilho: 0.86
-    - _Contraste: 1.66
-    - _EscalaRuido: 3
-    - _ForcaEspuma: 0.82
+    - _AmplitudeOnda: 0.0218
+    - _Brilho: 0.8
+    - _Contraste: 3.59
+    - _EscalaRuido: 6
+    - _ForcaEspuma: 0.75
     - _FrequenciaOnda: 6
-    - _LarguraEspuma: 0.5
-    - _Passos: 5
-    - _RaioDisco: 1
-    - _ReflexoOnda: 0.45
+    - _LarguraEspuma: 0.427
+    - _Passos: 7.9
+    - _RaioDisco: 1.4
+    - _ReflexoOnda: 1
     - _VelocidadeOnda: 1.5
     m_Colors:
-    - _CorClara: {r: 0.85, g: 0.11999995, b: 0.14999998, a: 1}
-    - _CorEscura: {r: 0.29999998, g: 0.02, b: 0.04, a: 1}
-    - _CorEspuma: {r: 0.2830189, g: 0.060074773, b: 0.060074773, a: 1}
-    - _VelocidadeA: {r: 0.05, g: 0.03, b: 0, a: 0}
+    - _CorClara: {r: 0.3962264, g: 0.11400853, b: 0.11400853, a: 1}
+    - _CorEscura: {r: 0.18867922, g: 0.056069765, b: 0.06667851, a: 1}
+    - _CorEspuma: {r: 0.122641504, g: 0.03875934, b: 0.03875934, a: 1}
+    - _VelocidadeA: {r: 1, g: 0.03, b: 0, a: 0}
     - _VelocidadeB: {r: -0.04, g: 0.02, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

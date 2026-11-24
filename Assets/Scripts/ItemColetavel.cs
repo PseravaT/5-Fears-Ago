@@ -16,6 +16,10 @@ public class ItemColetavel : MonoBehaviour
     [Header("Condição (opcional)")]
     [Tooltip("Se preenchido, o item só pode ser pego depois que este cofre estiver aberto")]
     [SerializeField] private ValvulaCofre cofreNecessario;
+    [Tooltip("Se preenchido, o item só pode ser pego depois que este puzzle de ingredientes for concluído")]
+    [SerializeField] private PuzzleIngredientes puzzleNecessario;
+    [Tooltip("Alternativa ao campo acima: o 'Id Unico' de um puzzle. O item só pode ser pego depois que ele estiver concluído (funciona até se o puzzle estiver em outra cena)")]
+    [SerializeField] private string idDoPuzzleNecessario = "";
     [Tooltip("Se ligado, só dá para pegar enquanto houver uma inspeção em andamento")]
     [SerializeField] private bool soDuranteAInspecao = false;
 
@@ -111,7 +115,7 @@ public class ItemColetavel : MonoBehaviour
     public void Coletar()
     {
         if (coletado || item == null) return;
-        if (cofreNecessario != null && !cofreNecessario.Aberto) return;
+        if (!LiberadoParaColeta(out _)) return;
 
         if (GerenciadorDeInventario.Instancia == null)
         {
@@ -158,7 +162,8 @@ public class ItemColetavel : MonoBehaviour
         return melhorDoFrame;
     }
 
-    private bool CondicoesAtendidas(out string motivo)
+    /// <summary>O cofre foi aberto e o puzzle foi concluído? (as condições "de história" do item)</summary>
+    private bool LiberadoParaColeta(out string motivo)
     {
         motivo = "";
 
@@ -167,6 +172,29 @@ public class ItemColetavel : MonoBehaviour
             motivo = "o ValvulaCofre indicado em 'Cofre Necessario' ainda não está Aberto (confira se é o mesmo cofre que você abriu).";
             return false;
         }
+
+        if (puzzleNecessario != null && !puzzleNecessario.JaConcluido)
+        {
+            motivo = "o puzzle indicado em 'Puzzle Necessario' ainda não foi concluído.";
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(idDoPuzzleNecessario)
+            && !EstadoDoJogo.PuzzleConcluido(idDoPuzzleNecessario.Trim()))
+        {
+            motivo = $"o puzzle '{idDoPuzzleNecessario.Trim()}' ainda não foi concluído.";
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool CondicoesAtendidas(out string motivo)
+    {
+        motivo = "";
+
+        if (!LiberadoParaColeta(out motivo)) return false;
+
         if (soDuranteAInspecao && !(GerenciadorDeInspecao.Instancia != null && GerenciadorDeInspecao.Instancia.EstaInspecionando))
         {
             motivo = "'So Durante A Inspecao' está ligado e não há inspeção em andamento.";

@@ -14,6 +14,9 @@ public class ItemParaInspecionar : MonoBehaviour
     [Tooltip("Deslocamento inicial em relação ao ponto padrão, relativo à câmera: X = direita, Y = cima, Z = mais longe (positivo) ou mais perto (negativo)")]
     public Vector3 posicaoInicial = Vector3.zero;
 
+    [Tooltip("Escala do modelo na inspeção (1,1,1 = tamanho original do prefab)")]
+    public Vector3 escalaInicial = Vector3.one;
+
     [Header("História do Objeto (Tecla Q)")]
     [Tooltip("Texto customizado que aparece ao apertar Q durante a inspeção (Estágio 0 / Normal)")]
     [TextArea(5, 10)]
@@ -84,7 +87,8 @@ public class ItemParaInspecionar : MonoBehaviour
                 modeloDoObjeto,
                 Quaternion.Euler(rotacaoInicial),
                 historiaEscolhida,
-                posicaoInicial
+                posicaoInicial,
+                escalaInicial
             );
         }
         else

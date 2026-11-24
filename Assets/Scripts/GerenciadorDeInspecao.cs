@@ -79,20 +79,26 @@ public class GerenciadorDeInspecao : MonoBehaviour
     // Sobrecargas por compatibilidade
     public void IniciarInspecao(GameObject modelo3D)
     {
-        IniciarInspecao(modelo3D, Quaternion.identity, "", Vector3.zero);
+        IniciarInspecao(modelo3D, Quaternion.identity, "", Vector3.zero, Vector3.one);
     }
 
     public void IniciarInspecao(GameObject modelo3D, string textoItem)
     {
-        IniciarInspecao(modelo3D, Quaternion.identity, textoItem, Vector3.zero);
+        IniciarInspecao(modelo3D, Quaternion.identity, textoItem, Vector3.zero, Vector3.one);
     }
 
     public void IniciarInspecao(GameObject modelo3D, Quaternion rotacaoInicial, string textoItem)
     {
-        IniciarInspecao(modelo3D, rotacaoInicial, textoItem, Vector3.zero);
+        IniciarInspecao(modelo3D, rotacaoInicial, textoItem, Vector3.zero, Vector3.one);
     }
 
     public void IniciarInspecao(GameObject modelo3D, Quaternion rotacaoInicial, string textoItem, Vector3 posicaoInicial)
+    {
+        IniciarInspecao(modelo3D, rotacaoInicial, textoItem, posicaoInicial, Vector3.one);
+    }
+
+    /// <param name="escalaInicial">Multiplica a escala original do prefab (1,1,1 = tamanho original)</param>
+    public void IniciarInspecao(GameObject modelo3D, Quaternion rotacaoInicial, string textoItem, Vector3 posicaoInicial, Vector3 escalaInicial)
     {
         if (estaInspecionando) return;
 
@@ -109,6 +115,9 @@ public class GerenciadorDeInspecao : MonoBehaviour
         objetoSendoInspecionado.transform.SetParent(cameraTransform, false);
         objetoSendoInspecionado.transform.localPosition = new Vector3(posicaoInicial.x, posicaoInicial.y, distanciaAtual);
         objetoSendoInspecionado.transform.localRotation = rotacaoInicial;
+
+        // Escala: multiplica a escala original do prefab pela escala escolhida
+        objetoSendoInspecionado.transform.localScale = Vector3.Scale(objetoSendoInspecionado.transform.localScale, escalaInicial);
 
         // Guarda o estado inicial
         rotacaoInicialGuardada = rotacaoInicial;
