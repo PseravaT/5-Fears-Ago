@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 public class ItemParaInspecionar : MonoBehaviour
@@ -43,9 +44,30 @@ public class ItemParaInspecionar : MonoBehaviour
     [TextArea(2, 4)]
     public string dialogoDano2Vermelho;
 
+    [Header("Coletar ao Pressionar E na Inspeção (Opcional)")]
+    [Tooltip("Se preencher um ItemData aqui, ao apertar E dentro da inspeção 3D ele pega o item e coloca no inventário em vez de apenas sair! (ESC continua saindo sem pegar).")]
+    public ItemData itemParaInventario;
+    [Tooltip("Se marcado, esconde/desativa o objeto da cena após pegar o item.")]
+    public bool ocultarObjetoAoColetar = true;
+    public UnityEvent aoColetarItem;
+
+    private bool jaColetado = false;
+
+    void Start()
+    {
+        if (itemParaInventario != null && EstadoDoJogo.PuzzleConcluido("coletado_" + itemParaInventario.Id))
+        {
+            jaColetado = true;
+            if (TryGetComponent<Interagivel>(out var inter)) inter.SetEnabled(false);
+            if (ocultarObjetoAoColetar) gameObject.SetActive(false);
+        }
+    }
+
     // Conecte esta função no seu "On Interact ()" do Interagivel
     public void MandarParaAInspecao()
     {
+        if (jaColetado) return;
+
         string dialogoEscolhido = GerenciadorDeDialogo.EscolherTextoPorDano(
             dialogoAntesDeInspecionar,
             dialogoDano1Laranja,
@@ -90,10 +112,60 @@ public class ItemParaInspecionar : MonoBehaviour
                 posicaoInicial,
                 escalaInicial
             );
+
+            if (itemParaInventario != null)
+            {
+                GerenciadorDeInspecao.Instancia.DefinirAcaoAoPressionarE(ColetarParaInventario);
+            }
         }
         else
         {
             Debug.LogError("Faltou colocar o modelo 3D no script ou falta o Gerenciador na cena!", this);
+        }
+    }
+
+    private void ColetarParaInventario()
+    {
+        if (jaColetado || itemParaInventario == null) return;
+
+        // Garante que o ItemData do inventário também tenha o texto detalhado se estiver vazio no asset
+        if (string.IsNullOrWhiteSpace(itemParaInventario.textoDetalhado))
+        {
+            string historia = GerenciadorDeDialogo.EscolherTextoPorDano(
+                textoDetalhado,
+                textoDetalhadoDano1Laranja,
+                textoDetalhadoDano2Vermelho
+            );
+            if (!string.IsNullOrWhiteSpace(historia))
+            {
+                itemParaInventario.textoDetalhado = historia;
+            }
+        }
+
+        if (GerenciadorDeInventario.Instancia != null)
+        {
+            GerenciadorDeInventario.Instancia.Adicionar(itemParaInventario);
+        }
+        else
+        {
+            EstadoDoJogo.AdicionarItem(itemParaInventario.Id);
+        }
+
+        jaColetado = true;
+        EstadoDoJogo.MarcarPuzzleConcluido("coletado_" + itemParaInventario.Id);
+
+        if (TryGetComponent<Interagivel>(out var inter) ||
+            (inter = GetComponentInChildren<Interagivel>(true)) != null ||
+            (inter = GetComponentInParent<Interagivel>()) != null)
+        {
+            inter.SetEnabled(false);
+        }
+
+        aoColetarItem?.Invoke();
+
+        if (ocultarObjetoAoColetar)
+        {
+            gameObject.SetActive(false);
         }
     }
 

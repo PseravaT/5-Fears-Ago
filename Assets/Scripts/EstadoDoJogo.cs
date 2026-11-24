@@ -38,6 +38,9 @@ public static class EstadoDoJogo
     /// <summary>Disparado sempre que um item entra ou sai do inventário, quando tudo é limpo ou quando o slot muda.</summary>
     public static event Action AoMudarInventario;
 
+    /// <summary>Disparado quando qualquer puzzle é marcado como concluído (envia o ID do puzzle).</summary>
+    public static event Action<string> AoConcluirPuzzle;
+
     // ---------- SLOTS ----------
 
     /// <summary>Slot em uso agora (1 a TotalDeSlots). Na primeira vez é o último que foi usado, ou 1.</summary>
@@ -151,6 +154,7 @@ public static class EstadoDoJogo
             PlayerPrefs.SetString(ChaveLista(slot), string.Join(",", ids));
 
         PlayerPrefs.Save();
+        AoConcluirPuzzle?.Invoke(id);
     }
 
     // ---------- INVENTÁRIO ----------
@@ -279,6 +283,7 @@ public static class EstadoDoJogo
     {
         ReiniciarCache();
         AoMudarInventario = null;
+        AoConcluirPuzzle = null;
         slotAtual = 0;
 
         if (EditorPrefs.GetBool(ChaveEditor, true))

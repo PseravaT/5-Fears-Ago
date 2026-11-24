@@ -90,6 +90,8 @@ public class ControleCameraInteracao : MonoBehaviour
 
     void OnDisable()
     {
+        estaInteragindo = false;
+
         if (GerenciadorDeDialogo.Instancia != null)
         {
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(SairDaVisao);

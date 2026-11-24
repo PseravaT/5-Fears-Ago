@@ -129,14 +129,15 @@ public class GerenciadorDeInventario : MonoBehaviour
 
         if (Keyboard.current == null) return;
 
-        bool apertouTecla = Keyboard.current[teclaDeAbrir].wasPressedThisFrame;
+        bool apertouTecla = Keyboard.current[teclaDeAbrir].wasPressedThisFrame ||
+                            Keyboard.current.iKey.wasPressedThisFrame;
 
         if (aberto)
         {
             // Ignora o input no frame em que abriu (ex.: voltando da inspeção com E ou Esc)
             if (Time.frameCount <= frameDeAbertura) return;
 
-            if (apertouTecla)
+            if (apertouTecla || Keyboard.current.escapeKey.wasPressedThisFrame)
             {
                 Fechar();
                 return;
@@ -174,7 +175,7 @@ public class GerenciadorDeInventario : MonoBehaviour
 
     public void Abrir()
     {
-        if (aberto) return;
+        if (aberto || MenuDePausa.Pausado) return;
 
         if (painelInventario == null)
         {
@@ -184,6 +185,7 @@ public class GerenciadorDeInventario : MonoBehaviour
 
         aberto = true;
         frameDeAbertura = Time.frameCount;
+        MenuDePausa.Bloqueado = true;
 
         lockAnterior = Cursor.lockState;
         cursorVisivelAnterior = Cursor.visible;
@@ -208,6 +210,7 @@ public class GerenciadorDeInventario : MonoBehaviour
     {
         if (!aberto) return;
         aberto = false;
+        StartCoroutine(DesbloquearPausaProximoFrame());
 
         LimparPreview();
         if (painelInventario != null) painelInventario.SetActive(false);
@@ -219,6 +222,12 @@ public class GerenciadorDeInventario : MonoBehaviour
 
         aoFecharInventario?.Invoke();
         AoMudarEstado?.Invoke(false);
+    }
+
+    private System.Collections.IEnumerator DesbloquearPausaProximoFrame()
+    {
+        yield return null;
+        if (!aberto) MenuDePausa.Bloqueado = false;
     }
 
     /// <summary>Fecha o inventário e abre o item no modelo interativo (inspeção). Ao sair, volta para o inventário.</summary>
@@ -273,6 +282,7 @@ public class GerenciadorDeInventario : MonoBehaviour
 
     private bool PodeAbrir()
     {
+        if (MenuDePausa.Pausado) return false;
         if (GerenciadorDeInspecao.Instancia != null && GerenciadorDeInspecao.Instancia.EstaInspecionando) return false;
         if (GerenciadorDeDialogo.Instancia != null && GerenciadorDeDialogo.Instancia.DialogoEstaAtivo) return false;
         return true;

@@ -15,11 +15,12 @@ MonoBehaviour:
   id: 03
   nomeDoItem: Garrafa com mensagem
   icone: {fileID: 21300000, guid: 0826bad3f11f97145b5b594c1c6fa2f1, type: 3}
-  descricaoCurta: 
+  descricaoCurta: 'Garrafa com chafe e uma carta '
   posicaoInicialInspecao: {x: 0, y: -0.24, z: 0}
   modelo3D: {fileID: 5863832394121149354, guid: 6056329f162605f45bde0c29560a5454, type: 3}
   rotacaoInicialGraus: {x: 0, y: 0, z: 0}
   escalaInspecao: {x: 0.3, y: 0.3, z: 0.3}
   usarRotacaoPropriaNaInspecao: 1
   rotacaoNaInspecaoGraus: {x: 0, y: 0, z: 0}
-  textoDetalhado: 
+  textoDetalhado: Parece uma Garrafa que tem uma chave dentro ... tem uma mensagem
+    junto

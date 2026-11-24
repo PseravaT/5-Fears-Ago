@@ -59,6 +59,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
     private float distanciaInicialGuardada;
 
     private Coroutine rotinaPose;
+    private System.Action aoColetarComTeclaE;
 
     public bool EstaInspecionando => estaInspecionando;
     public bool FechouNesteFrame => Time.frameCount == ultimoFrameFechado;
@@ -105,6 +106,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         cameraTransform = Camera.main.transform;
 
         objetoSendoInspecionado = Instantiate(modelo3D);
+        LimparScriptsDeCenaDoClone(objetoSendoInspecionado);
 
         // Z da posição inicial soma na distância; X e Y deslocam o objeto na tela.
         distanciaAlvo = Mathf.Clamp(distanciaDaCamera + posicaoInicial.z, distanciaMinima, distanciaMaxima);
@@ -126,6 +128,8 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
         ControlesTravados = false;
         EmTransicao = false;
+        aoColetarComTeclaE = null;
+        aoColetarComTeclaE = null;
 
         if (objetoSendoInspecionado.TryGetComponent<Rigidbody>(out var rb))
         {
@@ -174,6 +178,20 @@ public class GerenciadorDeInspecao : MonoBehaviour
         frameInicioInspecao = Time.frameCount;
     }
 
+    private void LimparScriptsDeCenaDoClone(GameObject clone)
+    {
+        if (clone == null) return;
+
+        // Se o usuário arrastou um objeto da cena para ModeloDoObjeto, o clone não pode rodar
+        // scripts de cena que desativam/movem o objeto ou conflitam com o InteractionDotManager.
+        foreach (var comp in clone.GetComponentsInChildren<LiberarAposPuzzle>(true)) { comp.enabled = false; Destroy(comp); }
+        foreach (var comp in clone.GetComponentsInChildren<Interagivel>(true)) { comp.enabled = false; Destroy(comp); }
+        foreach (var comp in clone.GetComponentsInChildren<ItemParaInspecionar>(true)) { comp.enabled = false; Destroy(comp); }
+        foreach (var comp in clone.GetComponentsInChildren<ItemColetavel>(true)) { comp.enabled = false; Destroy(comp); }
+        foreach (var comp in clone.GetComponentsInChildren<BoiarNoLiquido>(true)) { comp.enabled = false; Destroy(comp); }
+        foreach (var col in clone.GetComponentsInChildren<Collider>(true)) col.enabled = false;
+    }
+
     private void MudarLayerRecursivo(Transform obj, int novaLayer)
     {
         if (novaLayer == -1) return;
@@ -197,6 +215,12 @@ public class GerenciadorDeInspecao : MonoBehaviour
         pos.x = deslocamentoXYInicial.x;
         pos.y = deslocamentoXYInicial.y;
         objetoSendoInspecionado.transform.localPosition = pos;
+    }
+
+    /// <summary>Define uma ação opcional executada ao pressionar E para sair da inspeção (ex.: coletar o item para o inventário).</summary>
+    public void DefinirAcaoAoPressionarE(System.Action acao)
+    {
+        aoColetarComTeclaE = acao;
     }
 
     /// <summary>Trava ou libera rotação, zoom e reset (usado enquanto a válvula anima). Ignorado durante uma transição de pose.</summary>
@@ -351,8 +375,15 @@ public class GerenciadorDeInspecao : MonoBehaviour
             bool apertouEsc = Keyboard.current.escapeKey.wasPressedThisFrame;
             bool dialogoAtivo = GerenciadorDeDialogo.Instancia != null && GerenciadorDeDialogo.Instancia.DialogoEstaAtivo;
 
-            if (apertouEsc || (!dialogoAtivo && !ControlesTravados && Keyboard.current.eKey.wasPressedThisFrame))
+            if (apertouEsc)
             {
+                TerminarInspecao();
+            }
+            else if (!dialogoAtivo && !ControlesTravados && Keyboard.current.eKey.wasPressedThisFrame)
+            {
+                var acaoColeta = aoColetarComTeclaE;
+                aoColetarComTeclaE = null;
+                acaoColeta?.Invoke();
                 TerminarInspecao();
             }
         }
@@ -372,6 +403,8 @@ public class GerenciadorDeInspecao : MonoBehaviour
         }
         ControlesTravados = false;
         EmTransicao = false;
+        aoColetarComTeclaE = null;
+        aoColetarComTeclaE = null;
 
         if (GerenciadorDeDialogo.Instancia != null)
         {

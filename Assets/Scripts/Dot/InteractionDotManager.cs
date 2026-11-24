@@ -29,15 +29,12 @@ public class InteractionDotManager : MonoBehaviour
         if (player != null)
             playerInteractor = player.GetComponent<PlayerInteractor>();
 
-        // Busca todos os objetos interagíveis na cena
-        allInteractables.AddRange(Object.FindObjectsByType<Interagivel>());
+        // Busca todos os objetos interagíveis na cena (incluindo os que começam desativados/bloqueados por puzzle)
+        allInteractables.AddRange(Object.FindObjectsByType<Interagivel>(FindObjectsInactive.Include));
 
         foreach (var interactable in allInteractables)
         {
-            if (interactable.CanInteract())
-            {
-                CreateDotForInteractable(interactable);
-            }
+            CreateDotForInteractable(interactable);
         }
     }
 

@@ -1282,16 +1282,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be7a8a77b15b1e740923acf2efcc222b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
-  modeloDoObjeto: {fileID: 2019871066}
+  modeloDoObjeto: {fileID: 43081800}
   rotacaoInicial: {x: -90, y: 0, z: 180}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
-  textoDetalhado: 
+  textoDetalhado: "Vi nas marcas de minhas m\xE3os o que um dia ardia,\nRestos escuros
+    de escolhas que o tempo n\xE3o consumia.\nTentei apagar meu passado, mas a mancha
+    persistia,\nPreso em tua vigil\xE2ncia, olham-me enquanto vivia."
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &252318861 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7454933818436235590, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
@@ -1449,6 +1456,174 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 292806262}
   m_CullTransparentMesh: 1
+--- !u!1 &302891308
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 302891312}
+  - component: {fileID: 302891311}
+  - component: {fileID: 302891310}
+  - component: {fileID: 302891309}
+  - component: {fileID: 302891314}
+  - component: {fileID: 302891313}
+  m_Layer: 0
+  m_Name: InteragirGarrafa
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &302891309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302891308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be7a8a77b15b1e740923acf2efcc222b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
+  modeloDoObjeto: {fileID: 529344303}
+  rotacaoInicial: {x: 0, y: 0, z: 0}
+  posicaoInicial: {x: 0, y: 0, z: 0}
+  escalaInicial: {x: 1, y: 1, z: 1}
+  textoDetalhado: Parece uma Garrafa que tem uma chave dentro ... tem uma mensagem
+    junto
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
+  dialogoAntesDeInspecionar: tem algo boiando no Ponche...
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 11400000, guid: 0f3e00f02fbbc9842bdeb25d8ddd541d, type: 2}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 356023699}
+        m_TargetAssemblyTypeName: Interagivel, Assembly-CSharp
+        m_MethodName: SetEnabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!114 &302891310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302891308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0caba14b7fe49444caaa11aeaece73d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LiberarAposPuzzle
+  idDoPuzzleNecessario: caldeirao
+  itemColetadoQueLibera: {fileID: 0}
+  ocultarObjetoAntesDoPuzzle: 0
+  objetoVisualParaMostrar: {fileID: 529344303}
+  interagivelAlvo: {fileID: 0}
+  aoLiberar:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &302891311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302891308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05eda8a6fd12fb41a789d241083667f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interagivel
+  displayName: interaja
+  isEnabled: 1
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 302891309}
+        m_TargetAssemblyTypeName: ItemParaInspecionar, Assembly-CSharp
+        m_MethodName: MandarParaAInspecao
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &302891312
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302891308}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -17.52, y: 3.299, z: -66.325}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &302891313
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302891308}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!64 &302891314
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302891308}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &327483396 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3410185793394415013, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
@@ -1495,16 +1670,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be7a8a77b15b1e740923acf2efcc222b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
-  modeloDoObjeto: {fileID: 1380998176}
+  modeloDoObjeto: {fileID: 203452713}
   rotacaoInicial: {x: -90, y: 0, z: 180}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
-  textoDetalhado: 
+  textoDetalhado: "Me foi entregue desde o ber\xE7o, a fria presen\xE7a,\nT\xE3o
+    fina e cruel, dividia minha inoc\xEAncia.\nBrincava entre cacos do que um dia
+    me pertencia,\nNa escurid\xE3o do meu quarto, olham-me enquanto eu dormia."
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &327483404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1527,6 +1709,144 @@ MonoBehaviour:
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &356023694 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4767400413853537203, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+  m_PrefabInstance: {fileID: 1350969523}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &356023699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356023694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05eda8a6fd12fb41a789d241083667f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interagivel
+  displayName: interaja
+  isEnabled: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 356023700}
+        m_TargetAssemblyTypeName: ControleCameraInteracao, Assembly-CSharp
+        m_MethodName: EntrarNaVisao
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &356023700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356023694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc992a783870da1408e33807679842d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControleCameraInteracao
+  cameraDesteObjeto: {fileID: 1125692677}
+  aoEntrarNaVisao:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2023022848}
+        m_TargetAssemblyTypeName: walking, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
+        m_TargetAssemblyTypeName: InteractionDotManager, Assembly-CSharp
+        m_MethodName: AlternarDots
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1215706653}
+        m_TargetAssemblyTypeName: GerenciadorDeDialogo, Assembly-CSharp
+        m_MethodName: MostrarTexto
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Acho que ja fiz tudo que tinha que ser feito
+          m_BoolArgument: 0
+        m_CallState: 2
+  aoSairDaVisao:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1160073998060383025, guid: 864a8421c42bfc04e81710e831222c97, type: 3}
+        m_TargetAssemblyTypeName: InteractionDotManager, Assembly-CSharp
+        m_MethodName: AlternarDots
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2023022848}
+        m_TargetAssemblyTypeName: walking, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!114 &356023701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356023694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0caba14b7fe49444caaa11aeaece73d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LiberarAposPuzzle
+  idDoPuzzleNecessario: caldeirao
+  itemColetadoQueLibera: {fileID: 11400000, guid: 0f3e00f02fbbc9842bdeb25d8ddd541d, type: 2}
+  ocultarObjetoAntesDoPuzzle: 0
+  objetoVisualParaMostrar: {fileID: 0}
+  interagivelAlvo: {fileID: 0}
+  aoLiberar:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &372949212
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2054,31 +2374,6 @@ MonoBehaviour:
   amplitude: 0.01
   periodoEmSegundos: 4
   inclinacaoGraus: 1
---- !u!114 &529344308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 529344303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25b25f80aecd696439b2242f11ff4980, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
-  item: {fileID: 11400000, guid: 0f3e00f02fbbc9842bdeb25d8ddd541d, type: 2}
-  cofreNecessario: {fileID: 0}
-  puzzleNecessario: {fileID: 1734989702}
-  idDoPuzzleNecessario: 
-  soDuranteAInspecao: 0
-  teclaDeColetar: 30
-  distanciaMaxima: 7
-  jogador: {fileID: 2023022845}
-  dicaDeInteracao: {fileID: 0}
-  mostrarDiagnostico: 1
-  aoColetar:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &543414610
 GameObject:
   m_ObjectHideFlags: 0
@@ -2939,6 +3234,11 @@ MonoBehaviour:
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &682710800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3062,6 +3362,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 104}
+--- !u!1 &685119540 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9017328541939089309, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+  m_PrefabInstance: {fileID: 1350969523}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &685119545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685119540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6a9312e41f5a44bba04904211ce328, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuadroReativoAoDano
+  materialDaFoto: {fileID: 0}
+  fotoVerde: {fileID: 0}
+  fotoLaranja: {fileID: 0}
+  fotoVermelha: {fileID: 0}
+  meshRendererDoQuadro: {fileID: 0}
+  indiceDoMaterialNoMesh: 1
+  materialVerde: {fileID: 2100000, guid: fd81f38de2ee9bd4caabb94aac716e5f, type: 2}
+  materialLaranja: {fileID: 2100000, guid: 96bd1b05149625741a0a7488e1ce9b71, type: 2}
+  materialVermelho: {fileID: 2100000, guid: 4db124ea2e29ae049bcc43c0b8648a87, type: 2}
 --- !u!1 &704266312 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7123193131662581613, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
@@ -4058,18 +4384,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be7a8a77b15b1e740923acf2efcc222b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
-  modeloDoObjeto: {fileID: 1733039699}
+  modeloDoObjeto: {fileID: 1380998176}
   rotacaoInicial: {x: -90, y: 0, z: 180}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
-  textoDetalhado: "Familia e fihos, tudo entreguei no final,\nMinha velhice sugada,
-    temperada com sal.\nN\xE3o vejo a hora do fim, pois a dor n\xE3o cedia,\nSem
-    pena do meu tormento, olham-me enquanto sofria."
+  textoDetalhado: "Observa-me com tua lente, tua grande vis\xE3o,\nDei meu sangue
+    e meus dias, sem receber perd\xE3o.\nAlgo em meu peito se partia, mas ainda resistia,\nNa
+    mesa vazia da vida, olham-me enquanto comia."
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &996680945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5342,7 +5673,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ControleDePorta
   estaTrancada: 1
   textoInteracao: Droga a porta fechou de algum forma !
-  textoQuandoDestrancada: A porta foi destrancada!
+  textoQuandoDestrancada: A porta foi destrancada! mas parece que tem algo flutuando
+    na mistura
   nomeDaProximaSala: Casa
   nomeDaCenaDeTransicao: Porta
   nomeDoPontoDeSpawnNoDestino: SpawnVindoDaCozinha
@@ -6544,6 +6876,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 4b88295228114464c88ff2e51efecbf1, type: 2}
+    - target: {fileID: 1099556530389837002, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: fd81f38de2ee9bd4caabb94aac716e5f, type: 2}
     - target: {fileID: 1129496810705857465, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -6776,6 +7112,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: e1b7c84fea196884380b06a9dbcd4893, type: 2}
+    - target: {fileID: 4767400413853537203, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+      propertyPath: m_Name
+      value: "P\xE9 do caldeir\xE3o "
+      objectReference: {fileID: 0}
     - target: {fileID: 4825102201480058366, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -7268,6 +7608,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -5754060345647867467, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1350969525}
+    - targetCorrespondingSourceObject: {fileID: 9017328541939089309, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 685119545}
     - targetCorrespondingSourceObject: {fileID: -5117700066308340382, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1827420123}
@@ -7325,6 +7668,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -9121101064940512526, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2086776916}
+    - targetCorrespondingSourceObject: {fileID: 4767400413853537203, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 356023699}
+    - targetCorrespondingSourceObject: {fileID: 4767400413853537203, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 356023700}
+    - targetCorrespondingSourceObject: {fileID: 4767400413853537203, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 356023701}
     - targetCorrespondingSourceObject: {fileID: 6478181706803222961, guid: b17df161287d663458b54f858ea0bd1a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1541318821}
@@ -8500,6 +8852,10 @@ PrefabInstance:
       value: "\xE1rea intera\xE7\xE3o"
       objectReference: {fileID: 0}
     - target: {fileID: 8442906881264002074, guid: f0ade1ef3f674574ab5644f7e8a2ca6b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2022386
+      objectReference: {fileID: 0}
+    - target: {fileID: 8442906881264002074, guid: f0ade1ef3f674574ab5644f7e8a2ca6b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.027999878
       objectReference: {fileID: 0}
@@ -8887,19 +9243,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be7a8a77b15b1e740923acf2efcc222b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
-  modeloDoObjeto: {fileID: 203452713}
+  modeloDoObjeto: {fileID: 1733039699}
   rotacaoInicial: {x: -90, y: 0, z: 180}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
-  textoDetalhado: "Um fragmento de hist\xF3ria:\nMe foi entregue desde o princ\xEDpio,
-    a fria presen\xE7a,\nAcompanhando cada passo, feito dura senten\xE7a.\nComo l\xE2minas
-    que cortam a paz que eu sentia,\nNa escurid\xE3o do meu quarto, olham-me enquanto
-    eu dormia."
+  textoDetalhado: "Fam\xEDlia e filhos, tudo entreguei no final,\nRestou-me o branco
+    dos anos, um gosto quase mortal.\nO tempo secou meus olhos, mas algo deles escorria,\nSem
+    pena do meu tormento, olham-me enquanto sofria."
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1708620113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8956,17 +9316,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc992a783870da1408e33807679842d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControleCameraInteracao
---- !u!114 &1734989702 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8960182305927579261, guid: c95c450d2d1f0a94392a32ac6fed7753, type: 3}
-  m_PrefabInstance: {fileID: 8799013050910655769}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22439c7cc18b01649b029d5f70f1d0fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PuzzleIngredientes
 --- !u!1 &1748453178
 GameObject:
   m_ObjectHideFlags: 0
@@ -9267,16 +9616,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be7a8a77b15b1e740923acf2efcc222b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
-  modeloDoObjeto: {fileID: 43081800}
+  modeloDoObjeto: {fileID: 2019871066}
   rotacaoInicial: {x: -90, y: 0, z: 180}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
-  textoDetalhado: 
+  textoDetalhado: "Da minha antiga exist\xEAncia, j\xE1 n\xE3o resta um elo,\nO que
+    fui se desfez em restos, espalhados pelo solo.\nNem o p\xF3 guardou meu nome,
+    nem a terra me acolhia,\nNo canto frio da cozinha... olham-me enquanto eu morria."
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1827420123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10298,6 +10654,88 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 80.936, y: -90, z: -90}
+--- !u!1 &1979755078 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3136370652811208648, guid: 6056329f162605f45bde0c29560a5454, type: 3}
+  m_PrefabInstance: {fileID: 919848764466897753}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1979755082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979755078}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05eda8a6fd12fb41a789d241083667f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interagivel
+  displayName: interaja
+  isEnabled: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1979755083}
+        m_TargetAssemblyTypeName: ItemParaInspecionar, Assembly-CSharp
+        m_MethodName: MandarParaAInspecao
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1979755083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979755078}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be7a8a77b15b1e740923acf2efcc222b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
+  modeloDoObjeto: {fileID: 529344303}
+  rotacaoInicial: {x: 0, y: 0, z: 0}
+  posicaoInicial: {x: 0, y: 0, z: 0}
+  escalaInicial: {x: 1, y: 1, z: 1}
+  textoDetalhado: Parece uma Garrafa que tem uma chave dentro ... tem uma mensagem
+    junto
+  textoDetalhadoDano1Laranja: 
+  textoDetalhadoDano2Vermelho: 
+  dialogoAntesDeInspecionar: tem algo boiando no Ponche...
+  dialogoDano1Laranja: 
+  dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 11400000, guid: 0f3e00f02fbbc9842bdeb25d8ddd541d, type: 2}
+  ocultarObjetoAoColetar: 0
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1979755084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979755078}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0caba14b7fe49444caaa11aeaece73d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LiberarAposPuzzle
+  idDoPuzzleNecessario: caldeirao
+  itemColetadoQueLibera: {fileID: 0}
+  ocultarObjetoAntesDoPuzzle: 1
+  objetoVisualParaMostrar: {fileID: 529344303}
+  interagivelAlvo: {fileID: 0}
+  aoLiberar:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2013063187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11020,9 +11458,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5863832394121149354, guid: 6056329f162605f45bde0c29560a5454, type: 3}
       insertIndex: -1
       addedObject: {fileID: 529344306}
-    - targetCorrespondingSourceObject: {fileID: 5863832394121149354, guid: 6056329f162605f45bde0c29560a5454, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 3136370652811208648, guid: 6056329f162605f45bde0c29560a5454, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 529344308}
+      addedObject: {fileID: 1979755084}
+    - targetCorrespondingSourceObject: {fileID: 3136370652811208648, guid: 6056329f162605f45bde0c29560a5454, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1979755083}
+    - targetCorrespondingSourceObject: {fileID: 3136370652811208648, guid: 6056329f162605f45bde0c29560a5454, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1979755082}
   m_SourcePrefab: {fileID: 100100000, guid: 6056329f162605f45bde0c29560a5454, type: 3}
 --- !u!4 &975881613731164690
 Transform:
@@ -11610,6 +12054,11 @@ MonoBehaviour:
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7774039909846026903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12287,3 +12736,4 @@ SceneRoots:
   - {fileID: 617389213}
   - {fileID: 34403975}
   - {fileID: 1187871967}
+  - {fileID: 302891312}
