@@ -301,6 +301,54 @@ public class DamageSystem : MonoBehaviour
         SistemaDeVida.SincronizarPeloDamageSystem(hits, maxHits);
     }
 
+    /// <summary>
+    /// Zera o dano e todos os efeitos de dano na hora, sem esperar a suavização voltar a zero.
+    /// A escuridão (darkness) NÃO é zerada: ela continua clareando sozinha, como um fade-in.
+    /// </summary>
+    public void ResetDamageImediato()
+    {
+        ResetDamage();
+
+        currentLevel = 0f;
+        levelVelocity = 0f;
+        flash = 0f;
+        currentColor = Color.clear;
+        veinReach = 0f;
+        brushReachNow = 0f;
+        heartVolume = 0f;
+        heartSpeed = 1f;
+        pulseIntervalNow = 1.2f;
+
+        // Devolve os parâmetros das veias e dos rabiscos aos valores de antes do primeiro dano
+        veinColor = new Color(0.6f, 0.03f, 0.05f, 1f);
+        veinWidth = 0.06f;
+        veinDensity = 12f;
+        veinFps = 10f;
+        veinFrames = 4f;
+        veinBoil = 0.8f;
+        veinOutlineColor = new Color(0.03f, 0f, 0.01f, 1f);
+        veinOutline = 0f;
+        veinScribble = 0.7f;
+        brushColorNow = new Color(0.02f, 0.02f, 0.02f, 1f);
+        brushThicknessNow = 0.22f;
+        brushDensityNow = 9f;
+        brushRoughNow = 0.6f;
+        veinRoughNow = 0.5f;
+        outlineRoughNow = 0.5f;
+
+        if (heartbeatSource != null)
+        {
+            heartbeatSource.Stop();
+            heartbeatSource.volume = 0f;
+        }
+
+        // Empurra tudo para os materiais já neste frame
+        SetCrtFloat(DamageLevelId, 0f);
+        SetCrtFloat(HitFlashId, 0f);
+        SetCrtColor(DamageColorId, Color.clear);
+        UpdateVeins();
+    }
+
     // Permite que o SistemaDeVida defina diretamente o estagio de dano (com ou sem som de impacto)
     public void SetDamageStage(int targetHits, bool playEffects = true)
     {
@@ -348,6 +396,23 @@ public class DamageSystem : MonoBehaviour
 
     [ContextMenu("Testar: resetar dano")]
     void TestReset() => ResetDamage();
+
+    [ContextMenu("Diagnóstico: mostrar valores do filtro")]
+    void Diagnostico()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"hits={hits} shownHits={shownHits} level={currentLevel:F4} flash={flash:F4} darkness={darkness:F4} vein={veinReach:F4} brush={brushReachNow:F4} cor.a={currentColor.a:F3}");
+
+        foreach (var m in Resources.FindObjectsOfTypeAll<Material>())
+        {
+            if (m == null || m.shader == null || !m.shader.name.Contains("CRT")) continue;
+
+            bool naLista = materiaisCRTAtivos.Contains(m);
+            sb.AppendLine($"{(naLista ? "NA LISTA" : "FORA DA LISTA")} | {m.name} ({m.shader.name}) | level={m.GetFloat(DamageLevelId):F4} darkness={m.GetFloat(DamageDarknessId):F4} vein={m.GetFloat(VeinReachId):F4} brush={m.GetFloat(BrushReachId):F4} flash={m.GetFloat(HitFlashId):F4} cor.a={m.GetColor(DamageColorId).a:F3}");
+        }
+
+        Debug.Log(sb.ToString(), this);
+    }
 
     // Indice em stageColors para hits >= 1 (hits = 0 nao usa cor)
     int StageIndex()
