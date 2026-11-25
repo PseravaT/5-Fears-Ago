@@ -54,6 +54,15 @@ public class PainelRunasLivros : MonoBehaviour
     private void Start()
     {
         if (cam == null) cam = Camera.main;
+
+        // Se o puzzle já foi resolvido antes (ex.: o jogador saiu da cena e voltou), já nasce resolvido.
+        // Não dispara o aoResolver: o que depende dele guarda o próprio estado.
+        if (!string.IsNullOrWhiteSpace(idParaSalvar) && EstadoDoJogo.PuzzleConcluido(idParaSalvar.Trim()))
+        {
+            resolvido = true;
+            travado = false;
+        }
+
         foreach (var t in simbolos) t.AoIniciarGiro += AoIniciarGiroTambor;
         foreach (var t in cores) t.AoIniciarGiro += AoIniciarGiroTambor;
         AtualizarMarcador();

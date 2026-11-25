@@ -2439,6 +2439,10 @@ MonoBehaviour:
   textoBotaoQ: {fileID: 376556145}
   textoContadorPaginas: {fileID: 0}
   ocultarContadorSePaginaUnica: 0
+  textoLerDetalhes: pressione Q para ler detalhes
+  textoVoltarDaLeitura: "pressione Q para voltar a inspe\xE7\xE3o"
+  textoFocar: pressione Q para focar
+  textoDesfocar: pressione Q para sair do foco
   distanciaDaCamera: 2.5
   velocidadeDeRotacao: 10
   distanciaMinima: 2
@@ -3155,12 +3159,24 @@ MonoBehaviour:
   rotacaoInicial: {x: -90, y: 0, z: 0}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
   textoDetalhado: 
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &558759772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3678,12 +3694,24 @@ MonoBehaviour:
   rotacaoInicial: {x: 180, y: 0, z: 180}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
   textoDetalhado: '"O Cachorro da Estepe" por Carbonemann Torro.'
   textoDetalhadoDano1Laranja: '"O Cachorro da Estepe" por Carbonemann Torro.'
   textoDetalhadoDano2Vermelho: '"O Cachorro da Estepe" por Carbonemann Torro.'
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &636514559
 GameObject:
   m_ObjectHideFlags: 0
@@ -4529,12 +4557,24 @@ MonoBehaviour:
   rotacaoInicial: {x: 270, y: 0, z: 270}
   posicaoInicial: {x: 0, y: -0.2, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
   textoDetalhado: 
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &880353634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7954,12 +7994,24 @@ MonoBehaviour:
   rotacaoInicial: {x: -90, y: 0, z: 0}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
   textoDetalhado: 
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!64 &1046842141
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13305,6 +13357,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 291084843649612480, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 291084843649612480, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7005792568177808993, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
       propertyPath: m_Name
       value: Canvas Variant
@@ -13389,6 +13449,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9174636170063652195, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174636170063652195, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174636170063652195, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174636170063652195, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13444,6 +13520,13 @@ MonoBehaviour:
   rotacaoInicial: {x: -90, y: 0, z: 0}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
   textoDetalhado: "Foto rara de pai, m\xE3e, eu e o tio Com a gente."
   textoDetalhadoDano1Laranja: "Foto rara de pai, m\xE3e, eu e o tio Com a gente."
   textoDetalhadoDano2Vermelho: "Foto rara de pai, m\xE3e, eu e o tio Com a gente."
@@ -13453,6 +13536,11 @@ MonoBehaviour:
   dialogoDano2Vermelho: "Aquele B\xEAbado do meu tio roubava meus poucos brinquedos
     para alimentar seu v\xEDcio! | Isso quando ele n\xE3o estava brigando com seu
     irm\xE3o, o Pai, durante v\xE1rias horas seguidas."
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1815443088
 GameObject:
   m_ObjectHideFlags: 0
@@ -13713,12 +13801,24 @@ MonoBehaviour:
   rotacaoInicial: {x: 180, y: 0, z: 180}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
   textoDetalhado: "\"Uma Gest\xE3o de Qu\xEDmica\" por G. Couto."
   textoDetalhadoDano1Laranja: "\"Uma Gest\xE3o de Qu\xEDmica\" por G. Couto."
   textoDetalhadoDano2Vermelho: "\"Uma Gest\xE3o de Qu\xEDmica\" por G. Couto."
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1910680859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13769,6 +13869,13 @@ MonoBehaviour:
   rotacaoInicial: {x: -90, y: 0, z: 0}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
   textoDetalhado: "Foto Tirada de Pai, M\xE3e e Eu."
   textoDetalhadoDano1Laranja: "Foto Tirada de Pai, M\xE3e e Eu."
   textoDetalhadoDano2Vermelho: "Foto Tirada de Pai, M\xE3e e Eu."
@@ -13779,6 +13886,11 @@ MonoBehaviour:
   dialogoDano2Vermelho: "Nunca fui escutado, nunca me deram aten\xE7\xE3o, nunca
     se importaram comigo! | Nem quando eu fazia minha coisa favorita, que era escutar
     os LPs, eu era importante para eles!"
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1944180850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13829,6 +13941,13 @@ MonoBehaviour:
   rotacaoInicial: {x: 180, y: 0, z: 180}
   posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
   textoDetalhado: '"OLHAM-ME"
 
     - Lucy Four'
@@ -13837,6 +13956,11 @@ MonoBehaviour:
   dialogoAntesDeInspecionar: "A M\xE3e lia para mim antes de dormir."
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1947668131
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -97,9 +97,10 @@ public class FocoCameraPainel : MonoBehaviour
         if (correta)
         {
             // O estado lógico muda já: se a inspeção fechar no meio da animação, o cofre fica aberto
+            // (e salvo, para continuar aberto quando o jogador sair da cena e voltar)
             painelDoCenario.MarcarResolvido();
             painelDoModelo.MarcarResolvido();
-            if (valvulaDoCenario != null) valvulaDoCenario.DefinirAberto();
+            if (valvulaDoCenario != null) valvulaDoCenario.DefinirAbertoESalvar();
         }
 
         valvulaDoModelo.AoTerminarAnimacao += AoTerminarTentativa;
@@ -189,6 +190,9 @@ public class FocoCameraPainel : MonoBehaviour
 
             var teclado = Keyboard.current;
             if (teclado == null) return;
+
+            // Ignora a tecla que acabou de abrir a inspeção (o E do Interagivel)
+            if (ger.IniciouNesteFrame) return;
 
             if (teclado[teclaFocar].wasPressedThisFrame) AlternarFoco();
             else if (teclado[teclaDestrancar].wasPressedThisFrame) TentarDestrancar(ger);

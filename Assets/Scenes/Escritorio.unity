@@ -393,10 +393,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
   item: {fileID: 11400000, guid: 8eb54d996b4af744cb7c053d5b427f1c, type: 2}
   cofreNecessario: {fileID: 5334037119480373171}
+  puzzleNecessario: {fileID: 0}
+  idDoPuzzleNecessario: 
   soDuranteAInspecao: 0
-  teclaDeColetar: 30
+  inspecionarAoColetar: 1
+  modeloParaInspecao: {fileID: 919132148705416912}
+  rotacaoInicialInspecao: {x: 0, y: -90, z: 0}
+  posicaoInicialInspecao: {x: 0, y: 0, z: 0}
+  escalaInicialInspecao: {x: 1, y: 1, z: 1}
+  textoExtraNaInspecao: {fileID: 1060627579}
+  teclaDeColetar: 19
+  coletarComE: 1
   distanciaMaxima: 4
-  jogador: {fileID: 0}
+  jogador: {fileID: 1333970085}
   dicaDeInteracao: {fileID: 0}
   mostrarDiagnostico: 1
   aoColetar:
@@ -461,12 +470,25 @@ MonoBehaviour:
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
+  textoExtraNaInspecao: {fileID: 0}
   textoDetalhado: "\"O Barco B\xEAbado\" por Gabriel Totormud."
   textoDetalhadoDano1Laranja: "\"O Barco B\xEAbado\" por Gabriel Totormud."
   textoDetalhadoDano2Vermelho: "\"O Barco B\xEAbado\" por Gabriel Totormud."
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &213598660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -763,6 +785,10 @@ PrefabInstance:
       value: "Sistema de Inspe\xE7\xE3o Global"
       objectReference: {fileID: 0}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: textoFocar
+      value: Pressione Q para focar
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: passoDoZoom
       value: 1.5
       objectReference: {fileID: 0}
@@ -774,6 +800,10 @@ PrefabInstance:
       propertyPath: volumeDeBlur
       value: 
       objectReference: {fileID: 2011932302}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: textoDesfocar
+      value: Pressione Q para sair do foco
+      objectReference: {fileID: 0}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: distanciaMaxima
       value: 1.5
@@ -787,6 +817,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 744461876}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: textoLerDetalhes
+      value: Pressione Q para ler detalhes
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: distanciaDaCamera
       value: 1.5
       objectReference: {fileID: 0}
@@ -798,6 +832,10 @@ PrefabInstance:
       propertyPath: painelTextoDetalhado
       value: 
       objectReference: {fileID: 744461875}
+    - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
+      propertyPath: textoVoltarDaLeitura
+      value: "Pressione Q para voltar a inspe\xE7\xE3o"
+      objectReference: {fileID: 0}
     - target: {fileID: 5342556350994108569, guid: 6ed53d14163fdb443bcd6b3c851b4b7c, type: 3}
       propertyPath: componenteTextoHistoria
       value: 
@@ -964,12 +1002,25 @@ MonoBehaviour:
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
+  textoExtraNaInspecao: {fileID: 0}
   textoDetalhado: "\"Vidas S\xEAcas\" por Grabriel Totoramos."
   textoDetalhadoDano1Laranja: "\"Vidas S\xEAcas\" por Grabriel Totoramos."
   textoDetalhadoDano2Vermelho: "\"Vidas S\xEAcas\" por Grabriel Totoramos."
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &304186971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2041,6 +2092,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 600
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484843575461836163, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -10
+      objectReference: {fileID: 0}
     - target: {fileID: 2790213016763366757, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2138,12 +2225,20 @@ PrefabInstance:
       value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 6422993927329311264, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6422993927329311264, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
       propertyPath: m_VerticalAlignment
       value: 512
       objectReference: {fileID: 0}
+    - target: {fileID: 6422993927329311264, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6989482589102203140, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
       propertyPath: m_text
-      value: pressione Esc ou E para sair
+      value: Pressione Esc para sair
       objectReference: {fileID: 0}
     - target: {fileID: 6989482589102203140, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
       propertyPath: m_fontSize
@@ -2159,7 +2254,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4883110295042733544, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 1060627580}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
 --- !u!1 &744461869 stripped
@@ -2218,6 +2316,11 @@ GameObject:
 --- !u!1 &744461876 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2790213016763366757, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
+  m_PrefabInstance: {fileID: 744461868}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &744461877 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4883110295042733544, guid: 1bd82e2c821a9e64281af7405ddc4911, type: 3}
   m_PrefabInstance: {fileID: 744461868}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &758606721
@@ -2936,6 +3039,143 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0f0df7e31925734aa5c8badf4d268a3, type: 3}
+--- !u!1 &1060627579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1060627580}
+  - component: {fileID: 1060627582}
+  - component: {fileID: 1060627581}
+  m_Layer: 5
+  m_Name: GuiaDestrancar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1060627580
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060627579}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 744461877}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 10}
+  m_SizeDelta: {x: 600, y: 50}
+  m_Pivot: {x: 1, y: 0}
+--- !u!114 &1060627581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060627579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Pressione E para destrancar
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 5310bee9c2211544b8086c1b80b560ed, type: 2}
+  m_sharedMaterial: {fileID: 9099026631464139006, guid: 5310bee9c2211544b8086c1b80b560ed, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 22
+  m_fontSizeBase: 22
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 4
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 0
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: -214.69035, y: 3.6464596, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1060627582
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060627579}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1095731479
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4134,12 +4374,25 @@ MonoBehaviour:
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
+  textoExtraNaInspecao: {fileID: 0}
   textoDetalhado: '"Ecus" por Totonuez.'
   textoDetalhadoDano1Laranja: '"Ecus" por Totonuez.'
   textoDetalhadoDano2Vermelho: '"Ecus" por Totonuez.'
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1517255896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4218,12 +4471,25 @@ MonoBehaviour:
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
+  textoExtraNaInspecao: {fileID: 0}
   textoDetalhado: "\"M\xFAsica para Mico-Le\xF5es\" por G. Couto."
   textoDetalhadoDano1Laranja: "\"M\xFAsica para Mico-Le\xF5es\" por G. Couto."
   textoDetalhadoDano2Vermelho: "\"M\xFAsica para Mico-Le\xF5es\" por G. Couto."
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1566934562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5702,12 +5968,25 @@ MonoBehaviour:
   rotacaoInicial: {x: -180, y: 0, z: 180}
   posicaoInicial: {x: 0.15, y: -0.03, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 0
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
+  textoExtraNaInspecao: {fileID: 0}
   textoDetalhado: '"Fanrrapo Humano" por Gabi Bonelli.'
   textoDetalhadoDano1Laranja: '"Fanrrapo Humano" por Gabi Bonelli.'
   textoDetalhadoDano2Vermelho: '"Fanrrapo Humano" por Gabi Bonelli.'
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2016591625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6882,14 +7161,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemParaInspecionar
   modeloDoObjeto: {fileID: 919132149312923886}
   rotacaoInicial: {x: 0, y: -90, z: 0}
-  posicaoInicial: {x: 0, y: -0.4, z: 0}
+  posicaoInicial: {x: 0, y: 0, z: 0}
   escalaInicial: {x: 1, y: 1, z: 1}
+  funcaoDaTeclaQ: 1
+  aoFocar:
+    m_PersistentCalls:
+      m_Calls: []
+  aoDesfocar:
+    m_PersistentCalls:
+      m_Calls: []
+  textoExtraNaInspecao: {fileID: 1060627579}
   textoDetalhado: 
   textoDetalhadoDano1Laranja: 
   textoDetalhadoDano2Vermelho: 
   dialogoAntesDeInspecionar: 
   dialogoDano1Laranja: 
   dialogoDano2Vermelho: 
+  itemParaInventario: {fileID: 0}
+  ocultarObjetoAoColetar: 1
+  aoColetarItem:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5334037119480373169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6957,13 +7249,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FocoCameraPainel
   painelDoCenario: {fileID: 8513859187651998861}
   valvulaDoCenario: {fileID: 5334037119480373171}
-  distanciaDoPainel: 0.6
-  deslocamentoDoPainel: {x: -0.09, y: -0.4}
+  distanciaDoPainel: 0.5
+  deslocamentoDoPainel: {x: -0.1, y: 0}
   duracaoTransicaoSegundos: 0.8
   botaoFocar: {fileID: 0}
   dicaDestrancar: {fileID: 0}
-  teclaFocar: 20
-  teclaDestrancar: 18
+  teclaFocar: 31
+  teclaDestrancar: 19
 --- !u!114 &5334037119480373171
 MonoBehaviour:
   m_ObjectHideFlags: 0

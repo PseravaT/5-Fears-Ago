@@ -4,6 +4,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
+/// <summary>O que a tecla Q faz durante a inspeção.</summary>
+public enum ModoTeclaQ
+{
+    LerDetalhes,
+    Focar,
+    Nenhum
+}
+
 public class GerenciadorDeInspecao : MonoBehaviour
 {
     public static GerenciadorDeInspecao Instancia;
@@ -18,6 +26,12 @@ public class GerenciadorDeInspecao : MonoBehaviour
     [Tooltip("Se marcado, esconde o contador quando o texto tiver apenas 1 página.")]
     [SerializeField] private bool ocultarContadorSePaginaUnica = false;
 
+    [Header("Textos da tecla Q")]
+    [SerializeField] private string textoLerDetalhes = "pressione Q para ler detalhes";
+    [SerializeField] private string textoVoltarDaLeitura = "pressione Q para voltar a inspeção";
+    [SerializeField] private string textoFocar = "pressione Q para focar";
+    [SerializeField] private string textoDesfocar = "pressione Q para sair do foco";
+
     private bool lendoTelaPreta = false;
     private string[] paginasAtuais = new string[0];
     private int paginaAtual = 0;
@@ -26,6 +40,9 @@ public class GerenciadorDeInspecao : MonoBehaviour
     [Tooltip("Distância inicial que o objeto vai flutuar na frente da câmera")]
     [SerializeField] private float distanciaDaCamera = 1.5f;
     [SerializeField] private float velocidadeDeRotacao = 150f;
+
+    [Tooltip("Guia 'passar página'. Aparece sozinho em qualquer inspeção cujo texto tenha mais de uma página")]
+    [SerializeField] private GameObject guiaPassarPagina;
 
     [Header("Zoom (Roda do Mouse)")]
     [SerializeField] private float distanciaMinima = 0.5f;
@@ -61,11 +78,21 @@ public class GerenciadorDeInspecao : MonoBehaviour
     private Coroutine rotinaPose;
     private System.Action aoColetarComTeclaE;
 
+    // Tecla Q
+    private ModoTeclaQ modoTeclaQ = ModoTeclaQ.LerDetalhes;
+    private System.Action<bool> aoAlternarFoco;
+    private bool emFoco;
+
     public bool EstaInspecionando => estaInspecionando;
     public bool FechouNesteFrame => Time.frameCount == ultimoFrameFechado;
+    /// <summary>true só no frame em que a inspeção abriu. Use para ignorar o E que abriu a inspeção.</summary>
+    public bool IniciouNesteFrame => estaInspecionando && Time.frameCount == frameInicioInspecao;
     public float DistanciaAtualDoObjeto => distanciaAtual;
     public GameObject ObjetoInspecionado => objetoSendoInspecionado;
     public Quaternion RotacaoInicial => rotacaoInicialGuardada;
+
+    /// <summary>true enquanto a Q está no estado "focado" (modo Focar).</summary>
+    public bool EmFoco => emFoco;
 
     /// <summary>Quando true, rotação, zoom e reset ficam bloqueados (usado no foco do painel).</summary>
     public bool ControlesTravados { get; private set; }
@@ -102,11 +129,35 @@ public class GerenciadorDeInspecao : MonoBehaviour
     public void IniciarInspecao(GameObject modelo3D, Quaternion rotacaoInicial, string textoItem, Vector3 posicaoInicial, Vector3 escalaInicial)
     {
         if (estaInspecionando) return;
+        if (modelo3D == null)
+        {
+            Debug.LogWarning("[GerenciadorDeInspecao] Modelo 3D vazio, a inspeção não foi aberta.", this);
+            return;
+        }
 
         cameraTransform = Camera.main.transform;
 
-        objetoSendoInspecionado = Instantiate(modelo3D);
-        LimparScriptsDeCenaDoClone(objetoSendoInspecionado);
+        // Raiz vazia: o modelo é recentralizado dentro dela, então o pivô (o ponto em volta do qual
+        // o objeto gira e é posicionado) fica no centro visual, mesmo que o pivô do prefab esteja fora do mesh
+        GameObject raiz = new GameObject("InspecaoPivo");
+        raiz.transform.position = Vector3.zero;
+        raiz.transform.rotation = Quaternion.identity;
+
+        GameObject clone = Instantiate(modelo3D, raiz.transform);
+        clone.transform.localPosition = Vector3.zero;
+        clone.transform.localRotation = Quaternion.identity;
+        clone.SetActive(true);
+        LimparScriptsDeCenaDoClone(clone);
+
+        Renderer[] rends = clone.GetComponentsInChildren<Renderer>(true);
+        if (rends.Length > 0)
+        {
+            Bounds b = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) b.Encapsulate(rends[i].bounds);
+            clone.transform.localPosition = -b.center;
+        }
+
+        objetoSendoInspecionado = raiz;
 
         // Z da posição inicial soma na distância; X e Y deslocam o objeto na tela.
         distanciaAlvo = Mathf.Clamp(distanciaDaCamera + posicaoInicial.z, distanciaMinima, distanciaMaxima);
@@ -118,7 +169,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         objetoSendoInspecionado.transform.localPosition = new Vector3(posicaoInicial.x, posicaoInicial.y, distanciaAtual);
         objetoSendoInspecionado.transform.localRotation = rotacaoInicial;
 
-        // Escala: multiplica a escala original do prefab pela escala escolhida
+        // Escala: multiplica a escala original pela escala escolhida
         objetoSendoInspecionado.transform.localScale = Vector3.Scale(objetoSendoInspecionado.transform.localScale, escalaInicial);
 
         // Guarda o estado inicial
@@ -129,9 +180,13 @@ public class GerenciadorDeInspecao : MonoBehaviour
         ControlesTravados = false;
         EmTransicao = false;
         aoColetarComTeclaE = null;
-        aoColetarComTeclaE = null;
 
-        if (objetoSendoInspecionado.TryGetComponent<Rigidbody>(out var rb))
+        // Tecla Q volta ao padrão (quem quiser outra função chama DefinirTeclaQ depois)
+        modoTeclaQ = ModoTeclaQ.LerDetalhes;
+        aoAlternarFoco = null;
+        emFoco = false;
+
+        foreach (var rb in objetoSendoInspecionado.GetComponentsInChildren<Rigidbody>(true))
         {
             rb.isKinematic = true;
         }
@@ -161,11 +216,13 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
         ConfigurarPaginasTexto(textoItem);
 
+        if (guiaPassarPagina != null) guiaPassarPagina.SetActive(paginasAtuais.Length > 1);
+
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(true);
         lendoTelaPreta = false;
 
         if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
-        if (textoBotaoQ != null) textoBotaoQ.text = "pressione Q para ler detalhes";
+        AtualizarTextoDaTeclaQ();
 
         if (GerenciadorDeDialogo.Instancia != null && GerenciadorDeDialogo.Instancia.DialogoEstaAtivo)
         {
@@ -217,10 +274,80 @@ public class GerenciadorDeInspecao : MonoBehaviour
         objetoSendoInspecionado.transform.localPosition = pos;
     }
 
-    /// <summary>Define uma ação opcional executada ao pressionar E para sair da inspeção (ex.: coletar o item para o inventário).</summary>
+    /// <summary>Define uma ação opcional executada ao pressionar E (ex.: coletar o item para o inventário). Depois da ação a inspeção fecha. Sem ação, o E não faz nada: só o ESC sai.</summary>
     public void DefinirAcaoAoPressionarE(System.Action acao)
     {
+        Debug.Log($"[Inspecao] Acao do E definida: {(acao == null ? "nenhuma" : acao.Method.DeclaringType + "." + acao.Method.Name)}\n{System.Environment.StackTrace}");
         aoColetarComTeclaE = acao;
+    }
+
+    /// <summary>
+    /// Escolhe o que a tecla Q faz nesta inspeção. Chame logo depois de IniciarInspecao.
+    /// No modo Focar, aoAlternarFoco recebe true ao focar e false ao desfocar.
+    /// </summary>
+    public void DefinirTeclaQ(ModoTeclaQ modo, System.Action<bool> aoAlternarFoco = null)
+    {
+        modoTeclaQ = modo;
+        this.aoAlternarFoco = aoAlternarFoco;
+        emFoco = false;
+
+        // Se estava lendo e trocou de modo, fecha o painel de leitura
+        if (modo != ModoTeclaQ.LerDetalhes && lendoTelaPreta)
+        {
+            lendoTelaPreta = false;
+            if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
+        }
+
+        AtualizarTextoDaTeclaQ();
+    }
+
+    private void AtualizarTextoDaTeclaQ()
+    {
+        if (textoBotaoQ == null) return;
+
+        switch (modoTeclaQ)
+        {
+            case ModoTeclaQ.LerDetalhes:
+                textoBotaoQ.gameObject.SetActive(true);
+                textoBotaoQ.text = lendoTelaPreta ? textoVoltarDaLeitura : textoLerDetalhes;
+                break;
+            case ModoTeclaQ.Focar:
+                textoBotaoQ.gameObject.SetActive(true);
+                textoBotaoQ.text = emFoco ? textoDesfocar : textoFocar;
+                break;
+            default:
+                textoBotaoQ.gameObject.SetActive(false);
+                break;
+        }
+    }
+
+    private void AoApertarQ()
+    {
+        switch (modoTeclaQ)
+        {
+            case ModoTeclaQ.LerDetalhes:
+                lendoTelaPreta = !lendoTelaPreta;
+
+                if (painelTextoDetalhado != null)
+                    painelTextoDetalhado.SetActive(lendoTelaPreta);
+
+                if (lendoTelaPreta)
+                    AtualizarExibicaoPagina();
+                break;
+
+            case ModoTeclaQ.Focar:
+                // Não deixa apertar no meio da animação de pose
+                if (EmTransicao) return;
+
+                emFoco = !emFoco;
+                aoAlternarFoco?.Invoke(emFoco);
+                break;
+
+            default:
+                return;
+        }
+
+        AtualizarTextoDaTeclaQ();
     }
 
     /// <summary>Trava ou libera rotação, zoom e reset (usado enquanto a válvula anima). Ignorado durante uma transição de pose.</summary>
@@ -331,24 +458,10 @@ public class GerenciadorDeInspecao : MonoBehaviour
             ResetarModelo();
         }
 
+        // --- TECLA Q (função depende do modo escolhido) ---
         if (Keyboard.current.qKey.wasPressedThisFrame)
         {
-            lendoTelaPreta = !lendoTelaPreta;
-
-            if (painelTextoDetalhado != null)
-                painelTextoDetalhado.SetActive(lendoTelaPreta);
-
-            if (lendoTelaPreta)
-            {
-                AtualizarExibicaoPagina();
-            }
-
-            if (textoBotaoQ != null)
-            {
-                textoBotaoQ.text = lendoTelaPreta
-                    ? "pressione Q para voltar a inspeção"
-                    : "pressione Q para ler detalhes";
-            }
+            AoApertarQ();
         }
 
         // --- NAVEGAÇÃO ENTRE PÁGINAS (W / A = Voltar | S / D = Avançar) ---
@@ -377,14 +490,19 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
             if (apertouEsc)
             {
+                // Única forma de sair da inspeção
                 TerminarInspecao();
             }
-            else if (!dialogoAtivo && !ControlesTravados && Keyboard.current.eKey.wasPressedThisFrame)
+            else if (!dialogoAtivo && !ControlesTravados && aoColetarComTeclaE != null
+                     && Keyboard.current.eKey.wasPressedThisFrame)
             {
+                // O E só serve para executar a ação registrada (ex.: coletar o item). Sem ação, não faz nada.
                 var acaoColeta = aoColetarComTeclaE;
                 aoColetarComTeclaE = null;
-                acaoColeta?.Invoke();
+
+                // Fecha a inspeção atual ANTES, para a ação poder abrir outra (ex.: a do item coletado)
                 TerminarInspecao();
+                acaoColeta.Invoke();
             }
         }
     }
@@ -404,7 +522,10 @@ public class GerenciadorDeInspecao : MonoBehaviour
         ControlesTravados = false;
         EmTransicao = false;
         aoColetarComTeclaE = null;
-        aoColetarComTeclaE = null;
+
+        modoTeclaQ = ModoTeclaQ.LerDetalhes;
+        aoAlternarFoco = null;
+        emFoco = false;
 
         if (GerenciadorDeDialogo.Instancia != null)
         {
@@ -428,6 +549,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         paginaAtual = 0;
         if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(false);
+        if (guiaPassarPagina != null) guiaPassarPagina.SetActive(false);
 
         aoTerminarInspecao?.Invoke();
     }

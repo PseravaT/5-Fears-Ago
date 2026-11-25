@@ -16,9 +16,35 @@ MonoBehaviour:
   nomeDoItem: Diario
   icone: {fileID: 21300000, guid: 60ff06d110eba624297a3aba39a3dacc, type: 3}
   descricaoCurta: 
-  posicaoInicialInspecao: {x: 0, y: 0, z: 0}
   modelo3D: {fileID: 2173939101591531462, guid: 0213dd1a6642ec244ae376617b526e1b, type: 3}
   rotacaoInicialGraus: {x: 180, y: 0, z: 180}
+  posicaoInicialInspecao: {x: 0, y: 0, z: 0}
+  escalaInspecao: {x: 1, y: 1, z: 1}
   usarRotacaoPropriaNaInspecao: 1
   rotacaoNaInspecaoGraus: {x: 180, y: 0, z: 180}
-  textoDetalhado: 
+  textoDetalhado: "Todo santo dia tenho que acordar mais cedo que desejava, para
+    conseguir \"ajudar\" a M\xE3e no caf\xE9. me cansa ter que estar nessa rotina,
+    de ter que estar de corpo presente para, de alguma forma, frustrar uma necessidade
+    dela de me punir; j\xE1 venho desconfiando qual \xE9 o prop\xF3sito deles comigo...|Na
+    sala vejo a repetida rotina: o Pai lendo, parece que alheio ao mundo, n\xE3o
+    me olha, n\xE3o fala comigo, n\xE3o me dirige a palavra, mas talvez seja melhor
+    assim; as vezes em que ele fez algo desse tipo n\xE3o foram mem\xF3rias para
+    serem guardadas, mas aqueles livros cada vez mais bizarros, at\xE9 mesmo para
+    a gente, j\xE1 n\xE3o escondem o que querem fazer comigo. | Chegando \xE0 cozinha,
+    o sil\xEAncio sepulcral, apenas os barulhos da torneira ligada, resto de comida
+    espalhado por todos os cantos, ratos, baratas \u2014 tudo j\xE1 virou rotina;
+    talvez tivesse mais dignidade se vivesse como esses animais, talvez se pelo menos
+    falassem a verdade do que fizeram com meu \xFAnico amigo, meu cachorro. sinto
+    que toda essa dor, todo esse sofrimento, seja planejado por eles. | N\xE3o aguento
+    mais olhar essas paredes, n\xE3o aguento mais viver longe de tudo e todos, n\xE3o
+    aguento ter que, toda vez que subo as escadas, ficar olhando o \xFAnico ser que
+    sempre me amou e me tratou bem em toda minha vida. cansei! vou arrumar tudo,
+    vou frustrar os planos deles, n\xE3o vou deixar que tudo que eles vieram planejando
+    se concretize, pois acho que esse ser\xE1 meu fim de qualquer jeito. | Levo comigo
+    apenas minha pouca coragem e esperan\xE7a de uma vida melhor; a \xFAnica coisa
+    que me prendia a esse lugar era, em algum momento, saber por que o pai se trancava
+    naquele maldito escrit\xF3rio e por que ele chorava com tanta raiva e f\xFAria
+    quando estava l\xE1 dentro. al\xE9m disso, nunca pude em vida entrar no quarto
+    deles (mas prefiro nunca descobrir).| espero que consiga sair dessa, espero que
+    consiga viver longe daqui e, principalmente, espero que nunca volte a esse MALDITO
+    lugar de novo."

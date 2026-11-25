@@ -145,6 +145,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 291084843649612480, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 291084843649612480, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7005792568177808993, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
       propertyPath: m_Name
       value: Canvas Variant 1
@@ -228,6 +236,22 @@ PrefabInstance:
     - target: {fileID: 7963569326571914922, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174636170063652195, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174636170063652195, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174636170063652195, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174636170063652195, guid: f73704530087b0f4fb7506f02c1a3fcd, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

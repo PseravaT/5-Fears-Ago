@@ -31,6 +31,13 @@ public class PlayerInteractor : MonoBehaviour
     {
         AtualizarObjetosNaCaixa();
 
+        // NOVO: o inventário tem prioridade. Bloqueia enquanto está aberto e também no frame em que
+        // fechou (o E que inspeciona o item do inventário não pode interagir com o objeto da cena).
+        if (GerenciadorDeInventario.BloqueiaInteracao)
+        {
+            return;
+        }
+
         // Se um diálogo já estiver aberto (ou acabou de fechar neste exato frame com a tecla E),
         // não dispara uma nova interação por cima para não reiniciar o diálogo.
         if (GerenciadorDeDialogo.Instancia != null &&
@@ -160,4 +167,3 @@ public class PlayerInteractor : MonoBehaviour
         return interagivel.transform.position;
     }
 }
-

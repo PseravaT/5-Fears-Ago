@@ -47,9 +47,9 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _Cutoff: 0
-    - _Metallic: 0.981
+    - _Metallic: 1
     - _ReceiveShadows: 0
-    - _Smoothness: 0.784
+    - _Smoothness: 0.862
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -18,7 +18,19 @@ public class ItemParaInspecionar : MonoBehaviour
     [Tooltip("Escala do modelo na inspeção (1,1,1 = tamanho original do prefab)")]
     public Vector3 escalaInicial = Vector3.one;
 
-    [Header("História do Objeto (Tecla Q)")]
+    [Header("Tecla Q na inspeção")]
+    [Tooltip("LerDetalhes: abre o texto da história. Focar: alterna entre focar e desfocar (use os eventos abaixo). Nenhum: a Q não faz nada")]
+    public ModoTeclaQ funcaoDaTeclaQ = ModoTeclaQ.LerDetalhes;
+    [Tooltip("Só no modo Focar: chamado quando o jogador aperta Q para focar")]
+    public UnityEvent aoFocar;
+    [Tooltip("Só no modo Focar: chamado quando o jogador aperta Q para sair do foco")]
+    public UnityEvent aoDesfocar;
+
+    [Header("Texto extra na inspeção (Opcional)")]
+    [Tooltip("Objeto de UI que só aparece enquanto ESTE item é inspecionado. Deixe desativado na cena")]
+    public GameObject textoExtraNaInspecao;
+
+    [Header("História do Objeto (Tecla Q no modo LerDetalhes)")]
     [Tooltip("Texto customizado que aparece ao apertar Q durante a inspeção (Estágio 0 / Normal)")]
     [TextArea(5, 10)]
     public string textoDetalhado;
@@ -45,7 +57,7 @@ public class ItemParaInspecionar : MonoBehaviour
     public string dialogoDano2Vermelho;
 
     [Header("Coletar ao Pressionar E na Inspeção (Opcional)")]
-    [Tooltip("Se preencher um ItemData aqui, ao apertar E dentro da inspeção 3D ele pega o item e coloca no inventário em vez de apenas sair! (ESC continua saindo sem pegar).")]
+    [Tooltip("Se preencher um ItemData aqui, ao apertar E dentro da inspeção 3D ele pega o item e coloca no inventário. O ESC sai sem pegar.")]
     public ItemData itemParaInventario;
     [Tooltip("Se marcado, esconde/desativa o objeto da cena após pegar o item.")]
     public bool ocultarObjetoAoColetar = true;
@@ -113,6 +125,20 @@ public class ItemParaInspecionar : MonoBehaviour
                 escalaInicial
             );
 
+            // Texto extra que só existe para este item
+            if (textoExtraNaInspecao != null)
+            {
+                textoExtraNaInspecao.SetActive(true);
+                GerenciadorDeInspecao.Instancia.aoTerminarInspecao.RemoveListener(EsconderTextoExtra);
+                GerenciadorDeInspecao.Instancia.aoTerminarInspecao.AddListener(EsconderTextoExtra);
+            }
+
+            // Função da tecla Q escolhida no Inspector
+            if (funcaoDaTeclaQ != ModoTeclaQ.LerDetalhes)
+            {
+                GerenciadorDeInspecao.Instancia.DefinirTeclaQ(funcaoDaTeclaQ, AoAlternarFoco);
+            }
+
             if (itemParaInventario != null)
             {
                 GerenciadorDeInspecao.Instancia.DefinirAcaoAoPressionarE(ColetarParaInventario);
@@ -122,6 +148,22 @@ public class ItemParaInspecionar : MonoBehaviour
         {
             Debug.LogError("Faltou colocar o modelo 3D no script ou falta o Gerenciador na cena!", this);
         }
+    }
+
+    private void EsconderTextoExtra()
+    {
+        if (textoExtraNaInspecao != null) textoExtraNaInspecao.SetActive(false);
+
+        if (GerenciadorDeInspecao.Instancia != null)
+        {
+            GerenciadorDeInspecao.Instancia.aoTerminarInspecao.RemoveListener(EsconderTextoExtra);
+        }
+    }
+
+    private void AoAlternarFoco(bool focando)
+    {
+        if (focando) aoFocar?.Invoke();
+        else aoDesfocar?.Invoke();
     }
 
     private void ColetarParaInventario()
@@ -171,9 +213,17 @@ public class ItemParaInspecionar : MonoBehaviour
 
     void OnDisable()
     {
+        // Se o objeto for desativado no meio da inspeção, o texto extra não pode ficar preso na tela
+        if (textoExtraNaInspecao != null) textoExtraNaInspecao.SetActive(false);
+
         if (GerenciadorDeDialogo.Instancia != null)
         {
             GerenciadorDeDialogo.Instancia.aoFecharDialogo.RemoveListener(AbrirInspecaoAposDialogo);
+        }
+
+        if (GerenciadorDeInspecao.Instancia != null)
+        {
+            GerenciadorDeInspecao.Instancia.aoTerminarInspecao.RemoveListener(EsconderTextoExtra);
         }
     }
 

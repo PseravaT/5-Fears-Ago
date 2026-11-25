@@ -23,9 +23,25 @@ public class ItemColetavel : MonoBehaviour
     [Tooltip("Se ligado, só dá para pegar enquanto houver uma inspeção em andamento")]
     [SerializeField] private bool soDuranteAInspecao = false;
 
+    [Header("Inspeção ao coletar")]
+    [Tooltip("Se ligado, ao pegar o item entra direto no modo de inspeção")]
+    [SerializeField] private bool inspecionarAoColetar = true;
+    [Tooltip("Modelo que aparece na inspeção. Aceita prefab. Se vazio, usa o 'Modelo 3D' do ItemData (com a rotação, posição e escala dele); se ele também estiver vazio, usa este próprio objeto")]
+    [SerializeField] private GameObject modeloParaInspecao;
+    [Tooltip("Usados só quando 'Modelo Para Inspecao' está preenchido")]
+    [SerializeField] private Vector3 rotacaoInicialInspecao = Vector3.zero;
+    [Tooltip("X = direita, Y = cima, Z = mais longe (positivo) ou mais perto (negativo)")]
+    [SerializeField] private Vector3 posicaoInicialInspecao = Vector3.zero;
+    [SerializeField] private Vector3 escalaInicialInspecao = Vector3.one;
+
+    [Tooltip("Opcional: guia de UI que aparece na inspeção do item já coletado (ex.: GuiaPassarPagina). Deixe desativado na cena")]
+    [SerializeField] private GameObject textoExtraNaInspecao;
+
     [Header("Interação")]
-    [Tooltip("Evite o E: ele fecha a inspeção")]
+    [Tooltip("Tecla para coletar fora da inspeção. Evite o E: ele fecha a inspeção")]
     [SerializeField] private Key teclaDeColetar = Key.P;
+    [Tooltip("Se ligado, durante a inspeção apertar E pega este item (quando ele é o mais próximo e está liberado)")]
+    [SerializeField] private bool coletarComE = true;
     [Tooltip("Distância máxima do jogador até o item para poder pegá-lo. Diminua nos itens que ficam perto de outros")]
     [SerializeField] private float distanciaMaxima = 4f;
     [Tooltip("De onde a distância é medida. Se vazio, usa a câmera principal")]
@@ -45,9 +61,11 @@ public class ItemColetavel : MonoBehaviour
     private static int frameDoCalculo = -1;
     private static ItemColetavel melhorDoFrame;
     private static int frameDaUltimaColeta = -1;
+    private static GameObject inspecaoDoItemColetado;
 
     private Renderer[] renderersDoItem;
     private bool coletado;
+    private bool registreiAcaoE;
 
     private string ChaveDeColeta => "coletado_" + item.Id;
 
@@ -58,6 +76,7 @@ public class ItemColetavel : MonoBehaviour
         frameDoCalculo = -1;
         melhorDoFrame = null;
         frameDaUltimaColeta = -1;
+        inspecaoDoItemColetado = null;
     }
 
     void OnEnable()
@@ -99,6 +118,7 @@ public class ItemColetavel : MonoBehaviour
         ItemColetavel melhor = ObterMelhorCandidato();
         bool souOMelhor = melhor == this;
         MostrarDica(souOMelhor);
+        AtualizarAcaoDaTeclaE(souOMelhor);
 
         if (!Keyboard.current[teclaDeColetar].wasPressedThisFrame) return;
 
@@ -109,6 +129,29 @@ public class ItemColetavel : MonoBehaviour
             Coletar();
         else if (melhor == null && mostrarDiagnostico)
             Debug.Log($"[ItemColetavel:{name}] Não coletou: {MotivoDeNaoColetar()}", this);
+    }
+
+    // Enquanto este item for o candidato, o E da inspeção passa a coletá-lo
+    private void AtualizarAcaoDaTeclaE(bool souOMelhor)
+    {
+        var g = GerenciadorDeInspecao.Instancia;
+        if (g == null) return;
+
+        // Na inspeção de um item recém-coletado, o E não coleta nada (só o ESC sai)
+        if (g.EstaInspecionando && g.ObjetoInspecionado == inspecaoDoItemColetado) return;
+
+        bool deveRegistrar = coletarComE && souOMelhor && g.EstaInspecionando;
+
+        if (deveRegistrar)
+        {
+            g.DefinirAcaoAoPressionarE(Coletar);
+            registreiAcaoE = true;
+        }
+        else if (registreiAcaoE)
+        {
+            g.DefinirAcaoAoPressionarE(null);
+            registreiAcaoE = false;
+        }
     }
 
     /// <summary>Pode ser chamado também por um UnityEvent ou outro script.</summary>
@@ -131,7 +174,56 @@ public class ItemColetavel : MonoBehaviour
 
         MostrarDica(false);
         aoColetar?.Invoke();
+        bool abriuInspecao = false;
+
+        if (inspecionarAoColetar && GerenciadorDeInspecao.Instancia != null)
+        {
+            // Se a inspeção do cofre ainda estiver aberta (ex.: coleta pela tecla P), fecha antes
+            if (GerenciadorDeInspecao.Instancia.EstaInspecionando)
+                GerenciadorDeInspecao.Instancia.TerminarInspecao();
+
+            GameObject modelo;
+            Quaternion rotacao;
+            Vector3 posicao;
+            Vector3 escala;
+
+            if (modeloParaInspecao != null)
+            {
+                // Configuração própria deste coletável
+                modelo = modeloParaInspecao;
+                rotacao = Quaternion.Euler(rotacaoInicialInspecao);
+                posicao = posicaoInicialInspecao;
+                escala = escalaInicialInspecao;
+            }
+            else if (item.modelo3D != null)
+            {
+                // Mesma configuração usada pelo inventário
+                modelo = item.modelo3D;
+                rotacao = Quaternion.Euler(item.usarRotacaoPropriaNaInspecao
+                    ? item.rotacaoNaInspecaoGraus
+                    : item.rotacaoInicialGraus);
+                posicao = item.posicaoInicialInspecao;
+                escala = item.escalaInspecao;
+            }
+            else
+            {
+                // Último recurso: este próprio objeto (ainda ativo neste ponto, então o clone nasce ativo)
+                modelo = gameObject;
+                rotacao = Quaternion.Euler(rotacaoInicialInspecao);
+                posicao = posicaoInicialInspecao;
+                escala = escalaInicialInspecao;
+            }
+
+            string texto = string.IsNullOrEmpty(item.textoDetalhado) ? item.descricaoCurta : item.textoDetalhado;
+
+            GerenciadorDeInspecao.Instancia.IniciarInspecao(modelo, rotacao, texto, posicao, escala);
+            abriuInspecao = true;
+            inspecaoDoItemColetado = GerenciadorDeInspecao.Instancia.ObjetoInspecionado;
+            GerenciadorDeInspecao.Instancia.DefinirAcaoAoPressionarE(null);
+        }
+
         gameObject.SetActive(false);
+        if (abriuInspecao) MostrarTextoExtra();
     }
 
     // ---------- ESCOLHA DO ITEM MAIS PRÓXIMO ----------
@@ -262,5 +354,22 @@ public class ItemColetavel : MonoBehaviour
     {
         if (dicaDeInteracao != null && dicaDeInteracao.activeSelf != mostrar)
             dicaDeInteracao.SetActive(mostrar);
+    }
+
+    private void MostrarTextoExtra()
+    {
+        if (textoExtraNaInspecao == null || GerenciadorDeInspecao.Instancia == null) return;
+
+        textoExtraNaInspecao.SetActive(true);
+        GerenciadorDeInspecao.Instancia.aoTerminarInspecao.RemoveListener(EsconderTextoExtra);
+        GerenciadorDeInspecao.Instancia.aoTerminarInspecao.AddListener(EsconderTextoExtra);
+    }
+
+    private void EsconderTextoExtra()
+    {
+        if (textoExtraNaInspecao != null) textoExtraNaInspecao.SetActive(false);
+
+        if (GerenciadorDeInspecao.Instancia != null)
+            GerenciadorDeInspecao.Instancia.aoTerminarInspecao.RemoveListener(EsconderTextoExtra);
     }
 }

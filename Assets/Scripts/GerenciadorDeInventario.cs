@@ -17,6 +17,11 @@ public class GerenciadorDeInventario : MonoBehaviour
     /// <summary>true enquanto o inventário está aberto. Use nos seus scripts para ignorar input.</summary>
     public static bool InventarioAberto => Instancia != null && Instancia.aberto;
 
+    // NOVO
+    /// <summary>true se o inventário está aberto OU estava aberto neste frame. Use nos scripts de interação para ignorar o input (ex.: o E que abre a inspeção do item do inventário).</summary>
+    public static bool BloqueiaInteracao =>
+        Instancia != null && (Instancia.aberto || Instancia.frameEmQueEstavaAberto == Time.frameCount);
+
     /// <summary>Disparado ao abrir (true) e ao fechar (false) o inventário.</summary>
     public static event System.Action<bool> AoMudarEstado;
 
@@ -64,6 +69,7 @@ public class GerenciadorDeInventario : MonoBehaviour
     private ItemData itemSelecionado;
     private bool aberto;
     private int frameDeAbertura = -1;
+    private int frameEmQueEstavaAberto = -1; // NOVO
     private bool voltarAoInventarioDepois;
 
     private CursorLockMode lockAnterior;
@@ -123,6 +129,9 @@ public class GerenciadorDeInventario : MonoBehaviour
 
     void Update()
     {
+        // NOVO: marca que o inventário estava aberto neste frame (vale mesmo se fechar mais abaixo)
+        if (aberto) frameEmQueEstavaAberto = Time.frameCount;
+
         // O modelo do preview gira com tempo real, mesmo se o jogo estiver pausado
         if (aberto && modeloDoPreview != null && giradorDoPreview != null)
             giradorDoPreview.Rotate(Vector3.up, velocidadeDeGiroGrausPorSegundo * Time.unscaledDeltaTime, Space.World);
@@ -209,6 +218,10 @@ public class GerenciadorDeInventario : MonoBehaviour
     public void Fechar()
     {
         if (!aberto) return;
+
+        // NOVO: o resto deste frame continua contando como "inventário aberto" para quem lê o E
+        frameEmQueEstavaAberto = Time.frameCount;
+
         aberto = false;
         StartCoroutine(DesbloquearPausaProximoFrame());
 
@@ -233,10 +246,20 @@ public class GerenciadorDeInventario : MonoBehaviour
     /// <summary>Fecha o inventário e abre o item no modelo interativo (inspeção). Ao sair, volta para o inventário.</summary>
     public void InspecionarSelecionado()
     {
-        if (itemSelecionado == null || itemSelecionado.modelo3D == null) return;
+        if (itemSelecionado == null) return;
+
+        if (itemSelecionado.modelo3D == null)
+        {
+            Debug.LogWarning($"[Inventario] O item '{itemSelecionado.Id}' não tem 'Modelo 3D' no ItemData.", itemSelecionado);
+            return;
+        }
 
         GerenciadorDeInspecao inspecao = GerenciadorDeInspecao.Instancia;
-        if (inspecao == null) return;
+        if (inspecao == null)
+        {
+            Debug.LogWarning("[Inventario] Não achei o GerenciadorDeInspecao na cena.", this);
+            return;
+        }
 
         ItemData item = itemSelecionado;
         Fechar();

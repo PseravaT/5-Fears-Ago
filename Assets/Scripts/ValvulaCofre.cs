@@ -97,7 +97,7 @@ public class ValvulaCofre : MonoBehaviour
         StartCoroutine(correta ? AbrirRoutine() : ErrarRoutine());
     }
 
-    /// <summary>Deixa as portas abertas na hora, sem animação nem som.</summary>
+    /// <summary>Deixa as portas abertas na hora, sem animação nem som. Não grava nada no EstadoDoJogo.</summary>
     public void DefinirAberto()
     {
         StopAllCoroutines();
@@ -105,6 +105,13 @@ public class ValvulaCofre : MonoBehaviour
         Aberto = true;
         AplicarValvula(0f);
         AplicarPortas(1f);
+    }
+
+    /// <summary>Abre na hora e guarda no EstadoDoJogo, para o cofre continuar aberto ao voltar à cena.</summary>
+    public void DefinirAbertoESalvar()
+    {
+        DefinirAberto();
+        EstadoDoJogo.MarcarPuzzleConcluido(ChaveDeEstado);
     }
 
     private IEnumerator ErrarRoutine()
