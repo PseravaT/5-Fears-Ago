@@ -16,6 +16,9 @@ public class LiberarAposPuzzle : MonoBehaviour
     [Tooltip("Opcional: se preencher um ItemData aqui (ex: GarrafaComMensagem), este objeto só libera e persiste habilitado DEPOIS que esse item for coletado!")]
     [SerializeField] private ItemData itemColetadoQueLibera;
 
+    [Tooltip("Opcional: arraste um ValvulaCofre se este objeto só puder ser liberado após o cofre abrir.")]
+    [SerializeField] private ValvulaCofre cofreNecessario;
+
     [Header("Comportamento Visual e Interação")]
     [Tooltip("Se marcado, esconde os Renderers e Colliders deste objeto enquanto o puzzle não terminar (mantendo este script ativo para escutar o fim do puzzle).")]
     [SerializeField] private bool ocultarObjetoAntesDoPuzzle = true;
@@ -45,6 +48,7 @@ public class LiberarAposPuzzle : MonoBehaviour
     void OnEnable()
     {
         EstadoDoJogo.AoConcluirPuzzle += AoConcluirAlgumPuzzle;
+        if (cofreNecessario != null) cofreNecessario.AoTerminarAnimacao += AtualizarEstado;
         AtualizarEstado();
     }
 
@@ -53,9 +57,19 @@ public class LiberarAposPuzzle : MonoBehaviour
         AtualizarEstado();
     }
 
+    void Update()
+    {
+        // Garante sincronização se o ValvulaCofre.Start() rodar depois do LiberarAposPuzzle.Start()
+        if (!jaLiberado && cofreNecessario != null && cofreNecessario.Aberto)
+        {
+            AtualizarEstado();
+        }
+    }
+
     void OnDisable()
     {
         EstadoDoJogo.AoConcluirPuzzle -= AoConcluirAlgumPuzzle;
+        if (cofreNecessario != null) cofreNecessario.AoTerminarAnimacao -= AtualizarEstado;
     }
 
     private void AoConcluirAlgumPuzzle(string idConcluido)
@@ -80,7 +94,9 @@ public class LiberarAposPuzzle : MonoBehaviour
         bool itemOk = itemColetadoQueLibera == null ||
                       EstadoDoJogo.PuzzleConcluido("coletado_" + itemColetadoQueLibera.Id);
 
-        bool liberado = puzzleOk && itemOk;
+        bool cofreOk = cofreNecessario == null || cofreNecessario.Aberto;
+
+        bool liberado = puzzleOk && itemOk && cofreOk;
 
         if (interagivelAlvo != null)
         {

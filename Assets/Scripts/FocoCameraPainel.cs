@@ -19,8 +19,24 @@ public class FocoCameraPainel : MonoBehaviour
     [SerializeField] private GameObject botaoFocar;
     [Tooltip("Texto 'D: destrancar'. Aparece só fora do foco. Deixe desativado na cena")]
     [SerializeField] private GameObject dicaDestrancar;
+    [Tooltip("Ícone de seleção que substitui o ícone de destrancar enquanto estiver focado (após apertar Q). Deixe desativado na cena")]
+    [SerializeField] private GameObject dicaSelecaoNoFoco;
     [SerializeField] private Key teclaFocar = Key.F;
     [SerializeField] private Key teclaDestrancar = Key.D;
+    [Tooltip("Se marcado, fecha a inspeção automaticamente assim que a porta do cofre terminar de abrir.")]
+    [SerializeField] private bool sairDaInspecaoAoDestrancar = false;
+    [Tooltip("Se marcado, registra 1 erro no SistemaDeVida (aplica dano) quando tentar destrancar com a combinação errada.")]
+    [SerializeField] private bool causarDanoAoErrar = true;
+    [Tooltip("Opcional: mensagem exibida ao sair (Esc) logo após destrancar o cofre nesta inspeção.")]
+    [TextArea(2, 4)]
+    [SerializeField] private string mensagemAoSairAposDestrancar;
+
+    [Header("Cofre já aberto / vazio")]
+    [Tooltip("Opcional: fala exibida ao inspecionar o cofre depois de já estar aberto (ex.: 'Não tem mais nada aqui.').")]
+    [TextArea(2, 4)]
+    [SerializeField] private string dialogoCofreVazio;
+    [Tooltip("Opcional: se preencher o item de dentro do cofre, o diálogo acima só aparece depois que esse item for coletado.")]
+    [SerializeField] private ItemData itemQueEsvaziaOCofre;
 
     private PainelRunasLivros painelDoModelo;
     private ValvulaCofre valvulaDoModelo;
@@ -28,6 +44,7 @@ public class FocoCameraPainel : MonoBehaviour
     private bool inspecaoComecou;
     private bool focado;
     private bool tentando;
+    private bool destrancouNestaInspecao;
 
     private void Start()
     {
@@ -35,6 +52,7 @@ public class FocoCameraPainel : MonoBehaviour
         if (painelDoCenario != null) painelDoCenario.SetAtivo(false);
         if (botaoFocar != null) botaoFocar.SetActive(false);
         if (dicaDestrancar != null) dicaDestrancar.SetActive(false);
+        if (dicaSelecaoNoFoco != null) dicaSelecaoNoFoco.SetActive(false);
     }
 
     // Ligue no "On Interact ()" do Interagivel, junto do MandarParaAInspecao
@@ -44,6 +62,7 @@ public class FocoCameraPainel : MonoBehaviour
         inspecaoComecou = false;
         focado = false;
         tentando = false;
+        destrancouNestaInspecao = false;
     }
 
     // Ligue também no OnClick do botão
@@ -100,7 +119,21 @@ public class FocoCameraPainel : MonoBehaviour
             // (e salvo, para continuar aberto quando o jogador sair da cena e voltar)
             painelDoCenario.MarcarResolvido();
             painelDoModelo.MarcarResolvido();
+            destrancouNestaInspecao = true;
             if (valvulaDoCenario != null) valvulaDoCenario.DefinirAbertoESalvar();
+        }
+        else if (causarDanoAoErrar)
+        {
+            if (SistemaDeVida.Instancia != null)
+                SistemaDeVida.Instancia.RegistrarErroPuzzle();
+            else
+                SistemaDeVida.RegistrarErroGlobal();
+
+            if (SistemaDeVida.Instancia != null && SistemaDeVida.Instancia.EstaMorto)
+            {
+                ger.TerminarInspecao();
+                return;
+            }
         }
 
         valvulaDoModelo.AoTerminarAnimacao += AoTerminarTentativa;
@@ -113,7 +146,15 @@ public class FocoCameraPainel : MonoBehaviour
         tentando = false;
 
         var ger = GerenciadorDeInspecao.Instancia;
-        if (ger != null && ger.EstaInspecionando) ger.TravarControles(false);
+        if (ger != null && ger.EstaInspecionando)
+        {
+            ger.TravarControles(false);
+
+            if (sairDaInspecaoAoDestrancar && painelDoCenario != null && painelDoCenario.Resolvido)
+            {
+                ger.TerminarInspecao();
+            }
+        }
     }
 
     private void PrepararModelo(GerenciadorDeInspecao ger)
@@ -131,11 +172,20 @@ public class FocoCameraPainel : MonoBehaviour
         {
             painelDoModelo.AplicarEstado(painelDoCenario.ObterEstado());
 
-            // Se o cofre já foi aberto, a cópia também nasce aberta e com os tambores travados
+            // Se o cofre já foi aberto, a cópia também nasce aberta, sem ícone de Q (só Esc)
             if (painelDoCenario.Resolvido)
             {
                 painelDoModelo.MarcarResolvido();
                 if (valvulaDoModelo != null) valvulaDoModelo.DefinirAberto();
+                ger.DefinirTeclaQ(ModoTeclaQ.Nenhum);
+
+                bool itemColetado = itemQueEsvaziaOCofre == null
+                    || EstadoDoJogo.PuzzleConcluido("coletado_" + itemQueEsvaziaOCofre.Id);
+
+                if (itemColetado && !string.IsNullOrWhiteSpace(dialogoCofreVazio) && GerenciadorDeDialogo.Instancia != null)
+                {
+                    GerenciadorDeDialogo.Instancia.MostrarTexto(dialogoCofreVazio);
+                }
             }
         }
 
@@ -165,6 +215,13 @@ public class FocoCameraPainel : MonoBehaviour
 
         if (botaoFocar != null) botaoFocar.SetActive(false);
         if (dicaDestrancar != null) dicaDestrancar.SetActive(false);
+        if (dicaSelecaoNoFoco != null) dicaSelecaoNoFoco.SetActive(false);
+
+        if (destrancouNestaInspecao && !string.IsNullOrWhiteSpace(mensagemAoSairAposDestrancar) && GerenciadorDeDialogo.Instancia != null)
+        {
+            GerenciadorDeDialogo.Instancia.MostrarTexto(mensagemAoSairAposDestrancar);
+        }
+        destrancouNestaInspecao = false;
     }
 
     private void Update()
@@ -184,9 +241,11 @@ public class FocoCameraPainel : MonoBehaviour
 
             bool resolvido = painelDoCenario != null && painelDoCenario.Resolvido;
             bool podeDestrancar = !focado && !tentando && !resolvido;
+            bool podeSelecionar = focado && !tentando && !resolvido;
 
             if (botaoFocar != null) botaoFocar.SetActive(!resolvido && !tentando);
             if (dicaDestrancar != null) dicaDestrancar.SetActive(podeDestrancar);
+            if (dicaSelecaoNoFoco != null) dicaSelecaoNoFoco.SetActive(podeSelecionar);
 
             var teclado = Keyboard.current;
             if (teclado == null) return;
