@@ -28,8 +28,8 @@ Material:
     - _BlackLift: 0.064
     - _BrushDensity: 9
     - _BrushReach: 0
-    - _BrushRough: 0.7
-    - _BrushThickness: 0.28000975
+    - _BrushRough: 0.6
+    - _BrushThickness: 0.22
     - _Contrast: 1.2
     - _Curvature: 0.122
     - _DamageDarkness: 0
@@ -52,22 +52,22 @@ Material:
     - _RollSpeed: 0.15
     - _ScanlineCount: 300
     - _ScanlineIntensity: 0.2
-    - _VeinBoil: 1
-    - _VeinDensity: 4
-    - _VeinFps: 3.3
+    - _VeinBoil: 0.8
+    - _VeinDensity: 12
+    - _VeinFps: 10
     - _VeinFrames: 4
-    - _VeinOutline: 0.044998698
+    - _VeinOutline: 0
     - _VeinOutlineJitter: 0.7
-    - _VeinOutlineRough: 0.7000259
+    - _VeinOutlineRough: 0.5
     - _VeinReach: 0
-    - _VeinRough: 0.70001423
-    - _VeinWidth: 0.17599712
+    - _VeinRough: 0.5
+    - _VeinWidth: 0.06
     - _Vignette: 0.548
     m_Colors:
     - _BrushColor: {r: 0.02, g: 0.02, b: 0.02, a: 1}
     - _DamageColor: {r: 0, g: 0, b: 0, a: 0}
     - _Tint: {r: 0.9528302, g: 0.9528302, b: 0.9528302, a: 1}
-    - _VeinColor: {r: 0.000051680257, g: 0.000002961102, b: 0.0000042767274, a: 1}
-    - _VeinOutlineColor: {r: 0.030048737, g: 0.000010897239, b: 0.010008113, a: 1}
+    - _VeinColor: {r: 0.6, g: 0.03, b: 0.05, a: 1}
+    - _VeinOutlineColor: {r: 0.03, g: 0, b: 0.01, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

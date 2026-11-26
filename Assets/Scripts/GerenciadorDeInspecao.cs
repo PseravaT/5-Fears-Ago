@@ -225,9 +225,6 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
         ConfigurarPaginasTexto(textoItem);
 
-        if (guiaPassarPagina != null) guiaPassarPagina.SetActive(paginasAtuais.Length > 1);
-        if (guiaColetarComE != null) guiaColetarComE.SetActive(false);
-
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(true);
         lendoTelaPreta = false;
 
@@ -243,6 +240,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         aoIniciarInspecao?.Invoke();
         estaInspecionando = true;
         frameInicioInspecao = Time.frameCount;
+        AtualizarGuiasCentrais();
     }
 
     private void LimparScriptsDeCenaDoClone(GameObject clone)
@@ -289,10 +287,18 @@ public class GerenciadorDeInspecao : MonoBehaviour
     {
         Debug.Log($"[Inspecao] Acao do E definida: {(acao == null ? "nenhuma" : acao.Method.DeclaringType + "." + acao.Method.Name)}\n{System.Environment.StackTrace}");
         aoColetarComTeclaE = acao;
+        AtualizarGuiasCentrais();
+    }
 
-        bool mostrarGuia = acao != null;
-        if (guiaColetarComE != null && guiaColetarComE.activeSelf != mostrarGuia)
-            guiaColetarComE.SetActive(mostrarGuia);
+    private void AtualizarGuiasCentrais()
+    {
+        bool lendoComPaginas = estaInspecionando && lendoTelaPreta && paginasAtuais.Length > 1;
+        if (guiaPassarPagina != null && guiaPassarPagina.activeSelf != lendoComPaginas)
+            guiaPassarPagina.SetActive(lendoComPaginas);
+
+        bool mostrarColeta = estaInspecionando && !lendoTelaPreta && aoColetarComTeclaE != null;
+        if (guiaColetarComE != null && guiaColetarComE.activeSelf != mostrarColeta)
+            guiaColetarComE.SetActive(mostrarColeta);
     }
 
     /// <summary>Limpa a ação do E apenas se ela ainda pertencer ao mesmo método/alvo passado.</summary>
@@ -320,6 +326,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         }
 
         AtualizarTextoDaTeclaQ();
+        AtualizarGuiasCentrais();
     }
 
     private void AtualizarTextoDaTeclaQ()
@@ -376,6 +383,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         }
 
         AtualizarTextoDaTeclaQ();
+        AtualizarGuiasCentrais();
     }
 
     /// <summary>Trava ou libera rotação, zoom e reset (usado enquanto a válvula anima). Ignorado durante uma transição de pose.</summary>
@@ -521,7 +529,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
                 // Única forma de sair da inspeção
                 TerminarInspecao();
             }
-            else if (!dialogoAtivo && !ControlesTravados && aoColetarComTeclaE != null
+            else if (!dialogoAtivo && !lendoTelaPreta && !ControlesTravados && aoColetarComTeclaE != null
                      && Keyboard.current.eKey.wasPressedThisFrame)
             {
                 // O E só serve para executar a ação registrada (ex.: coletar o item). Sem ação, não faz nada.
