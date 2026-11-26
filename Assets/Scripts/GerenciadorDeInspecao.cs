@@ -32,6 +32,13 @@ public class GerenciadorDeInspecao : MonoBehaviour
     [SerializeField] private string textoFocar = "pressione Q para focar";
     [SerializeField] private string textoDesfocar = "pressione Q para sair do foco";
 
+    [Header("Ícone da tecla Q (opcional, substitui o texto)")]
+    [SerializeField] private UnityEngine.UI.Image iconeBotaoQ;
+    [SerializeField] private Sprite spriteLerDetalhes;
+    [SerializeField] private Sprite spriteVoltarDaLeitura;
+    [SerializeField] private Sprite spriteFocar;
+    [SerializeField] private Sprite spriteDesfocar;
+
     private bool lendoTelaPreta = false;
     private string[] paginasAtuais = new string[0];
     private int paginaAtual = 0;
@@ -43,6 +50,8 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
     [Tooltip("Guia 'passar página'. Aparece sozinho em qualquer inspeção cujo texto tenha mais de uma página")]
     [SerializeField] private GameObject guiaPassarPagina;
+    [Tooltip("Guia 'E para colocar no inventário'. Aparece apenas quando há um item coletável com a tecla E disponível na inspeção.")]
+    [SerializeField] private GameObject guiaColetarComE;
 
     [Header("Zoom (Roda do Mouse)")]
     [SerializeField] private float distanciaMinima = 0.5f;
@@ -217,6 +226,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         ConfigurarPaginasTexto(textoItem);
 
         if (guiaPassarPagina != null) guiaPassarPagina.SetActive(paginasAtuais.Length > 1);
+        if (guiaColetarComE != null) guiaColetarComE.SetActive(false);
 
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(true);
         lendoTelaPreta = false;
@@ -279,6 +289,17 @@ public class GerenciadorDeInspecao : MonoBehaviour
     {
         Debug.Log($"[Inspecao] Acao do E definida: {(acao == null ? "nenhuma" : acao.Method.DeclaringType + "." + acao.Method.Name)}\n{System.Environment.StackTrace}");
         aoColetarComTeclaE = acao;
+
+        bool mostrarGuia = acao != null;
+        if (guiaColetarComE != null && guiaColetarComE.activeSelf != mostrarGuia)
+            guiaColetarComE.SetActive(mostrarGuia);
+    }
+
+    /// <summary>Limpa a ação do E apenas se ela ainda pertencer ao mesmo método/alvo passado.</summary>
+    public void LimparAcaoAoPressionarESeFor(System.Action acao)
+    {
+        if (aoColetarComTeclaE == acao)
+            DefinirAcaoAoPressionarE(null);
     }
 
     /// <summary>
@@ -303,21 +324,28 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
     private void AtualizarTextoDaTeclaQ()
     {
-        if (textoBotaoQ == null) return;
+        bool mostrar = modoTeclaQ == ModoTeclaQ.LerDetalhes || modoTeclaQ == ModoTeclaQ.Focar;
 
-        switch (modoTeclaQ)
+        if (textoBotaoQ != null)
         {
-            case ModoTeclaQ.LerDetalhes:
-                textoBotaoQ.gameObject.SetActive(true);
+            textoBotaoQ.gameObject.SetActive(mostrar);
+            if (modoTeclaQ == ModoTeclaQ.LerDetalhes)
                 textoBotaoQ.text = lendoTelaPreta ? textoVoltarDaLeitura : textoLerDetalhes;
-                break;
-            case ModoTeclaQ.Focar:
-                textoBotaoQ.gameObject.SetActive(true);
+            else if (modoTeclaQ == ModoTeclaQ.Focar)
                 textoBotaoQ.text = emFoco ? textoDesfocar : textoFocar;
-                break;
-            default:
-                textoBotaoQ.gameObject.SetActive(false);
-                break;
+        }
+
+        if (iconeBotaoQ != null)
+        {
+            iconeBotaoQ.gameObject.SetActive(mostrar);
+            Sprite alvo = null;
+            if (modoTeclaQ == ModoTeclaQ.LerDetalhes)
+                alvo = lendoTelaPreta ? spriteVoltarDaLeitura : spriteLerDetalhes;
+            else if (modoTeclaQ == ModoTeclaQ.Focar)
+                alvo = emFoco ? spriteDesfocar : spriteFocar;
+
+            if (alvo != null)
+                iconeBotaoQ.sprite = alvo;
         }
     }
 
@@ -550,6 +578,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
         if (painelTextoDetalhado != null) painelTextoDetalhado.SetActive(false);
         if (telaGuiasDeTecla != null) telaGuiasDeTecla.SetActive(false);
         if (guiaPassarPagina != null) guiaPassarPagina.SetActive(false);
+        if (guiaColetarComE != null) guiaColetarComE.SetActive(false);
 
         aoTerminarInspecao?.Invoke();
     }

@@ -63,6 +63,10 @@ public class ItemColetavel : MonoBehaviour
     private static int frameDaUltimaColeta = -1;
     private static GameObject inspecaoDoItemColetado;
 
+    [Header("Dot / Interagível (opcional)")]
+    [Tooltip("Opcional. Se houver um Interagivel neste item (ou filho), ele só fica habilitado quando o item estiver liberado para coleta.")]
+    [SerializeField] private Interagivel interagivelDoItem;
+
     private Renderer[] renderersDoItem;
     private bool coletado;
     private bool registreiAcaoE;
@@ -99,21 +103,29 @@ public class ItemColetavel : MonoBehaviour
             return;
         }
 
+        ResolverInteragivel();
+
         // Se já foi pego antes (ex.: o jogador voltou para esta cena ou reabriu o cofre), o objeto não reaparece
         if (EstadoDoJogo.PuzzleConcluido(ChaveDeColeta))
         {
             coletado = true;
+            AtualizarInteragivel();
             gameObject.SetActive(false);
             return;
         }
 
         renderersDoItem = GetComponentsInChildren<Renderer>(true);
         MostrarDica(false);
+        AtualizarInteragivel();
     }
 
     void Update()
     {
-        if (coletado || Keyboard.current == null) return;
+        if (coletado) return;
+
+        AtualizarInteragivel();
+
+        if (Keyboard.current == null) return;
 
         ItemColetavel melhor = ObterMelhorCandidato();
         bool souOMelhor = melhor == this;
@@ -149,7 +161,7 @@ public class ItemColetavel : MonoBehaviour
         }
         else if (registreiAcaoE)
         {
-            g.DefinirAcaoAoPressionarE(null);
+            g.LimparAcaoAoPressionarESeFor(Coletar);
             registreiAcaoE = false;
         }
     }
@@ -169,6 +181,7 @@ public class ItemColetavel : MonoBehaviour
         GerenciadorDeInventario.Instancia.Adicionar(item);
 
         coletado = true;
+        AtualizarInteragivel();
         frameDaUltimaColeta = Time.frameCount;
         EstadoDoJogo.MarcarPuzzleConcluido(ChaveDeColeta);
 
@@ -252,6 +265,23 @@ public class ItemColetavel : MonoBehaviour
         }
 
         return melhorDoFrame;
+    }
+
+    private void ResolverInteragivel()
+    {
+        if (interagivelDoItem == null)
+        {
+            interagivelDoItem = GetComponent<Interagivel>();
+            if (interagivelDoItem == null)
+                interagivelDoItem = GetComponentInChildren<Interagivel>(true);
+        }
+    }
+
+    private void AtualizarInteragivel()
+    {
+        if (interagivelDoItem == null) return;
+        bool pode = !coletado && LiberadoParaColeta(out _);
+        interagivelDoItem.SetEnabled(pode);
     }
 
     /// <summary>O cofre foi aberto e o puzzle foi concluído? (as condições "de história" do item)</summary>
