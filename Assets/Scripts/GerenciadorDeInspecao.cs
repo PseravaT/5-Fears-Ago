@@ -24,7 +24,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
     [Tooltip("Texto onde aparece 'Página 1 de X'. Crie um TextMeshPro dentro do painelTextoDetalhado e arraste aqui.")]
     public TMPro.TextMeshProUGUI textoContadorPaginas;
     [Tooltip("Se marcado, esconde o contador quando o texto tiver apenas 1 página.")]
-    [SerializeField] private bool ocultarContadorSePaginaUnica = false;
+    [SerializeField] private bool ocultarContadorSePaginaUnica = true;
 
     [Header("Textos da tecla Q")]
     [SerializeField] private string textoLerDetalhes = "pressione Q para ler detalhes";
@@ -639,7 +639,7 @@ public class GerenciadorDeInspecao : MonoBehaviour
 
         if (textoContadorPaginas != null)
         {
-            bool esconder = ocultarContadorSePaginaUnica && paginasAtuais.Length <= 1;
+            bool esconder = paginasAtuais.Length <= 1;
             textoContadorPaginas.gameObject.SetActive(!esconder);
             if (!esconder)
             {

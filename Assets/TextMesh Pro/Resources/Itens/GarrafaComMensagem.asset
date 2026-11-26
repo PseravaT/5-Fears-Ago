@@ -15,12 +15,24 @@ MonoBehaviour:
   id: 03
   nomeDoItem: Garrafa com mensagem
   icone: {fileID: 21300000, guid: 0826bad3f11f97145b5b594c1c6fa2f1, type: 3}
-  descricaoCurta: 'Garrafa com chafe e uma carta '
+  descricaoCurta: "Um garrafa com a chave do escrit\xF3rio e uma carta."
   modelo3D: {fileID: 5863832394121149354, guid: 7d54b8b982d859344bc2e0fb63ee14a7, type: 3}
   rotacaoInicialGraus: {x: 0, y: 0, z: 0}
   posicaoInicialInspecao: {x: 0, y: 0, z: 0}
   escalaInspecao: {x: 0.3, y: 0.3, z: 0.3}
   usarRotacaoPropriaNaInspecao: 1
   rotacaoNaInspecaoGraus: {x: 0, y: 0, z: 0}
-  textoDetalhado: Parece uma Garrafa que tem uma chave dentro ... tem uma mensagem
-    junto
+  textoDetalhado: "Est\xE1 escrito na Carta: Meu querido filho,\nDesde a sua partida,
+    esta casa nunca mais foi a mesma.|\nPercorro os corredores, observo os quartos
+    e, por vezes, ainda espero encontr\xE1-lo onde costumava estar. Mas tudo parece
+    t\xE3o vazio... t\xE3o frio. \xC9 como se uma n\xE9voa tivesse tomado conta n\xE3o
+    apenas desta casa, mas de tudo aquilo que restou de mim.\nAs vozes n\xE3o cessam.
+    | H\xE1 tanto tempo sussurram, insistem, prometem... Durante muito tempo tentei
+    ignor\xE1-las, mas come\xE7o a acreditar que talvez estejam certas. Talvez exista,
+    afinal, uma maneira de trazer de volta aquilo que me foi tirado. Mas n\xE3o posso
+    desistir. |N\xE3o depois de tudo o que fizemos. N\xE3o depois de termos chegado
+    t\xE3o perto.\nSei que talvez n\xE3o compreenda minhas escolhas. Talvez um dia
+    me odeie por elas. Mas uma m\xE3e n\xE3o deveria ser condenada por desejar ter
+    seu filho novamente em seus bra\xE7os.|\nFarei o que for necess\xE1rio. Mesmo
+    que precise ir al\xE9m do que j\xE1 fiz.\nDesta vez, meu filho, n\xE3o permitirei
+    que me deixem tir\xE1-lo de mim.\nCom todo o meu amor,\nMam\xE3e."
