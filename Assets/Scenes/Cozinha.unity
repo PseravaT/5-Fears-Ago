@@ -1697,6 +1697,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LiberarAposPuzzle
   idDoPuzzleNecessario: caldeirao
   itemColetadoQueLibera: {fileID: 11400000, guid: 0f3e00f02fbbc9842bdeb25d8ddd541d, type: 2}
+  cofreNecessario: {fileID: 0}
   ocultarObjetoAntesDoPuzzle: 0
   objetoVisualParaMostrar: {fileID: 0}
   interagivelAlvo: {fileID: 0}
@@ -1838,11 +1839,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4350315584081337493, guid: 73be0b90816b5d04dbc7d510b874523f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -1038.8169
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4350315584081337493, guid: 73be0b90816b5d04dbc7d510b874523f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -549.8197
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4350315584081337493, guid: 73be0b90816b5d04dbc7d510b874523f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2580,6 +2581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LiberarAposPuzzle
   idDoPuzzleNecessario: caldeirao
   itemColetadoQueLibera: {fileID: 0}
+  cofreNecessario: {fileID: 0}
   ocultarObjetoAntesDoPuzzle: 0
   objetoVisualParaMostrar: {fileID: 0}
   interagivelAlvo: {fileID: 571151680}
@@ -9080,7 +9082,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d9bef38a7cd2f9a408eb4411ecd7d85a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f403f8263c89f0e42894a34cf55f5d7a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

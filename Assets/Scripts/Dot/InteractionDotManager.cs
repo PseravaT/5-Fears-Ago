@@ -36,10 +36,25 @@ public class InteractionDotManager : MonoBehaviour
         {
             CreateDotForInteractable(interactable);
         }
+
+        if (JogadorMorreu())
+            AlternarDots(false);
+    }
+
+    void OnEnable()
+    {
+        if (JogadorMorreu())
+            AlternarDots(false);
     }
 
     void Update()
     {
+        if (JogadorMorreu())
+        {
+            AlternarDots(false);
+            return;
+        }
+
         Camera currentCam = Camera.main; 
         
         // Trava de segurança para evitar erros caso falte alguma referência
@@ -129,6 +144,15 @@ public class InteractionDotManager : MonoBehaviour
         dotRT.pivot = new Vector2(0.5f, 0.5f); 
         
         dotInstances.Add(interactable, dotRT);
+    }
+
+    private static bool JogadorMorreu()
+    {
+        if (SistemaDeVida.Instancia != null && SistemaDeVida.Instancia.EstaMorto)
+            return true;
+        if (DamageSystem.Instancia != null && DamageSystem.Instancia.IsDead)
+            return true;
+        return false;
     }
 
     // Função para ligar/desligar todo o sistema via UnityEvents
