@@ -1,5 +1,7 @@
+
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AlavancaEstatua : MonoBehaviour
 {
@@ -28,6 +30,9 @@ public class AlavancaEstatua : MonoBehaviour
     [Range(0f, 1f)] public float volume = 1f;
     public AudioSource audioSource;
 
+    [Header("Ao Concluir")]
+    public UnityEvent aoConcluir;
+
     private Quaternion rotacaoBase;
     private bool animando;
 
@@ -44,7 +49,6 @@ public class AlavancaEstatua : MonoBehaviour
         }
     }
 
-    // Chame pelo evento On Interact do componente Interagivel
     public void Interagir()
     {
         if (animando || puzzle == null || puzzle.Ocupado) return;
@@ -58,29 +62,41 @@ public class AlavancaEstatua : MonoBehaviour
 
         yield return Animar(anguloCima, anguloBaixo, duracaoPuxar);
 
-        // A ação acontece no fundo do curso da alavanca
         ExecutarAcao();
 
         yield return new WaitForSeconds(tempoSegurando);
+
         Tocar(somRetorno);
         yield return Animar(anguloBaixo, anguloCima, duracaoRetorno);
 
         animando = false;
+
+        // Evento executado ao terminar toda a animação
+        aoConcluir?.Invoke();
     }
 
     private void ExecutarAcao()
     {
         switch (acao)
         {
-            case Acao.GirarDireita:  puzzle.Girar(+1); break;
-            case Acao.GirarEsquerda: puzzle.Girar(-1); break;
-            case Acao.Confirmar:     puzzle.Confirmar(); break;
+            case Acao.GirarDireita:
+                puzzle.Girar(+1);
+                break;
+
+            case Acao.GirarEsquerda:
+                puzzle.Girar(-1);
+                break;
+
+            case Acao.Confirmar:
+                puzzle.Confirmar();
+                break;
         }
     }
 
     private IEnumerator Animar(float de, float para, float duracao)
     {
         float t = 0f;
+
         while (t < duracao)
         {
             t += Time.deltaTime;
@@ -88,6 +104,7 @@ public class AlavancaEstatua : MonoBehaviour
             cabo.localRotation = RotacaoNoAngulo(Mathf.Lerp(de, para, k));
             yield return null;
         }
+
         cabo.localRotation = RotacaoNoAngulo(para);
     }
 
