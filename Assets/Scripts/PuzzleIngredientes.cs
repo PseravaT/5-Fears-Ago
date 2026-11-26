@@ -75,9 +75,22 @@ public class PuzzleIngredientes : MonoBehaviour
     [Header("Efeitos Sonoros Opcionais")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip somNavegacao;
-    [SerializeField] private AudioClip somAcerto;
     [SerializeField] private AudioClip somErro;
     [SerializeField] private AudioClip somConclusao;
+
+    [Header("Sons de Acerto (vários, sorteados a cada acerto)")]
+    [Tooltip("Arraste aqui os clipes (ex.: splash_01 ... splash_10). Um é sorteado a cada acerto, sem repetir o anterior.")]
+    [SerializeField] private AudioClip[] sonsAcerto;
+    [Tooltip("AudioSource exclusivo dos acertos (opcional). Se vazio, um é criado automaticamente. É separado para o pitch não afetar os outros sons.")]
+    [SerializeField] private AudioSource audioSourceAcerto;
+    [Tooltip("Pitch sorteado entre mínimo e máximo. Abaixo de 1 = mais grave.")]
+    [SerializeField, Range(0.1f, 1.5f)] private float pitchAcertoMin = 0.70f;
+    [SerializeField, Range(0.1f, 1.5f)] private float pitchAcertoMax = 0.85f;
+    [Tooltip("Corta o som depois de X segundos (0 = toca o clipe inteiro).")]
+    [SerializeField, Min(0f)] private float duracaoMaximaAcerto = 0.6f;
+    [Tooltip("Tempo do fade-out no final do corte, para não estalar.")]
+    [SerializeField, Min(0f)] private float fadeOutAcerto = 0.08f;
+    [SerializeField, Range(0f, 1f)] private float volumeAcerto = 1f;
 
     [Header("Eventos")]
     public UnityEvent aoIniciarPuzzle;
@@ -91,6 +104,8 @@ public class PuzzleIngredientes : MonoBehaviour
     private int frameAtivacao = -1;
     private int ultimoFrameFechado = -1;
     private bool puzzleConcluido = false;
+    private int ultimoSomAcertoIndice = -1;
+    private Coroutine rotinaCorteAcerto;
     public bool JaConcluido => puzzleConcluido;
 
     public static PuzzleIngredientes Instancia;
@@ -108,8 +123,33 @@ public class PuzzleIngredientes : MonoBehaviour
         }
         Instancia = this;
 
+        PrepararAudioSourceAcerto();
+
         if (painelPuzzle != null)
             painelPuzzle.SetActive(false);
+    }
+
+    /// <summary>
+    /// Garante um AudioSource próprio para os acertos (o pitch é do AudioSource inteiro,
+    /// então não pode ser o mesmo usado pelos outros sons).
+    /// </summary>
+    private void PrepararAudioSourceAcerto()
+    {
+        if (audioSourceAcerto == null)
+        {
+            audioSourceAcerto = gameObject.AddComponent<AudioSource>();
+            audioSourceAcerto.playOnAwake = false;
+            audioSourceAcerto.loop = false;
+
+            // Herda as configurações do AudioSource principal, se existir
+            if (audioSource != null)
+            {
+                audioSourceAcerto.outputAudioMixerGroup = audioSource.outputAudioMixerGroup;
+                audioSourceAcerto.spatialBlend = audioSource.spatialBlend;
+                audioSourceAcerto.minDistance = audioSource.minDistance;
+                audioSourceAcerto.maxDistance = audioSource.maxDistance;
+            }
+        }
     }
 
     /// <summary>
@@ -293,7 +333,7 @@ public class PuzzleIngredientes : MonoBehaviour
             }
             else
             {
-                TocarSom(somAcerto);
+                TocarSomAcerto();
                 string textoFeedback = (passoAtualSequencia - 1 < mensagensAcerto.Length)
                     ? mensagensAcerto[passoAtualSequencia - 1]
                     : "Correto! Qual o próximo ingrediente?";
@@ -390,5 +430,74 @@ public class PuzzleIngredientes : MonoBehaviour
             audioSource.PlayOneShot(clip);
         }
     }
-}
 
+    // ------------------------------------------------------------------
+    //  SOM DE ACERTO: sorteia um clipe, abaixa o pitch e corta o final
+    // ------------------------------------------------------------------
+    private void TocarSomAcerto()
+    {
+        if (sonsAcerto == null || sonsAcerto.Length == 0) return;
+
+        PrepararAudioSourceAcerto();
+
+        // Sorteia um clipe diferente do último (quando há mais de um)
+        // Obs.: UnityEngine.Random explícito, pois "using System;" deixa "Random" ambíguo.
+        int indice = UnityEngine.Random.Range(0, sonsAcerto.Length);
+        if (sonsAcerto.Length > 1)
+        {
+            int tentativas = 0;
+            while ((indice == ultimoSomAcertoIndice || sonsAcerto[indice] == null) && tentativas < 10)
+            {
+                indice = UnityEngine.Random.Range(0, sonsAcerto.Length);
+                tentativas++;
+            }
+        }
+
+        AudioClip clip = sonsAcerto[indice];
+        if (clip == null) return;
+        ultimoSomAcertoIndice = indice;
+
+        // Interrompe o corte do acerto anterior, se ainda estiver rodando
+        if (rotinaCorteAcerto != null)
+        {
+            StopCoroutine(rotinaCorteAcerto);
+            rotinaCorteAcerto = null;
+        }
+
+        float pitchMin = Mathf.Min(pitchAcertoMin, pitchAcertoMax);
+        float pitchMax = Mathf.Max(pitchAcertoMin, pitchAcertoMax);
+
+        audioSourceAcerto.Stop();
+        audioSourceAcerto.clip = clip;
+        audioSourceAcerto.pitch = UnityEngine.Random.Range(pitchMin, pitchMax);
+        audioSourceAcerto.volume = volumeAcerto;
+        audioSourceAcerto.Play();
+
+        if (duracaoMaximaAcerto > 0f)
+            rotinaCorteAcerto = StartCoroutine(RotinaCortarAcerto());
+    }
+
+    private IEnumerator RotinaCortarAcerto()
+    {
+        // Tempo de espera até começar o fade-out
+        float esperar = Mathf.Max(0f, duracaoMaximaAcerto - fadeOutAcerto);
+        yield return new WaitForSecondsRealtime(esperar);
+
+        // Fade-out rápido para o corte não estalar
+        if (fadeOutAcerto > 0f)
+        {
+            float t = 0f;
+            float volumeInicial = audioSourceAcerto.volume;
+            while (t < fadeOutAcerto)
+            {
+                t += Time.unscaledDeltaTime;
+                audioSourceAcerto.volume = Mathf.Lerp(volumeInicial, 0f, t / fadeOutAcerto);
+                yield return null;
+            }
+        }
+
+        audioSourceAcerto.Stop();
+        audioSourceAcerto.volume = volumeAcerto;
+        rotinaCorteAcerto = null;
+    }
+}
