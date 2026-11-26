@@ -143,6 +143,7 @@ public class MoverMovelAposPuzzle : MonoBehaviour
     {
         transform.localPosition = posFinalLocal;
         jaMovido = true;
+        aoTerminarDeMover?.Invoke();
     }
 
     // ---------- SEQUÊNCIA ----------

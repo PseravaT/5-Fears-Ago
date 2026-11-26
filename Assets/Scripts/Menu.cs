@@ -46,6 +46,7 @@ public class Menu : MonoBehaviour
 
     [Header("Caixa postal")]
     public AudioClip clique;
+    [Range(0f, 1f)] public float volumeClique = 1f;
     public float pausaAposClique = 0.4f;
 
     [Header("Digitação da legenda")]
@@ -59,8 +60,11 @@ public class Menu : MonoBehaviour
     [Header("Áudio")]
     public AudioSource fonte;
     public AudioClip toque;
+    [Range(0f, 1f)] public float volumeToque = 1f;
     public AudioClip mensagem;
+    [Range(0f, 1f)] public float volumeMensagem = 1f;
     public AudioClip sequenciaCarro;
+    [Range(0f, 1f)] public float volumeSequenciaCarro = 1f;
 
     [Header("Tempos (segundos)")]
     public float fadeBotao = 0.8f;
@@ -638,19 +642,23 @@ public class Menu : MonoBehaviour
 
         if (visor) visor.Chamando();
 
+        float volumeBaseFonte = fonte != null ? fonte.volume : 1f;
+
         if (toque != null)
         {
             fonte.clip = toque;
+            fonte.volume = volumeBaseFonte * volumeToque;
             fonte.loop = true;
             fonte.Play();
             yield return new WaitForSeconds(tempoToque);
             fonte.Stop();
             fonte.loop = false;
+            fonte.volume = volumeBaseFonte;
         }
 
         if (clique)
         {
-            fonte.PlayOneShot(clique);
+            fonte.PlayOneShot(clique, volumeClique);
             yield return new WaitForSeconds(pausaAposClique);
         }
 
@@ -660,8 +668,7 @@ public class Menu : MonoBehaviour
 
         if (mensagem != null)
         {
-            fonte.clip = mensagem;
-            fonte.Play();
+            fonte.PlayOneShot(mensagem, volumeMensagem);
         }
 
         if (painelDialogo) StartCoroutine(Fade(painelDialogo, 0, 1, fadePainel));
@@ -670,7 +677,7 @@ public class Menu : MonoBehaviour
         float duracao = mensagem != null ? mensagem.length : duracaoSemAudio;
         yield return new WaitForSeconds(duracao + pausaAposMensagem);
 
-        if (clique) fonte.PlayOneShot(clique);
+        if (clique) fonte.PlayOneShot(clique, volumeClique);
 
         if (visor) visor.Apagar();
         if (painelDialogo) StartCoroutine(Fade(painelDialogo, 1, 0, fadePainel));
@@ -694,7 +701,7 @@ public class Menu : MonoBehaviour
         if (sequenciaCarro)
         {
             fonte.Stop();
-            fonte.PlayOneShot(sequenciaCarro);
+            fonte.PlayOneShot(sequenciaCarro, volumeSequenciaCarro);
             yield return new WaitForSeconds(sequenciaCarro.length);
         }
 

@@ -15,11 +15,23 @@ MonoBehaviour:
   id: 01
   nomeDoItem: Relogio-Foto-Magal
   icone: {fileID: 21300000, guid: dee745610072e144b9c610c14cba0583, type: 3}
-  descricaoCurta: 
+  descricaoCurta: "Um rel\xF3gio com uma carta ..."
   modelo3D: {fileID: 3148955172299530292, guid: 3383c3a9cc82c1941a4b0e4f1a9a6cd5, type: 3}
   rotacaoInicialGraus: {x: 0, y: -90, z: 0}
   posicaoInicialInspecao: {x: 0, y: 0, z: 0}
   escalaInspecao: {x: 1, y: 1, z: 1}
   usarRotacaoPropriaNaInspecao: 0
   rotacaoNaInspecaoGraus: {x: 0, y: 0, z: 0}
-  textoDetalhado: 
+  textoDetalhado: "H\xE1 algo escrito na parte de tr\xE1s:\n\"Nunca esquecer. 07/07.\"|
+    Meu filho, meu \xFAnico e verdadeiro filho.\nA culpa por sua perda me acompanha
+    todos os dias. N\xE3o h\xE1 uma \xFAnica noite em que eu n\xE3o me pergunte o
+    que poderia ter feito para impedir que voc\xEA fosse tirado de n\xF3s.\nMas n\xE3o
+    se preocupe, meu pequeno. Sua m\xE3e e eu encontramos uma maneira de traz\xEA-lo
+    de volta.|\nFizemos sacrif\xEDcios. Dedicamos nossas vidas a Ele, e Ele nos prometeu
+    que aquilo que nos foi tirado um dia seria devolvido.\nN\xE3o importa o que tenhamos
+    de fazer para cumprir nossa parte do acordo.\nSua m\xE3e acredita que estamos
+    cada vez mais perto. Eu tamb\xE9m quero acreditar.\n\xC0s vezes, quando olho
+    para aquele rosto, quase consigo enxergar voc\xEA.| Mas os olhos... os olhos
+    nunca foram os mesmos.\nAinda assim, Ele nos garantiu que isso n\xE3o importaria.\nPerdoe-me
+    por ter demorado tanto, meu filho. Perdoe-me por tudo o que ainda precisarei
+    fazer.\nEsta \xE9 uma promessa escrita em sangue.\nVoc\xEA voltar\xE1 para n\xF3s.\nPapai."

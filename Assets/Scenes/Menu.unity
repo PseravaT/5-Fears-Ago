@@ -3863,6 +3863,7 @@ MonoBehaviour:
   duracaoFadeSaida: 0.6
   visor: {fileID: 1248215846}
   clique: {fileID: 8300000, guid: f085733d4f840c14e8e2bdfc539d827f, type: 3}
+  volumeClique: 0.34
   pausaAposClique: 1
   efeitoDigitacao: 1
   segundosPorLetra: 0.0555
@@ -3872,8 +3873,11 @@ MonoBehaviour:
   volumeDigitar: 0.2
   fonte: {fileID: 523347427}
   toque: {fileID: 8300000, guid: 248b0a143596b1c499729f235cf7ae4b, type: 3}
+  volumeToque: 0.34
   mensagem: {fileID: 8300000, guid: 25331be5a5e4e7e4594aa69006fb6715, type: 3}
+  volumeMensagem: 1
   sequenciaCarro: {fileID: 8300000, guid: 8762c85d6bf5c6843ba7ce936efa65af, type: 3}
+  volumeSequenciaCarro: 1
   fadeBotao: 1.4
   tempoToque: 12
   pausaAntesMensagem: 1.2
