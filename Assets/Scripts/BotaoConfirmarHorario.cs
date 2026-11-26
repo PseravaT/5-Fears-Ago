@@ -1,5 +1,7 @@
+
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BotaoConfirmarHorario : MonoBehaviour
 {
@@ -22,6 +24,9 @@ public class BotaoConfirmarHorario : MonoBehaviour
     [Range(0f, 1f)] public float volume = 1f;
     public AudioSource audioSource;
 
+    [Header("Ao Concluir")]
+    public UnityEvent aoConcluir;
+
     private Vector3 posicaoRepouso;
     private bool animando;
 
@@ -37,7 +42,6 @@ public class BotaoConfirmarHorario : MonoBehaviour
         }
     }
 
-    // Chame pelo evento On Interact do componente Interagivel
     public void Interagir()
     {
         if (animando || puzzle == null || puzzle.Ocupado) return;
@@ -55,15 +59,20 @@ public class BotaoConfirmarHorario : MonoBehaviour
         puzzle.Confirmar();
 
         yield return new WaitForSeconds(tempoSegurando);
+
         Tocar(somSoltar);
         yield return Mover(posicaoRepouso + deslocamento, posicaoRepouso, duracaoSubir);
 
         animando = false;
+
+        // Evento executado após concluir toda a animação
+        aoConcluir?.Invoke();
     }
 
     private IEnumerator Mover(Vector3 de, Vector3 para, float duracao)
     {
         float t = 0f;
+
         while (t < duracao)
         {
             t += Time.deltaTime;
@@ -71,6 +80,7 @@ public class BotaoConfirmarHorario : MonoBehaviour
             botao.localPosition = Vector3.Lerp(de, para, k);
             yield return null;
         }
+
         botao.localPosition = para;
     }
 

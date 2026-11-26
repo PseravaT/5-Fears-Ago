@@ -31,6 +31,10 @@ public class PuzzleRelogioHumano : MonoBehaviour
     [Tooltip("Velocidade da trepidação (vezes por segundo)")]
     public float frequenciaTrepidacao = 12f;
 
+    [Header("Persistência")]
+    [Tooltip("ID único deste puzzle. Salva no EstadoDoJogo ao concluir. Use o MESMO texto no campo 'Id Do Puzzle' do MoverMovelAposPuzzle. Tem que ser diferente do ID dos outros puzzles.")]
+    [SerializeField] private string idUnico = "relogio_humano";
+
     [Header("Sequência (5 horários, 1 a 12)")]
     public int[] sequencia = { 3, 7, 12, 5, 9 };
     public bool reiniciarAoErrar = true;
@@ -39,6 +43,8 @@ public class PuzzleRelogioHumano : MonoBehaviour
     public AudioClip somClick;
     public AudioClip somErro;
     public AudioClip somGiro;
+    [Tooltip("Tocado ao confirmar o ÚLTIMO horário (puzzle concluído), no lugar do Som Click. Vazio = usa o Som Click normal.")]
+    public AudioClip somConclusao;
     [Range(0f, 1f)] public float volume = 1f;
     public AudioSource audioSource;
 
@@ -67,6 +73,10 @@ public class PuzzleRelogioHumano : MonoBehaviour
     {
         if (estatua != null) rotacaoInicial = estatua.localRotation;
 
+        // Já foi concluído antes (ex.: voltou para a cena): não deixa jogar de novo
+        if (!string.IsNullOrWhiteSpace(idUnico) && EstadoDoJogo.PuzzleConcluido(idUnico.Trim()))
+            concluido = true;
+
         if (audioSource == null && !TryGetComponent(out audioSource))
         {
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -92,14 +102,21 @@ public class PuzzleRelogioHumano : MonoBehaviour
 
         if (HoraAtual == sequencia[progresso])
         {
-            Tocar(somClick);
+            bool ultimo = progresso + 1 >= sequencia.Length;
+
+            // No último horário toca o som de conclusão (se houver); nos outros, o click normal
+            Tocar(ultimo && somConclusao != null ? somConclusao : somClick);
             aoAcertar?.Invoke(progresso);
             progresso++;
 
-            bool ultimo = progresso >= sequencia.Length;
             if (ultimo)
             {
                 concluido = true;
+
+                // Avisa o EstadoDoJogo (é isso que faz o MoverMovelAposPuzzle e outros scripts reagirem)
+                if (!string.IsNullOrWhiteSpace(idUnico))
+                    EstadoDoJogo.MarcarPuzzleConcluido(idUnico.Trim());
+
                 aoConcluir?.Invoke();
             }
         }

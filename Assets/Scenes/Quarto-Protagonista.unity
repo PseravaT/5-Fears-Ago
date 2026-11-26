@@ -389,10 +389,25 @@ MonoBehaviour:
   duracaoDescer: 1
   tempoSegurando: 0.1
   duracaoSubir: 1
-  somApertar: {fileID: 0}
+  somApertar: {fileID: 8300000, guid: 2474430acbfca9840b8fd576519c7080, type: 3}
   somSoltar: {fileID: 0}
-  volume: 1
+  volume: 0.5
   audioSource: {fileID: 0}
+  aoConcluir:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 94397632}
+        m_TargetAssemblyTypeName: BotaoConfirmarHorario, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1001 &114081543
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1141,6 +1156,21 @@ MonoBehaviour:
   somRetorno: {fileID: 0}
   volume: 0.08
   audioSource: {fileID: 0}
+  aoConcluir:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 321012165}
+        m_TargetAssemblyTypeName: AlavancaEstatua, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &321012166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2647,6 +2677,182 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::cameraChange
   player: {fileID: 312316731}
   cameraAtiva: {fileID: 729379149}
+--- !u!1 &1127197274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1127197277}
+  - component: {fileID: 1127197276}
+  - component: {fileID: 1127197275}
+  m_Layer: 0
+  m_Name: Audio Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1127197275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127197274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf87f074897ced469b04c5e0e6dd8b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomPorDistancia
+  jogador: {fileID: 312316731}
+  distanciaCheia: 2
+  distanciaMaxima: 12
+  volumeMaximo: 1
+  curva:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  suavizacao: 6
+  abafarComDistancia: 1
+  frequenciaPerto: 22000
+  frequenciaLonge: 1200
+  panoramaPelaPosicao: 0
+  intensidadeDoPan: 0.6
+--- !u!82 &1127197276
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127197274}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 3edccdea98f55774881bb1589586f808, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1127197277
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127197274}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -22.12, y: 0.16691, z: -66.18857}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1127289178
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3450,11 +3656,13 @@ MonoBehaviour:
   aceleracao: 2.5
   trepidacao: 0
   frequenciaTrepidacao: 12
-  sequencia: 060000000100000004000000080000000a000000
+  idUnico: relogio_humano
+  sequencia: 0600000006000000060000000600000006000000
   reiniciarAoErrar: 1
-  somClick: {fileID: 8300000, guid: 2474430acbfca9840b8fd576519c7080, type: 3}
+  somClick: {fileID: 0}
   somErro: {fileID: 0}
   somGiro: {fileID: 8300000, guid: e54bef8ce1b78f54fb1b5a07e9509bae, type: 3}
+  somConclusao: {fileID: 0}
   volume: 0.4
   audioSource: {fileID: 0}
   aoMudarHora:
@@ -3468,7 +3676,71 @@ MonoBehaviour:
       m_Calls: []
   aoConcluir:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1127197276}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1562983896}
+        m_TargetAssemblyTypeName: GerenciadorDeDialogo, Assembly-CSharp
+        m_MethodName: MostrarTexto
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: "A ordem finalmente est\xE1 certa... Parece que algo
+            foi liberado."
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1832662972}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: "A ordem finalmente est\xE1 certa... Parece que algo
+            foi liberado."
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 321012160}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: "A ordem finalmente est\xE1 certa... Parece que algo
+            foi liberado."
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 94397625}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: "A ordem finalmente est\xE1 certa... Parece que algo
+            foi liberado."
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1457827525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4054,6 +4326,21 @@ MonoBehaviour:
   somRetorno: {fileID: 0}
   volume: 0.15
   audioSource: {fileID: 0}
+  aoConcluir:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1832662978}
+        m_TargetAssemblyTypeName: Interagivel, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1832662978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7498,3 +7785,4 @@ SceneRoots:
   - {fileID: 1860759940}
   - {fileID: 2050589813}
   - {fileID: 779472521}
+  - {fileID: 1127197277}

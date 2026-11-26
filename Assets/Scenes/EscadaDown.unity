@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
+  m_FogColor: {r: 0.5377359, g: 0.6225562, b: 0.7169812, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.093
+  m_FogDensity: 0.058
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -32,7 +32,7 @@ RenderSettings:
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 0
+  m_DefaultReflectionMode: 1
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
@@ -3080,6 +3080,7 @@ GameObject:
   - component: {fileID: 1542867544}
   - component: {fileID: 1542867548}
   - component: {fileID: 1542867547}
+  - component: {fileID: 1542867549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3201,7 +3202,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: 6
+  m_RendererIndex: 8
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -3228,6 +3229,34 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1542867549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542867543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76bac421337b8f94aa343ea32f4f7ccd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SomPassosEscada
+  sonsPassos:
+  - {fileID: 8300000, guid: b93018864a077b74a94c89b46586625c, type: 3}
+  - {fileID: 8300000, guid: ceafb20a835cdd74bb02930c8df4d165, type: 3}
+  - {fileID: 8300000, guid: 5b8b981eef1a0ef4c8d435c2b7bb6e09, type: 3}
+  - {fileID: 8300000, guid: 4f234c8419a26fa40a6c82a0cd32ec1f, type: 3}
+  - {fileID: 8300000, guid: 1dcfc87583827fe418686a4e0011e954, type: 3}
+  - {fileID: 8300000, guid: 5a79ae1c606a2ff49a10026a5695baf9, type: 3}
+  - {fileID: 8300000, guid: 902656756b625484c91b2006a3c43853, type: 3}
+  - {fileID: 8300000, guid: 82c8e5e5bb9b8194583390f2302def04, type: 3}
+  - {fileID: 8300000, guid: adc21439e3a11a84ea34c617e47e3257, type: 3}
+  - {fileID: 8300000, guid: 7603956d5328124418db106f66fbb820, type: 3}
+  volume: 0.75
+  audioSource: {fileID: 0}
+  intervaloPassos: 0.8
+  quantidadeTotalPassos: 7
+  tocarAutomaticamente: 1
 --- !u!1 &1648139832
 GameObject:
   m_ObjectHideFlags: 0
